@@ -14,7 +14,9 @@
     "header": {
       "type": "header",
       "settings": {
-        "announcement_text": "Вітаємо в магазині Vlasnoruch!"
+        "menu": "",
+        "customer_account_menu": "customer-account-main-menu",
+        "announcement_text": "Вітаємо в магазині іграшок Vlasnoruch!"
       }
     }
   },
