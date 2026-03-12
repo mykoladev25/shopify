@@ -1,11 +1,25 @@
 {{ 'hero-banner.css' | asset_url | stylesheet_tag }}
 <section class="hero-banner">
-  {%- if section.settings.home_banner != blank -%}
-    {{ section.settings.home_banner | image_url: width: 1500, height: 400 | image_tag: class: 'hero-banner__image', loading: 'eager' }}
-      {%- else -%}
-    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
-  {%- endif -%}
+  <figure class="hero-banner__figure">
+  <picture>
+    {%- if section.settings.home_banner_mobile != blank -%}
+      <source media="(max-width: 767px)" srcset="{{ section.settings.home_banner_mobile | image_url: width: 767, height: 767 }}">
+    {%- endif -%}
+    
+    {%- if section.settings.home_banner_desktop != blank -%}
+      {{ section.settings.home_banner_desktop | image_url: width: 1500, height: 600 | image_tag: class: 'hero-banner__image', loading: 'eager' }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-banner__image' }}
+    {%- endif -%}
+  </picture>
+</figure>
   <div class="hero-banner__content">
+    
+      {%- if section.settings.home_banner_subtitle -%}
+        <h2 class="hero-banner__subtitle">
+          {{ section.settings.home_banner_subtitle }}
+        </h2>
+      {%- endif -%}
       {%- if section.settings.home_banner_title -%}
         <h1 class="hero-banner__title">
           {{ section.settings.home_banner_title }}
@@ -24,14 +38,25 @@
   "settings": [
     {
       "type": "image_picker",
-      "id": "home_banner",
-      "label": "Фото для банера"
+      "id": "home_banner_desktop",
+      "label": "Фото для банера десктопна версія"
+    },
+    {
+      "type": "image_picker",
+      "id": "home_banner_mobile",
+      "label": "Фото для банера мобільна версія"
+    },
+    {
+      "type": "text",
+      "id": "home_banner_subtitle",
+      "label": "Підзаголовок",
+      "default": "дерев'яні іграшки з душею"
     },
     {
       "type": "text",
       "id": "home_banner_title",
       "label": "Заголовок",
-      "default": "Іграшки ручної роботи"
+      "default": "vlasnoruch.ua"
     },
     {
       "type": "text",

@@ -11,6 +11,7 @@ body {
   flex-direction: column;
   margin: 0;
   min-height: 100svh;
+  font-size: 14px;
 }
 
 html:has(dialog[scroll-lock][open], details[scroll-lock][open]) {
@@ -123,4 +124,36 @@ body {
   text-transform: uppercase;
   padding: 10px 20px;
   font-weight: 600;
+  border: solid 1px transparent;
+
+  &:hover {
+    background-color: transparent;
+    border-color: black;
+    color: black;
+  }
+}
+
+h1, h2 {
+  text-transform: uppercase;
+}
+
+h2 {
+  font-weight: 400;
+}
+.desktop-only {
+  display: none !important;
+}
+@media only screen and (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+  .desktop-only {
+    display: flex !important;
+  }
+  .mobile-only {
+  display: none !important;
+  }
+}
+ul {
+  padding: 0;
 }
