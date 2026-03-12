@@ -1,0 +1,56 @@
+{{ 'hero-banner.css' | asset_url | stylesheet_tag }}
+<section class="hero-banner">
+  {%- if section.settings.home_banner != blank -%}
+    {{ section.settings.home_banner | image_url: width: 1500, height: 400 | image_tag: class: 'hero-banner__image', loading: 'eager' }}
+      {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+  {%- endif -%}
+  <div class="hero-banner__content">
+      {%- if section.settings.home_banner_title -%}
+        <h1 class="hero-banner__title">
+          {{ section.settings.home_banner_title }}
+        </h1>
+      {%- endif -%}
+      {%- if section.settings.home_banner_cta_text != blank and section.settings.home_banner_link != blank -%}
+        <a href="{{ section.settings.home_banner_link }}" class="button hero-banner__btn">
+          {{ section.settings.home_banner_cta_text }}
+        </a>
+      {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Головний банер",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "home_banner",
+      "label": "Фото для банера"
+    },
+    {
+      "type": "text",
+      "id": "home_banner_title",
+      "label": "Заголовок",
+      "default": "Іграшки ручної роботи"
+    },
+    {
+      "type": "text",
+      "id": "home_banner_cta_text",
+      "label": "Текст кнопки",
+      "default": "Переглянути"
+    },
+    {
+      "type": "url",
+      "id": "home_banner_link",
+      "label": "Посилання з кнопки",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Головний банер",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

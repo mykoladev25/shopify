@@ -115,3 +115,12 @@ body {
 .shopify-section > .full-width {
   grid-column: 1 / -1;
 }
+
+.button {
+  background-color: black;
+  color: white;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  font-weight: 600;
+}
