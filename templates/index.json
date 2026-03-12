@@ -11,7 +11,12 @@
   "sections": {
     "main": {
       "type": "hero-banner",
-      "settings": {}
+      "settings": {
+        "home_banner": "shopify://shop_images/Gemini_Generated_Image_he4iykhe4iykhe4i.png",
+        "home_banner_title": "Іграшки ручної роботи",
+        "home_banner_cta_text": "Переглянути",
+        "home_banner_link": "shopify://collections/all"
+      }
     }
   },
   "order": [
