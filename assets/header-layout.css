@@ -19,13 +19,13 @@ header a sup {
   overflow: hidden;
   max-width: var(--page-margin);
 }
-header svg {
-  width: 2rem;
-}
 header .header__menu,
 header .header__icons {
   display: flex;
   gap: 1rem;
+}
+header svg {
+  font-size: 18px;
 }
 .header-content {
   display: flex;
@@ -37,6 +37,7 @@ header .header__icons {
   }
   .header__icons {
     order: 3;
+    align-items: center;
   }
 }
 @media only screen and (min-width: 768px) {

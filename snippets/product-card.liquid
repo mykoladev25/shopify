@@ -1,0 +1,37 @@
+<div class="product-card">
+  <div class="product-card__image-wrapper">
+    <a href="{{ product.url }}" class="product-card__link" tabindex="-1">
+      {% if product.featured_image != blank %}
+        {{ product.featured_image | image_url: width: 600 | image_tag: class: 'product-card__image', loading: 'lazy' }}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__image' }}
+      {% endif %}
+    </a>
+
+    <button type="button" class="product-card__wishlist-btn" data-product-handle="{{ product.handle }}" aria-label="Додати у вибране">
+      {% render 'icon-wishlist' %}
+    </button>
+  </div>
+  
+  <div class="product-card__info">
+    <a href="{{ product.url }}" class="product-card__link">
+      <h3 class="product-card__title">{{ product.title }}</h3>
+    </a>
+    <span class="product-card__price">{{ product.price | money }}</span>
+  </div>
+
+  <div class="product-card__actions">
+    {% form 'product', product %}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      
+      <button type="submit" class="product-card__cart-btn" {% unless product.available %}disabled{% endunless %}>
+        {% if product.available %}
+          {% render 'icon-cart' %}
+          <span>В кошик</span>
+        {% else %}
+          <span>Немає в наявності</span>
+        {% endif %}
+      </button>
+    {% endform %}
+  </div>
+</div>

@@ -1,0 +1,69 @@
+{{ 'featured-collection.css' | asset_url | stylesheet_tag }}
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+
+{{ 'featured-collection.css' | asset_url | stylesheet_tag }}
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+
+<section class="featured-collection">
+  {% if section.settings.title != blank %}
+    <h2 class="featured-collection__title">{{ section.settings.title }}</h2>
+  {% endif %}
+
+  <div class="featured-collection__slider-wrapper">
+    <ul class="featured-collection__list" role="list">
+      {% for product in section.settings.collection.products limit: section.settings.products_to_show %}
+        <li class="featured-collection__item">
+          {% render 'product-card', product: product %}
+        </li>
+      {% else %}
+        {% for i in (1..4) %}
+          <li class="featured-collection__item">
+            <div class="product-card">
+              <div class="product-card__image-wrapper">
+                {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+                {{ 'product-' | append: current | placeholder_svg_tag: 'product-card__image' }}
+              </div>
+              <div class="product-card__info">
+                <h3 class="product-card__title">Назва товару</h3>
+                <span class="product-card__price">{{ 150000 | money }}</span>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Частіше всього купують"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Товари"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "Максимальна кількість товарів в слайдері"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

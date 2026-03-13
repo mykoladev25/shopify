@@ -8,6 +8,7 @@
   background: transparent;
   cursor: pointer;
   position: relative;
+  border-bottom: solid 2px;
 }
 .burger-icon,
 .burger-btn::before,
@@ -23,7 +24,7 @@
   transform: translateY(-8px);
 }
 .burger-btn::after {
-  transform: translateY(8px);
+  transform: translateY(2px);
 }
 .close-btn {
   display: flex;
