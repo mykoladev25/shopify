@@ -19,9 +19,19 @@
         "home_banner_cta_text": "Переглянути",
         "home_banner_link": "shopify://collections/all"
       }
+    },
+    "featured_collection_MxUR6y": {
+      "type": "featured-collection",
+      "name": "Featured Collection",
+      "settings": {
+        "title": "Частіше всього купують",
+        "collection": "частіше-за-все-купують",
+        "products_to_show": 4
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "featured_collection_MxUR6y"
   ]
 }
