@@ -24,7 +24,7 @@
       "type": "featured-collection",
       "name": "Featured Collection",
       "settings": {
-        "title": "Частіше всього купують",
+        "title": "Bestsellers",
         "collection": "частіше-за-все-купують",
         "products_to_show": 4
       }

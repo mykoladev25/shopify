@@ -1,4 +1,4 @@
-.shopify-section {
+.pdp-layout {
   display: grid;
   grid-template-columns: 1fr;
   gap: 30px;
@@ -8,7 +8,7 @@
 }
 
 @media (min-width: 768px) {
-  .shopify-section {
+  .pdp-layout {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: min-content auto;
     gap: 20px 50px;
