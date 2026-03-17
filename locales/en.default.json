@@ -15,6 +15,9 @@
   },
   "cart": {
     "checkout": "Checkout",
+    "subtotal": "Subtotal:",
+    "summary_title": "Your order",
+    "taxes_note": "Taxes and shipping are calculated at checkout.",
     "title": "Cart",
     "update": "Update",
     "remove": "Remove"
@@ -37,10 +40,30 @@
     "expires_on": "Expires on {{ expires_on }}",
     "use_at_checkout": "Use this gift card at checkout"
   },
+  "header": {
+    "announcement": "Welcome to the Vlasnoruch toy store!",
+    "open_menu": "Open menu",
+    "close_menu": "Close menu",
+    "language": "Language"
+  },
+  "hero_banner": {
+    "subtitle": "wooden toys made with care",
+    "title": "Handmade toys",
+    "cta": "Shop now"
+  },
+  "featured_collection": {
+    "title": "Bestsellers",
+    "placeholder_title": "Product title"
+  },
   "password": {
     "title": "This shop is private",
     "password": "Password",
     "enter": "Enter"
+  },
+  "product": {
+    "add_to_cart": "Add to cart",
+    "sold_out": "Sold out",
+    "add_to_wishlist": "Add to wishlist"
   },
   "search": {
     "title": "Search",
@@ -48,8 +71,5 @@
     "submit": "Search",
     "no_results_html": "No results found for {{ terms }}",
     "results_for_html": "{{ count }} results found for {{ terms }}"
-  },
-  "header": {
-    "announcement": "Безкоштовна доставка від 1000 грн"
   }
 }

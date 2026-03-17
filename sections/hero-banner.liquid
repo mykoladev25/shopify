@@ -1,3 +1,23 @@
+{% liquid
+  assign current_language_iso = localization.language.iso_code | default: request.locale.iso_code
+  assign locale_prefix = current_language_iso | slice: 0, 2
+  assign banner_subtitle = section.settings.home_banner_subtitle
+  assign banner_title = section.settings.home_banner_title
+  assign banner_cta_text = section.settings.home_banner_cta_text
+
+  if banner_subtitle == blank or locale_prefix == 'uk'
+    assign banner_subtitle = 'hero_banner.subtitle' | t
+  endif
+
+  if banner_title == blank or locale_prefix == 'uk'
+    assign banner_title = 'hero_banner.title' | t
+  endif
+
+  if banner_cta_text == blank or locale_prefix == 'uk'
+    assign banner_cta_text = 'hero_banner.cta' | t
+  endif
+%}
+
 {{ 'hero-banner.css' | asset_url | stylesheet_tag }}
 <section class="hero-banner">
   <figure class="hero-banner__figure">
@@ -15,66 +35,66 @@
 </figure>
   <div class="hero-banner__content">
     
-      {%- if section.settings.home_banner_subtitle -%}
+      {%- if banner_subtitle != blank -%}
         <h2 class="hero-banner__subtitle">
-          {{ section.settings.home_banner_subtitle }}
+          {{ banner_subtitle }}
         </h2>
       {%- endif -%}
-      {%- if section.settings.home_banner_title -%}
+      {%- if banner_title != blank -%}
         <h1 class="hero-banner__title">
-          {{ section.settings.home_banner_title }}
+          {{ banner_title }}
         </h1>
       {%- endif -%}
-      {%- if section.settings.home_banner_cta_text != blank and section.settings.home_banner_link != blank -%}
+      {%- if banner_cta_text != blank and section.settings.home_banner_link != blank -%}
         <a href="{{ section.settings.home_banner_link }}" class="button hero-banner__btn">
-          {{ section.settings.home_banner_cta_text }}
+          {{ banner_cta_text }}
         </a>
       {%- endif -%}
   </div>
 </section>
 {% schema %}
 {
-  "name": "Головний банер",
+  "name": "t:general.hero_banner",
   "settings": [
     {
       "type": "image_picker",
       "id": "home_banner_desktop",
-      "label": "Фото для банера десктопна версія"
+      "label": "t:labels.banner_desktop_image"
     },
     {
       "type": "image_picker",
       "id": "home_banner_mobile",
-      "label": "Фото для банера мобільна версія"
+      "label": "t:labels.banner_mobile_image"
     },
     {
       "type": "text",
       "id": "home_banner_subtitle",
-      "label": "Підзаголовок",
-      "default": "дерев'яні іграшки з душею"
+      "label": "t:labels.subtitle",
+      "default": "wooden toys made with care"
     },
     {
       "type": "text",
       "id": "home_banner_title",
-      "label": "Заголовок",
-      "default": "vlasnoruch.ua"
+      "label": "t:labels.heading",
+      "default": "Handmade toys"
     },
     {
       "type": "text",
       "id": "home_banner_cta_text",
-      "label": "Текст кнопки",
-      "default": "Переглянути"
+      "label": "t:labels.button_text",
+      "default": "Shop now"
     },
     {
       "type": "url",
       "id": "home_banner_link",
-      "label": "Посилання з кнопки",
+      "label": "t:labels.button_link",
       "default": "/collections/all"
     }
   ],
   "presets": [
     {
-      "name": "Головний банер",
-      "category": "Image"
+      "name": "t:general.hero_banner",
+      "category": "t:general.content"
     }
   ]
 }

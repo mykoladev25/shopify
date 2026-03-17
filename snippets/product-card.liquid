@@ -8,7 +8,7 @@
       {% endif %}
     </a>
 
-    <button type="button" class="product-card__wishlist-btn" data-product-handle="{{ product.handle }}" aria-label="Додати у вибране">
+    <button type="button" class="product-card__wishlist-btn" data-product-handle="{{ product.handle }}" aria-label="{{ 'product.add_to_wishlist' | t }}">
       {% render 'icon-wishlist' %}
     </button>
   </div>
@@ -24,12 +24,12 @@
     {% form 'product', product %}
       <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
       
-      <button type="submit" class="product-card__cart-btn" {% unless product.available %}disabled{% endunless %}>
+      <button type="submit" class="button product-card__cart-btn" {% unless product.available %}disabled{% endunless %}>
         {% if product.available %}
           {% render 'icon-cart' %}
-          <span>В кошик</span>
+          <span>{{ 'product.add_to_cart' | t }}</span>
         {% else %}
-          <span>Немає в наявності</span>
+          <span>{{ 'product.sold_out' | t }}</span>
         {% endif %}
       </button>
     {% endform %}

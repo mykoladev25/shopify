@@ -125,11 +125,26 @@ body {
   padding: 10px 20px;
   font-weight: 600;
   border: solid 1px transparent;
+  width: 100%;
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  column-gap: 10px;
+  cursor: pointer;
 
   &:hover {
     background-color: transparent;
     border-color: black;
     color: black;
+  }
+
+  &.secondary {
+    color: black;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    margin-top: 5px;
   }
 }
 
@@ -156,4 +171,18 @@ h2 {
 }
 ul {
   padding: 0;
+}
+input[type="number"] {
+  width: 60px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

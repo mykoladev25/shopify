@@ -1,9 +1,21 @@
+{% liquid
+  assign current_language_iso = localization.language.iso_code | default: request.locale.iso_code
+  assign locale_prefix = current_language_iso | slice: 0, 2
+  assign announcement_text = section.settings.announcement_text
+
+  if announcement_text == blank or locale_prefix == 'uk'
+    assign announcement_text = 'header.announcement' | t
+  endif
+%}
+
+{%- if section.settings.show_announcement and announcement_text != blank -%}
+  <p class="announcement">
+    <span class="announcement__content">
+      {{ announcement_text }}
+    </span>
+  </p>
+{%- endif -%}
 <header>
-  {%- if section.settings.announcement_text != blank and section.settings.show_announcement -%}
-    <p class="announcement">
-      {{ section.settings.announcement_text }}
-    </p>
-  {%- endif -%}
   <div class="header-content">
     <a href="{{ routes.root_url }}" class="header__logo-link header__title">
     {%- if settings.logo != blank -%}
@@ -22,7 +34,7 @@
       {% endfor %}
     </nav>
 
-    <button id="menu-open" class="burger-btn mobile-only"></button>
+    <button id="menu-open" class="burger-btn mobile-only" aria-label="{{ 'header.open_menu' | t }}"></button>
 
     <dialog id="mobile-menu" class="mobile-drawer">
       <nav class="mobile-drawer__nav">
@@ -32,19 +44,43 @@
           {% endfor %}
         </ul>
       </nav>
-      <button id="menu-close" class="close-btn">
-        close
+      <button id="menu-close" class="close-btn" aria-label="{{ 'header.close_menu' | t }}">
+        {{ 'header.close_menu' | t }}
       </button>
     </dialog>
 
     <div class="header__icons">
-      {% if shop.customer_accounts_enabled %}
-        <shopify-account menu="{{ section.settings.customer_account_menu }}">
-          {% render 'icon-account' %}
-        </shopify-account>
+      {% if localization.available_languages.size > 1 %}
+        {% form 'localization', class: 'header__locale-form' %}
+          <div class="header__locale-switcher" role="group" aria-label="{{ 'header.language' | t }}">
+            {% for language in localization.available_languages %}
+              {% liquid
+                assign language_label = language.iso_code | upcase
+
+                if language.iso_code == 'uk'
+                  assign language_label = 'UA'
+                endif
+              %}
+
+              <button
+                type="submit"
+                name="language_code"
+                value="{{ language.iso_code }}"
+                class="header__locale-button{% if language.iso_code == current_language_iso %} is-active{% endif %}"
+                aria-label="{{ language.endonym_name | default: language.name }}"
+              >
+                {{ language_label }}
+              </button>
+            {% endfor %}
+          </div>
+        {% endform %}
       {% endif %}
 
-      <a href="{{ routes.cart_url }}">
+      {% if shop.customer_accounts_enabled %}
+        <a href="{{ settings.account_url }}" aria-label="{{ 'customers.login.title' | t }}">{% render 'icon-account' %}</a>
+      {% endif %}
+
+      <a href="{{ routes.cart_url }}" aria-label="{{ 'cart.title' | t }}">
         {% if cart.item_count > 0 %}
           <sup>{{ cart.item_count }}</sup>
         {% endif %}
@@ -78,14 +114,14 @@
     {
       "type": "checkbox",
       "id": "show_announcement",
-      "label": "Показувати анонс",
+      "label": "t:labels.show_announcement",
       "default": true
     },
     {
       "type": "text",
       "id": "announcement_text",
-      "label": "Текст анонсу",
-      "default": "Безкоштовна доставка від 1000 грн"
+      "label": "t:labels.announcement_text",
+      "default": "Welcome to the Vlasnoruch toy store!"
     }
   ]
 }

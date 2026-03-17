@@ -1,6 +1,7 @@
 {
   "general": {
     "404": "Not found",
+    "account": "Account",
     "article": "Article",
     "block": "Block",
     "blog": "Blog",
@@ -13,11 +14,14 @@
     "column": "Column",
     "content": "Content",
     "custom_section": "Custom section",
+    "featured_collection": "Featured collection",
     "fonts": "Fonts",
     "footer": "Footer",
     "group": "Group",
     "header": "Header",
+    "hero_banner": "Hero banner",
     "layout": "Layout",
+    "logo": "Logo",
     "main": "Main",
     "page": "Page",
     "password": "Password",
@@ -35,18 +39,31 @@
   },
   "labels": {
     "alignment": "Alignment",
+    "account_url": "Account login URL",
+    "announcement_text": "Announcement text",
     "background": "Background",
+    "banner_desktop_image": "Desktop banner image",
+    "banner_mobile_image": "Mobile banner image",
+    "button_link": "Button link",
+    "button_text": "Button text",
+    "collection": "Collection",
     "foreground": "Foreground",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
+    "heading": "Heading",
     "input_corner_radius": "Input corner radius",
     "layout_direction": "Layout direction",
+    "logo_width": "Logo width",
+    "max_products": "Maximum products in slider",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",
     "padding": "Padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
+    "show_announcement": "Show announcement",
     "show_payment_icons": "Show payment icons",
+    "site_logo": "Site logo",
+    "subtitle": "Subtitle",
     "text_style": "Text style",
     "text": "Text"
   },
@@ -72,6 +89,6 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
   }
 }

@@ -1,0 +1,128 @@
+/* =========================================
+   Cart Items Table
+   ========================================= */
+.cart__items table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cart__items td {
+  padding: 20px 0;
+  vertical-align: top;
+  border-bottom: 1px solid #e5e5e5;
+  padding-right: 20px;
+}
+
+.cart__items tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================
+   Product Image
+   ========================================= */
+.cart__item-image {
+  width: 120px;
+}
+
+.cart__item-image img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  background-color: #f9f9f9;
+}
+
+/* =========================================
+   Product Details
+   ========================================= */
+.cart__item-details {
+  padding-left: 20px;
+}
+
+.cart__item-title {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.cart__item-remove {
+  font-size: 14px;
+  color: #d9534f;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cart__item-remove:hover {
+  color: #c9302c;
+  text-decoration: underline;
+}
+
+/* =========================================
+   Quantity Input & Update Button
+   ========================================= */
+.cart__item-quantity {
+  text-align: right;
+  width: 100px;
+}
+
+.cart__item-quantity .cart__update-btn {
+  display: block;
+  margin: 10px 0 0 auto;
+  width: 100%;
+  max-width: 80px;
+}
+.cart__layout {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+@media (min-width: 990px) {
+  .cart__layout {
+    flex-direction: row;
+  }
+  
+  .cart__items {
+    flex: 1;
+  }
+  
+  .cart__summary {
+    width: 380px;
+    position: sticky;
+    top: 40px;
+  }
+}
+
+.cart__summary {
+  background-color: #f9f9f9;
+  padding: 30px;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.cart__summary-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.cart__subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 15px;
+}
+
+.cart__taxes-note {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}

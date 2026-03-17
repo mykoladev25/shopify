@@ -1,11 +1,11 @@
 [
   {
-    "name": "Logo",
+    "name": "t:general.logo",
     "settings": [
       {
         "type": "image_picker",
         "id": "logo",
-        "label": "Логотип сайту"
+        "label": "t:labels.site_logo"
       },
       {
         "type": "range",
@@ -15,7 +15,18 @@
         "step": 10,
         "default": 100,
         "unit": "px",
-        "label": "Ширина логотипу"
+        "label": "t:labels.logo_width"
+      }
+    ]
+  },
+  {
+    "name": "t:general.account",
+    "settings": [
+      {
+        "type": "text",
+        "id": "account_url",
+        "label": "t:labels.account_url",
+        "default": "https://shopify.com/97587429656/account"
       }
     ]
   },

@@ -1,0 +1,94 @@
+{
+  "general": {
+    "404": "Не знайдено",
+    "account": "Акаунт",
+    "article": "Стаття",
+    "block": "Блок",
+    "blog": "Блог",
+    "cart": "Кошик",
+    "collection": "Колекція",
+    "collections": "Колекції",
+    "collection_card": "Картка колекції",
+    "collections_grid": "Сітка колекцій",
+    "colors": "Кольори",
+    "column": "Колонка",
+    "content": "Контент",
+    "custom_section": "Кастомна секція",
+    "featured_collection": "Рекомендована колекція",
+    "fonts": "Шрифти",
+    "footer": "Футер",
+    "group": "Група",
+    "header": "Хедер",
+    "hero_banner": "Головний банер",
+    "layout": "Макет",
+    "logo": "Логотип",
+    "main": "Основне",
+    "page": "Сторінка",
+    "password": "Пароль",
+    "primary": "Основний",
+    "product": "Товар",
+    "row": "Ряд",
+    "search": "Пошук",
+    "secondary": "Додатковий",
+    "section": "Секція",
+    "settings": "Налаштування",
+    "sidebar": "Бокова панель",
+    "text": "Текст",
+    "theme": "Тема",
+    "typography": "Типографіка"
+  },
+  "labels": {
+    "alignment": "Вирівнювання",
+    "account_url": "Посилання на логін-форму",
+    "announcement_text": "Текст анонсу",
+    "background": "Фон",
+    "banner_desktop_image": "Зображення банера для десктопу",
+    "banner_mobile_image": "Зображення банера для мобільних",
+    "button_link": "Посилання кнопки",
+    "button_text": "Текст кнопки",
+    "collection": "Колекція",
+    "customer_account_menu": "Меню акаунта",
+    "foreground": "Основний колір",
+    "grid_gap": "Відступ між елементами",
+    "grid_item_width": "Ширина елементів сітки",
+    "heading": "Заголовок",
+    "input_corner_radius": "Радіус кутів інпутів",
+    "layout_direction": "Напрямок макета",
+    "logo_width": "Ширина логотипу",
+    "max_products": "Максимальна кількість товарів у слайдері",
+    "menu": "Меню",
+    "page_margin": "Відступ сторінки",
+    "page_width": "Ширина сторінки",
+    "padding": "Внутрішній відступ",
+    "show_announcement": "Показувати анонс",
+    "show_payment_icons": "Показувати іконки оплат",
+    "site_logo": "Логотип сайту",
+    "subtitle": "Підзаголовок",
+    "text": "Текст",
+    "text_style": "Стиль тексту"
+  },
+  "options": {
+    "alignment": {
+      "left": "Ліворуч",
+      "center": "По центру",
+      "right": "Праворуч"
+    },
+    "direction": {
+      "horizontal": "Горизонтально",
+      "vertical": "Вертикально"
+    },
+    "page_width": {
+      "narrow": "Вузька",
+      "wide": "Широка"
+    },
+    "size": {
+      "large": "Великий",
+      "small": "Малий"
+    },
+    "text_style": {
+      "title": "Заголовок",
+      "subtitle": "Підзаголовок",
+      "normal": "Звичайний текст"
+    }
+  }
+}
