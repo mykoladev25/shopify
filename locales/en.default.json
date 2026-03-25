@@ -20,7 +20,8 @@
     "taxes_note": "Taxes and shipping are calculated at checkout.",
     "title": "Cart",
     "update": "Update",
-    "remove": "Remove"
+    "remove": "Remove",
+    "close": "Close"
   },
   "customers": {
     "login": {

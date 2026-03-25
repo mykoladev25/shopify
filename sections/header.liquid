@@ -80,7 +80,11 @@
         <a href="{{ settings.account_url }}" aria-label="{{ 'customers.login.title' | t }}">{% render 'icon-account' %}</a>
       {% endif %}
 
-      <a href="{{ routes.cart_url }}" aria-label="{{ 'cart.title' | t }}">
+      <a
+        href="{{ routes.cart_url }}"
+        data-minicart-open
+        aria-label="{{ 'cart.title' | t }}"
+      >
         {% if cart.item_count > 0 %}
           <sup>{{ cart.item_count }}</sup>
         {% endif %}
@@ -88,12 +92,75 @@
         {% render 'icon-cart' %}
       </a>
     </div>
+    <dialog id="minicart-drawer" class="minicart-drawer">
+        <div class="minicart__header">
+          <h2 class="minicart__title">{{ 'cart.title' | t | default: 'Your Cart' }}</h2>
+          <button type="button" id="minicart-close" class="minicart__close-btn" aria-label="{{ 'cart.close' | t | default: 'Close' }}">
+            ✕
+          </button>
+        </div>
+
+        <div class="minicart__body">
+          {% if cart.item_count > 0 %}
+            <form action="{{ routes.cart_url }}" method="post" id="minicart-form" class="minicart__form">
+              <div class="minicart__items">
+                {% for item in cart.items %}
+                  <div class="minicart__item">
+                    <a href="{{ item.url }}" class="minicart__item-image">
+                      {% if item.image %}
+                        <img src="{{ item.image | image_url: width: 150 }}" alt="{{ item.title | escape }}" width="75" height="75" loading="lazy">
+                      {% endif %}
+                    </a>
+                    <div class="minicart__item-details">
+                      <a href="{{ item.url }}" class="minicart__item-title">{{ item.product.title }}</a>
+                      
+                      {% unless item.variant.title contains 'Default' %}
+                        <p class="minicart__item-variant">{{ item.variant.title }}</p>
+                      {% endunless %}
+                      
+                      <div class="minicart__item-price">{{ item.final_line_price | money }}</div>
+                      
+                      <div class="minicart__item-actions">
+                        <div class="minicart__quantity">
+                          <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="Quantity">
+                        </div>
+                        <a href="{{ item.url_to_remove }}" class="minicart__item-remove">Remove</a>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </form>
+          {% else %}
+            <div class="minicart__empty">
+              <p>Your cart is empty.</p>
+              <a href="{{ routes.all_products_collection_url }}" class="minicart__continue-btn">Continue shopping</a>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if cart.item_count > 0 %}
+          <div class="minicart__footer">
+            <div class="minicart__subtotal">
+              <span>Subtotal</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+            <p class="minicart__taxes-note">Taxes and shipping calculated at checkout.</p>
+            <button type="submit" form="minicart-form" name="checkout" class="minicart__checkout-btn">
+              Checkout
+            </button>
+          </div>
+        {% endif %}
+    </dialog>
   </div>
 </header>
 <script src="{{ 'header.js' | asset_url }}" defer></script>
+<script src="{{ 'minicart.js' | asset_url }}" defer></script>
+
 <style>
   {{ 'header-layout.css' | inline_asset_content }}
   {{ 'burger-menu.css' | inline_asset_content }}
+  {{ 'minicart.css' | inline_asset_content }}
 </style>
 
 {% schema %}

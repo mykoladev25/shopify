@@ -1,0 +1,807 @@
+{% liquid
+  assign section_label = section.settings.section_label
+  assign section_title = section.settings.title
+%}
+
+<style>
+  .best-sellers {
+    --bs-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --bs-color-text: #000000;
+    --bs-color-text-main-label: #535353;
+    --bs-color-text-muted: #9D9D9D;
+    --bs-color-border: #e5e5e5;
+    --bs-color-white: #fff;
+    --bs-color-sale: #e53935;
+    --bs-color-tag: #FFFFFF;
+    --bs-color-tag_text: #000000;
+    --bs-color-overlay: rgba(0, 0, 0, 0.5);
+    --bs-radius-lg: 20px;
+    --bs-radius-md: 12px;
+    --bs-radius-sm: 8px;
+    font-family: var(--bs-font-family);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  .best-sellers *,
+  .best-sellers *::before,
+  .best-sellers *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  .best-sellers__container {
+    border: 1px solid var(--bs-color-border);
+    border-radius: var(--bs-radius-lg);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .best-sellers__left {
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .best-sellers__subtitle {
+    font-size: 16px;
+    color: var(--bs-color-text-main-label);
+    margin-bottom: 8px;
+  }
+
+  .best-sellers__title {
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--bs-color-text);
+    margin-bottom: 24px;
+    line-height: 1.2;
+    text-transform: capitalize;
+  }
+
+  .best-sellers__tabs {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .best-sellers__tab {
+    border-top: 1px solid var(--bs-color-border);
+  }
+
+  .best-sellers__tab:last-child {
+    border-bottom: 1px solid var(--bs-color-border);
+  }
+
+  .best-sellers__tab-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--bs-color-text-muted);
+    transition: color 0.25s ease, font-weight 0.25s ease;
+  }
+
+  .best-sellers__tab-btn:hover {
+    color: var(--bs-color-text);
+  }
+
+  .best-sellers__tab-btn.is-active {
+    color: var(--bs-color-text);
+    font-weight: 600;
+  }
+
+  .best-sellers__right {
+    position: relative;
+    padding: 0 20px 20px;
+  }
+
+  .best-sellers__product {
+    display: none;
+    position: relative;
+    height: 100%;
+  }
+
+  .best-sellers__product.is-active {
+    display: block;
+  }
+
+  .best-sellers__product-image-wrap {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border-radius: var(--bs-radius-md);
+    aspect-ratio: 4 / 5;
+  }
+
+  .best-sellers__product-image-wrap a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .best-sellers__product-image-wrap picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .best-sellers__product-image-wrap img,
+  .best-sellers__product-image-wrap svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .best-sellers__product-image-wrap .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    background: #f5f5f5;
+  }
+
+  .best-sellers__tags {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 2;
+  }
+
+  .best-sellers__tag {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--bs-radius-sm);
+    background: var(--bs-color-tag);
+    color: var(--bs-color-tag_text);
+    line-height: 1.4;
+  }
+
+  .best-sellers__tag--sale {
+    background: var(--bs-color-sale);
+    color: var(--bs-color-white);
+  }
+
+  .best-sellers__actions {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  .best-sellers__action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--bs-radius-md);
+    background: var(--bs-color-white);
+    border: 1px solid var(--bs-color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+    padding: 0;
+  }
+
+  .best-sellers__action-btn--cart {
+    order: 0;
+  }
+
+  .best-sellers__action-btn--wishlist {
+    order: 1;
+  }
+
+  .best-sellers__action-btn:hover {
+    background: #f5f5f5;
+  }
+
+  .best-sellers__action-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .best-sellers__action-btn:disabled:hover {
+    background: var(--bs-color-white);
+  }
+
+  .best-sellers__action-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .best-sellers__icon--desktop {
+    display: none;
+  }
+
+  .best-sellers__icon--mobile {
+    display: inline-flex;
+  }
+
+  .best-sellers__product-info {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    background: var(--bs-color-white);
+    border-radius: var(--bs-radius-md);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    z-index: 2;
+    margin-top: -40px;
+    margin-left: 12px;
+    margin-right: 12px;
+    border: 1px solid var(--bs-color-border);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .best-sellers__product-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--bs-color-text);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .best-sellers__product-name:hover {
+    opacity: 0.7;
+  }
+
+  .best-sellers__product-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .best-sellers__price--current {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--bs-color-sale);
+  }
+
+  .best-sellers__price--compare {
+    font-size: 13px;
+    color: var(--bs-color-text-muted);
+    text-decoration: line-through;
+  }
+
+  .best-sellers__price--regular {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--bs-color-text);
+  }
+
+  /* Wishlist Modal */
+  .best-sellers__overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bs-color-overlay);
+    z-index: 9998;
+    cursor: pointer;
+  }
+
+  .best-sellers__overlay.is-visible {
+    display: block;
+  }
+
+  .best-sellers__modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bs-color-white);
+    border-radius: var(--bs-radius-lg);
+    padding: 32px;
+    width: 90%;
+    max-width: 450px;
+    z-index: 9999;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .best-sellers__modal.is-visible {
+    display: block;
+  }
+
+  .best-sellers__modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+    padding: 0;
+  }
+
+  .best-sellers__modal-close:hover {
+    background: #f5f5f5;
+  }
+
+  .best-sellers__modal-close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .best-sellers__modal-text {
+    font-size: 16px;
+    color: var(--bs-color-text);
+    line-height: 1.5;
+    padding-right: 24px;
+  }
+
+  /* Desktop overrides */
+  @media screen and (min-width: 769px) {
+    .best-sellers {
+      padding: 40px 20px;
+    }
+
+    .best-sellers__container {
+      grid-template-columns: 1fr 1fr;
+      min-height: 500px;
+    }
+
+    .best-sellers__left {
+      padding: 48px 40px;
+      justify-content: center;
+    }
+
+    .best-sellers__title {
+      font-size: 32px;
+      margin-bottom: 32px;
+    }
+
+    .best-sellers__tab-btn {
+      font-size: 16px;
+      padding: 16px 4px;
+    }
+
+    .best-sellers__right {
+      padding: 0;
+    }
+
+    .best-sellers__action-btn {
+      border-radius: 9999px;
+      width: 42px;
+      height: 42px;
+    }
+
+    .best-sellers__action-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .best-sellers__action-btn--wishlist {
+      order: 0;
+    }
+
+    .best-sellers__action-btn--cart {
+      order: 1;
+    }
+
+    .best-sellers__icon--desktop {
+      display: inline-flex;
+    }
+
+    .best-sellers__icon--mobile {
+      display: none;
+    }
+
+    .best-sellers__product-image-wrap {
+      height: 100%;
+      border-radius: 0;
+      aspect-ratio: auto;
+    }
+
+    .best-sellers__product-info {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      margin-top: 0;
+      margin-left: 0;
+      margin-right: 0;
+      border: none;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .best-sellers__product-name {
+      white-space: nowrap;
+    }
+  }
+</style>
+
+{% if section.blocks.size > 0 %}
+  <section class="best-sellers" data-section-id="{{ section.id }}">
+    <div class="best-sellers__container">
+      <div class="best-sellers__left">
+        {% if section_label != blank %}
+          <p class="best-sellers__subtitle">{{ section_label }}</p>
+        {% endif %}
+
+        {% if section_title != blank %}
+          <h2 class="best-sellers__title">{{ section_title }}</h2>
+        {% endif %}
+
+        <ul class="best-sellers__tabs" role="tablist">
+          {% for block in section.blocks %}
+            {% liquid
+              assign collection = block.settings.collection
+              assign custom_title = block.settings.collection_title
+              if custom_title != blank
+                assign tab_title = custom_title
+              elsif collection != blank
+                assign tab_title = collection.title
+              else
+                assign tab_title = 'Collection ' | append: forloop.index
+              endif
+            %}
+            <li class="best-sellers__tab" role="presentation">
+              <button
+                class="best-sellers__tab-btn{% if forloop.first %} is-active{% endif %}"
+                role="tab"
+                type="button"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-controls="bs-panel-{{ section.id }}-{{ block.id }}"
+                data-bs-tab-index="{{ forloop.index0 }}"
+                {{ block.shopify_attributes }}
+              >
+                <span>{{ tab_title }}</span>
+                {{ 'arrow-right.svg' | inline_asset_content }}
+              </button>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="best-sellers__right">
+        {% for block in section.blocks %}
+          {% liquid
+            assign collection = block.settings.collection
+            assign custom_product = block.settings.product
+            if custom_product != blank
+              assign product = custom_product
+            elsif collection != blank and collection.products.size > 0
+              assign product = collection.products.first
+            else
+              assign product = nil
+            endif
+
+            assign is_sold_out = false
+            if product != blank and product.available == false
+              assign is_sold_out = true
+            endif
+
+            assign first_available_variant = nil
+            if product != blank
+              for variant in product.variants
+                if variant.available and first_available_variant == nil
+                  assign first_available_variant = variant
+                endif
+              endfor
+              if first_available_variant == nil
+                assign first_available_variant = product.selected_or_first_available_variant
+              endif
+            endif
+          %}
+
+          <div
+            class="best-sellers__product{% if forloop.first %} is-active{% endif %}"
+            id="bs-panel-{{ section.id }}-{{ block.id }}"
+            role="tabpanel"
+            data-bs-product-index="{{ forloop.index0 }}"
+            data-bs-product-name="{{ product.title | escape }}"
+            data-bs-variant-id="{{ first_available_variant.id }}"
+            data-bs-sold-out="{{ is_sold_out }}"
+          >
+            <div class="best-sellers__product-image-wrap">
+              {% if product != blank and product.featured_image != blank %}
+                <a href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+                  <picture>
+                    <source
+                      media="(max-width: 768px)"
+                      srcset="
+                        {{ product.featured_image | image_url: width: 480 }} 1x,
+                        {{ product.featured_image | image_url: width: 960 }} 2x
+                      "
+                    >
+                    <source
+                      media="(min-width: 769px)"
+                      srcset="
+                        {{ product.featured_image | image_url: width: 700 }} 1x,
+                        {{ product.featured_image | image_url: width: 1400 }} 2x
+                      "
+                    >
+                    <img
+                      src="{{ product.featured_image | image_url: width: 700 }}"
+                      alt="{{ product.featured_image.alt | escape | default: product.title | escape }}"
+                      loading="lazy"
+                      width="{{ product.featured_image.width }}"
+                      height="{{ product.featured_image.height }}"
+                    >
+                  </picture>
+                </a>
+              {% elsif product != blank %}
+                <a href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                </a>
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </div>
+
+            {% if product != blank and product.tags.size > 0 %}
+              <div class="best-sellers__tags">
+                {% assign tag_count = 0 %}
+                {% for tag in product.tags %}
+                  {% if tag_count < 3 %}
+                    <span class="best-sellers__tag{% if tag == 'Sale' %} best-sellers__tag--sale{% endif %}">
+                      {{ tag }}
+                    </span>
+                    {% assign tag_count = tag_count | plus: 1 %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="best-sellers__actions">
+              <button
+                class="best-sellers__action-btn best-sellers__action-btn--cart"
+                type="button"
+                aria-label="Add to cart"
+                data-bs-add-to-cart
+                {% if is_sold_out %}disabled{% endif %}
+              >
+                {{ 'eye.svg' | inline_asset_content }}
+              </button>
+              <button
+                class="best-sellers__action-btn best-sellers__action-btn--wishlist"
+                type="button"
+                aria-label="Add to wishlist"
+                data-bs-wishlist
+              >
+                <span class="best-sellers__icon--mobile" aria-hidden="true">
+                  {{ 'wishlist.svg' | inline_asset_content }}
+                </span>
+                <span class="best-sellers__icon--desktop" aria-hidden="true">
+                  {{ 'heart.svg' | inline_asset_content }}
+                </span>
+              </button>
+            </div>
+
+            {% if product != blank %}
+              <div class="best-sellers__product-info">
+                <a href="{{ product.url }}" class="best-sellers__product-name">
+                  {{ product.title }}
+                </a>
+                <div class="best-sellers__product-price">
+                  {% if product.compare_at_price > product.price %}
+                    <span class="best-sellers__price--current">{{ product.price | money }}</span>
+                    <span class="best-sellers__price--compare">{{ product.compare_at_price | money }}</span>
+                  {% else %}
+                    <span class="best-sellers__price--regular">{{ product.price | money }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="best-sellers__overlay" data-bs-overlay></div>
+    <div class="best-sellers__modal" data-bs-modal role="dialog" aria-modal="true">
+      <button class="best-sellers__modal-close" type="button" data-bs-modal-close aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <p class="best-sellers__modal-text" data-bs-modal-text></p>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+      if (!section) return;
+
+      const tabs = section.querySelectorAll('[data-bs-tab-index]');
+      const panels = section.querySelectorAll('[data-bs-product-index]');
+      const overlay = section.querySelector('[data-bs-overlay]');
+      const modal = section.querySelector('[data-bs-modal]');
+      const modalText = section.querySelector('[data-bs-modal-text]');
+      const modalClose = section.querySelector('[data-bs-modal-close]');
+
+      function getActiveProduct() {
+        return section.querySelector('.best-sellers__product.is-active');
+      }
+
+      /* Tab switching */
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          if (this.classList.contains('is-active')) return;
+
+          tabs.forEach(function (t) {
+            t.classList.remove('is-active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          panels.forEach(function (p) {
+            p.classList.remove('is-active');
+          });
+
+          this.classList.add('is-active');
+          this.setAttribute('aria-selected', 'true');
+
+          var index = this.getAttribute('data-bs-tab-index');
+          var target = section.querySelector('[data-bs-product-index="' + index + '"]');
+          if (target) target.classList.add('is-active');
+        });
+      });
+
+      /* Wishlist modal */
+      function openModal(productName) {
+        modalText.textContent = productName + ' has been added to the your wishlist.';
+        overlay.classList.add('is-visible');
+        modal.classList.add('is-visible');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        overlay.classList.remove('is-visible');
+        modal.classList.remove('is-visible');
+        document.body.style.overflow = '';
+      }
+
+      section.querySelectorAll('[data-bs-wishlist]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var panel = this.closest('.best-sellers__product');
+          var name = panel ? panel.getAttribute('data-bs-product-name') : '';
+          openModal(name);
+        });
+      });
+
+      if (modalClose) modalClose.addEventListener('click', closeModal);
+      if (overlay) overlay.addEventListener('click', closeModal);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('is-visible')) {
+          closeModal();
+        }
+      });
+
+      /* Add to cart via Shopify Ajax Cart API */
+      section.querySelectorAll('[data-bs-add-to-cart]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var panel = this.closest('.best-sellers__product');
+          if (!panel) return;
+
+          var variantId = panel.getAttribute('data-bs-variant-id');
+          if (!variantId) return;
+
+          btn.disabled = true;
+
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: [{ id: parseInt(variantId, 10), quantity: 1 }] })
+          })
+            .then(function (response) {
+              if (!response.ok) throw new Error('Failed to add to cart');
+              return response.json();
+            })
+            .then(function () {
+              btn.disabled = false;
+            })
+            .catch(function () {
+              btn.disabled = false;
+            });
+        });
+      });
+    })();
+  </script>
+{% else %}
+  <section class="best-sellers" data-section-id="{{ section.id }}">
+    <div class="best-sellers__container">
+      <div class="best-sellers__left">
+        {% if section_label != blank %}
+          <p class="best-sellers__subtitle">{{ section_label }}</p>
+        {% endif %}
+        {% if section_title != blank %}
+          <h2 class="best-sellers__title">{{ section_title }}</h2>
+        {% endif %}
+        <p style="color: var(--bs-color-text-muted); font-size: 14px; padding: 16px 0;">
+          Add collection blocks in the theme editor to display products.
+        </p>
+      </div>
+      <div class="best-sellers__right" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 300px;">
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Best sellers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_label",
+      "label": "Section label",
+      "default": "Best sellers"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Trending Products"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "collection_title",
+          "label": "Collection title",
+          "info": "Overrides the default collection title if set."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Overrides the first product of the collection if set."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Best sellers",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

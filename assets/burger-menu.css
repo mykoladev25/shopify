@@ -76,11 +76,11 @@
     }
   }
 }
-dialog {
+dialog.mobile-drawer {
   --duration: 0.34s;
 
-  transition: 
-    translate var(--duration) ease-in-out, 
+  transition:
+    translate var(--duration) ease-in-out,
     display var(--duration) ease-in-out allow-discrete;
 
   &[open] {
