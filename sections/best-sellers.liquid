@@ -9,14 +9,13 @@
     --bs-color-text: #000000;
     --bs-color-text-main-label: #535353;
     --bs-color-text-muted: #9D9D9D;
-    --bs-color-border: #e5e5e5;
+    --bs-color-border: #DCDCDC;
     --bs-color-white: #fff;
-    --bs-color-sale: #e53935;
+    --bs-color-sale: #E41616;
     --bs-color-tag: #FFFFFF;
     --bs-color-tag_text: #000000;
     --bs-color-overlay: rgba(0, 0, 0, 0.5);
-    --bs-radius-lg: 20px;
-    --bs-radius-md: 12px;
+    --bs-radius-md: 16px;
     --bs-radius-sm: 8px;
     font-family: var(--bs-font-family);
     max-width: 1400px;
@@ -33,9 +32,6 @@
   }
 
   .best-sellers__container {
-    border: 1px solid var(--bs-color-border);
-    border-radius: var(--bs-radius-lg);
-    overflow: hidden;
     display: grid;
     grid-template-columns: 1fr;
   }
@@ -49,11 +45,11 @@
   .best-sellers__subtitle {
     font-size: 16px;
     color: var(--bs-color-text-main-label);
-    margin-bottom: 8px;
+    margin-bottom: 16px;
   }
 
   .best-sellers__title {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 500;
     color: var(--bs-color-text);
     margin-bottom: 24px;
@@ -71,6 +67,10 @@
     border-top: 1px solid var(--bs-color-border);
   }
 
+  .best-sellers__tab:first-child {
+    border-top: none;
+  }
+
   .best-sellers__tab:last-child {
     border-bottom: 1px solid var(--bs-color-border);
   }
@@ -80,12 +80,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 4px;
+    padding: 25px 4px;
     background: none;
     border: none;
     cursor: pointer;
     font-family: inherit;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 400;
     color: var(--bs-color-text-muted);
     transition: color 0.25s ease, font-weight 0.25s ease;
@@ -97,7 +97,7 @@
 
   .best-sellers__tab-btn.is-active {
     color: var(--bs-color-text);
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .best-sellers__right {
@@ -122,6 +122,8 @@
     overflow: hidden;
     border-radius: var(--bs-radius-md);
     aspect-ratio: 4 / 5;
+    background: #f5f5f5;
+    min-height: clamp(360px, 72vw, 520px);
   }
 
   .best-sellers__product-image-wrap a {
@@ -144,6 +146,28 @@
     display: block;
   }
 
+  .best-sellers__product-image-wrap svg {
+    max-width: 16px;
+  }
+
+  .best-sellers__tab-btn > svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .best-sellers__tab-btn > svg path,
+  .best-sellers__tab-btn > svg [stroke] {
+    stroke: var(--bs-color-text-muted) !important;
+  }
+
+  .best-sellers__tab-btn.is-active > svg path,
+  .best-sellers__tab-btn.is-active > svg [stroke],
+  .best-sellers__tab-btn:hover > svg path,
+  .best-sellers__tab-btn:hover > svg [stroke] {
+    stroke: var(--bs-color-text) !important;
+  }
+
   .best-sellers__product-image-wrap .placeholder-svg {
     width: 100%;
     height: 100%;
@@ -162,8 +186,8 @@
 
   .best-sellers__tag {
     display: inline-block;
-    padding: 4px 12px;
-    font-size: 12px;
+    padding: 8px 16px;
+    font-size: 14px;
     font-weight: 500;
     border-radius: var(--bs-radius-sm);
     background: var(--bs-color-tag);
@@ -189,7 +213,7 @@
   .best-sellers__action-btn {
     width: 40px;
     height: 40px;
-    border-radius: var(--bs-radius-md);
+    border-radius: var(--bs-radius-sm);
     background: var(--bs-color-white);
     border: 1px solid var(--bs-color-border);
     display: flex;
@@ -221,11 +245,6 @@
     background: var(--bs-color-white);
   }
 
-  .best-sellers__action-btn svg {
-    width: 18px;
-    height: 18px;
-  }
-
   .best-sellers__icon--desktop {
     display: none;
   }
@@ -235,29 +254,23 @@
   }
 
   .best-sellers__product-info {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    right: auto;
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
     background: var(--bs-color-white);
     border-radius: var(--bs-radius-md);
     padding: 14px 18px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    z-index: 2;
-    margin-top: -40px;
-    margin-left: 12px;
-    margin-right: 12px;
-    border: 1px solid var(--bs-color-border);
-    flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    justify-content: flex-start;
+    gap: 8px;
+    z-index: 2;
+    flex-direction: column;
   }
 
   .best-sellers__product-name {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     color: var(--bs-color-text);
     text-decoration: none;
@@ -265,6 +278,7 @@
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 24px;
   }
 
   .best-sellers__product-name:hover {
@@ -279,13 +293,13 @@
   }
 
   .best-sellers__price--current {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 500;
     color: var(--bs-color-sale);
   }
 
   .best-sellers__price--compare {
-    font-size: 13px;
+    font-size: 16px;
     color: var(--bs-color-text-muted);
     text-decoration: line-through;
   }
@@ -317,7 +331,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background: var(--bs-color-white);
-    border-radius: var(--bs-radius-lg);
+    border-radius: var(--bs-radius-md);
     padding: 32px;
     width: 90%;
     max-width: 450px;
@@ -368,9 +382,13 @@
       padding: 40px 20px;
     }
 
+    .best-sellers__product-image-wrap svg {
+      max-width: 24px;
+    }
+
     .best-sellers__container {
       grid-template-columns: 1fr 1fr;
-      min-height: 500px;
+      border: none;
     }
 
     .best-sellers__left {
@@ -379,13 +397,13 @@
     }
 
     .best-sellers__title {
-      font-size: 32px;
-      margin-bottom: 32px;
+      font-size: 38px;
+      margin-bottom: 64px;
     }
 
     .best-sellers__tab-btn {
-      font-size: 16px;
-      padding: 16px 4px;
+      font-size: 28px;
+      padding: 24px 8px;
     }
 
     .best-sellers__right {
@@ -393,9 +411,8 @@
     }
 
     .best-sellers__action-btn {
-      border-radius: 9999px;
-      width: 42px;
-      height: 42px;
+      width: 48px;
+      height: 48px;
     }
 
     .best-sellers__action-btn svg {
@@ -420,9 +437,13 @@
     }
 
     .best-sellers__product-image-wrap {
+      height: auto;
+      aspect-ratio: 4 / 3;
+      min-height: clamp(420px, 38vw, 640px);
+    }
+
+    .best-sellers__product-image-wrap a {
       height: 100%;
-      border-radius: 0;
-      aspect-ratio: auto;
     }
 
     .best-sellers__product-info {
@@ -430,13 +451,11 @@
       bottom: 16px;
       left: 16px;
       right: 16px;
-      margin-top: 0;
-      margin-left: 0;
-      margin-right: 0;
-      border: none;
       flex-direction: row;
       align-items: center;
       gap: 12px;
+      justify-content: space-between;
+      padding: 24px 32px;
     }
 
     .best-sellers__product-name {
@@ -562,62 +581,61 @@
               {% else %}
                 {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
               {% endif %}
-            </div>
-
-            {% if product != blank and product.tags.size > 0 %}
-              <div class="best-sellers__tags">
-                {% assign tag_count = 0 %}
-                {% for tag in product.tags %}
-                  {% if tag_count < 3 %}
-                    <span class="best-sellers__tag{% if tag == 'Sale' %} best-sellers__tag--sale{% endif %}">
-                      {{ tag }}
-                    </span>
-                    {% assign tag_count = tag_count | plus: 1 %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-            {% endif %}
-
-            <div class="best-sellers__actions">
-              <button
-                class="best-sellers__action-btn best-sellers__action-btn--cart"
-                type="button"
-                aria-label="Add to cart"
-                data-bs-add-to-cart
-                {% if is_sold_out %}disabled{% endif %}
-              >
-                {{ 'eye.svg' | inline_asset_content }}
-              </button>
-              <button
-                class="best-sellers__action-btn best-sellers__action-btn--wishlist"
-                type="button"
-                aria-label="Add to wishlist"
-                data-bs-wishlist
-              >
-                <span class="best-sellers__icon--mobile" aria-hidden="true">
-                  {{ 'wishlist.svg' | inline_asset_content }}
-                </span>
-                <span class="best-sellers__icon--desktop" aria-hidden="true">
-                  {{ 'heart.svg' | inline_asset_content }}
-                </span>
-              </button>
-            </div>
-
-            {% if product != blank %}
-              <div class="best-sellers__product-info">
-                <a href="{{ product.url }}" class="best-sellers__product-name">
-                  {{ product.title }}
-                </a>
-                <div class="best-sellers__product-price">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="best-sellers__price--current">{{ product.price | money }}</span>
-                    <span class="best-sellers__price--compare">{{ product.compare_at_price | money }}</span>
-                  {% else %}
-                    <span class="best-sellers__price--regular">{{ product.price | money }}</span>
-                  {% endif %}
+              {% if product != blank and product.tags.size > 0 %}
+                <div class="best-sellers__tags">
+                  {% assign tag_count = 0 %}
+                  {% for tag in product.tags %}
+                    {% if tag_count < 3 %}
+                      <span class="best-sellers__tag{% if tag == 'Sale' %} best-sellers__tag--sale{% endif %}">
+                        {{ tag }}
+                      </span>
+                      {% assign tag_count = tag_count | plus: 1 %}
+                    {% endif %}
+                  {% endfor %}
                 </div>
+              {% endif %}
+
+              <div class="best-sellers__actions">
+                <button
+                  class="best-sellers__action-btn best-sellers__action-btn--cart"
+                  type="button"
+                  aria-label="Add to cart"
+                  data-bs-add-to-cart
+                  {% if is_sold_out %}disabled{% endif %}
+                >
+                  {{ 'eye.svg' | inline_asset_content }}
+                </button>
+                <button
+                  class="best-sellers__action-btn best-sellers__action-btn--wishlist"
+                  type="button"
+                  aria-label="Add to wishlist"
+                  data-bs-wishlist
+                >
+                  <span class="best-sellers__icon--mobile" aria-hidden="true">
+                    {{ 'wishlist.svg' | inline_asset_content }}
+                  </span>
+                  <span class="best-sellers__icon--desktop" aria-hidden="true">
+                    {{ 'heart.svg' | inline_asset_content }}
+                  </span>
+                </button>
               </div>
-            {% endif %}
+
+              {% if product != blank %}
+                <div class="best-sellers__product-info">
+                  <a href="{{ product.url }}" class="best-sellers__product-name">
+                    {{ product.title }}
+                  </a>
+                  <div class="best-sellers__product-price">
+                    {% if product.compare_at_price > product.price %}
+                      <span class="best-sellers__price--current">{{ product.price | money }}</span>
+                      <span class="best-sellers__price--compare">{{ product.compare_at_price | money }}</span>
+                    {% else %}
+                      <span class="best-sellers__price--regular">{{ product.price | money }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
           </div>
         {% endfor %}
       </div>
