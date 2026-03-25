@@ -1,5 +1,4 @@
 .best-sellers {
-  --bs-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --bs-color-text: #000000;
   --bs-color-text-main-label: #535353;
   --bs-color-text-muted: #9d9d9d;
@@ -11,7 +10,7 @@
   --bs-color-overlay: rgba(0, 0, 0, 0.5);
   --bs-radius-md: 16px;
   --bs-radius-sm: 8px;
-  font-family: var(--bs-font-family);
+  font-family: var(--font-primary--family);
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
