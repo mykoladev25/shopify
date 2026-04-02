@@ -20,48 +20,18 @@
         "home_banner_link": "shopify://collections/all"
       }
     },
-    "best_sellers_qBeHj7": {
-      "type": "best-sellers",
-      "blocks": {
-        "collection_RRTgVC": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "collection_title": "Mantra Rings",
-            "product": "butterfly-hope-and-rebirth"
-          }
-        },
-        "collection_46qVbk": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "collection_title": "CharityBands®",
-            "product": "dzhyp"
-          }
-        },
-        "collection_qtm7Nf": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "collection_title": "",
-            "product": "kabriolet-2-0"
-          }
-        }
-      },
-      "block_order": [
-        "collection_RRTgVC",
-        "collection_46qVbk",
-        "collection_qtm7Nf"
-      ],
-      "name": "Best sellers",
+    "featured_collection_qHEFXH": {
+      "type": "featured-collection",
+      "name": "t:general.featured_collection",
       "settings": {
-        "section_label": "Best sellers",
-        "title": "Trending Products"
+        "title": "Bestsellers",
+        "collection": "частіше-за-все-купують",
+        "products_to_show": 4
       }
     }
   },
   "order": [
     "main",
-    "best_sellers_qBeHj7"
+    "featured_collection_qHEFXH"
   ]
 }
