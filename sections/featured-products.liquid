@@ -1,188 +1,70 @@
-{% liquid
-  assign section_style = '--section-top:' | append: section.settings.padding_top | append: 'px;--section-bottom:' | append: section.settings.padding_bottom | append: 'px;--fp-cols:' | append: section.settings.columns_mobile | append: ';--fp-cols-lg:' | append: section.settings.columns_desktop | append: ';'
-  assign manual_count = 0
-  for block in section.blocks
-    if block.settings.product != blank
-      assign manual_count = manual_count | plus: 1
-    endif
-  endfor
-%}
+{%- style -%}
+  .featured-products {
+    padding: var(--space-12) var(--space-4);
+    background: var(--color-bg);
+  }
+  .featured-products__header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+  .featured-products__title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    margin: 0;
+  }
+  .featured-products__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--space-6);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+{%- endstyle -%}
 
-<section class="section-shell featured-products" style="{{ section_style }}">
-  <div class="section-shell__inner">
-    <div class="featured-products__header section-heading--split">
-      <div class="section-heading">
-        {% if section.settings.eyebrow != blank %}
-          <p class="section-heading__eyebrow">{{ section.settings.eyebrow }}</p>
-        {% endif %}
-
-        {% if section.settings.heading != blank %}
-          <h2>{{ section.settings.heading }}</h2>
-        {% endif %}
-
-        {% if section.settings.text != blank %}
-          <p class="section-heading__text">{{ section.settings.text }}</p>
-        {% endif %}
-      </div>
-
-      {% if section.settings.cta_label != blank and section.settings.cta_link != blank %}
-        <div class="featured-products__header-action">
-          <a href="{{ section.settings.cta_link }}" class="button button--secondary">
-            {{ section.settings.cta_label }}
-          </a>
-        </div>
-      {% endif %}
-    </div>
-
-    <div class="featured-products__grid product-grid">
-      {% if manual_count > 0 %}
-        {% for block in section.blocks %}
-          {% if block.settings.product != blank %}
-            <div {{ block.shopify_attributes }}>
-              {% liquid
-                assign eager = false
-                if forloop.index <= section.settings.eager_image_count
-                  assign eager = true
-                endif
-              %}
-              {% render 'product-card', product: block.settings.product, eager_primary_image: eager %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% elsif section.settings.collection != blank %}
-        {% for product in section.settings.collection.products limit: section.settings.products_to_show %}
-          {% liquid
-            assign eager = false
-            if forloop.index <= section.settings.eager_image_count
-              assign eager = true
-            endif
-          %}
-          {% render 'product-card', product: product, eager_primary_image: eager %}
-        {% endfor %}
-      {% else %}
-        {% for i in (1..4) %}
-          <article class="product-card product-card--placeholder surface-card" aria-hidden="true"></article>
-        {% endfor %}
-      {% endif %}
-    </div>
+<section class="featured-products">
+  <div class="featured-products__header">
+    <h2 class="featured-products__title">{{ section.settings.title | escape }}</h2>
+  </div>
+  
+  <div class="featured-products__grid">
+    {%- assign collection = collections[section.settings.collection] -%}
+    {%- for product in collection.products limit: section.settings.products_to_show -%}
+      {% render 'product-card', product: product %}
+    {%- else -%}
+      {%- for i in (1..4) -%}
+        {% render 'product-card', product: blank %}
+      {%- endfor -%}
+    {%- endfor -%}
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Featured products",
+  "name": "Featured Products",
   "settings": [
     {
       "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Почати легко"
-    },
-    {
-      "type": "text",
-      "id": "heading",
+      "id": "title",
       "label": "Heading",
-      "default": "Іграшки, які найчастіше обирають для подарунка і першого знайомства."
-    },
-    {
-      "type": "textarea",
-      "id": "text",
-      "label": "Text",
-      "default": "Короткий шлях до речей, які добре виглядають, приємно даруються і легко замовляються."
+      "default": "Обране для ваших малюків"
     },
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection source",
-      "info": "Used when no product blocks are set. If you add one or more product blocks, those products are shown instead of the collection."
+      "label": "Collection"
     },
     {
       "type": "range",
       "id": "products_to_show",
-      "label": "Products to show (collection mode)",
       "min": 2,
-      "max": 8,
+      "max": 12,
       "step": 1,
-      "default": 4
-    },
-    {
-      "type": "select",
-      "id": "columns_mobile",
-      "label": "Columns on mobile",
-      "options": [
-        { "value": "1", "label": "1" },
-        { "value": "2", "label": "2" }
-      ],
-      "default": "2"
-    },
-    {
-      "type": "range",
-      "id": "columns_desktop",
-      "label": "Columns on desktop",
-      "min": 2,
-      "max": 4,
-      "step": 1,
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "eager_image_count",
-      "label": "Load first images eagerly",
-      "min": 0,
-      "max": 4,
-      "step": 1,
-      "default": 2,
-      "info": "Improves LCP for the first tiles; keep low for performance."
-    },
-    {
-      "type": "text",
-      "id": "cta_label",
-      "label": "CTA label",
-      "default": "Увесь каталог"
-    },
-    {
-      "type": "url",
-      "id": "cta_link",
-      "label": "CTA link"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Top spacing",
-      "min": 12,
-      "max": 140,
-      "step": 4,
-      "unit": "px",
-      "default": 32
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Bottom spacing",
-      "min": 24,
-      "max": 140,
-      "step": 4,
-      "unit": "px",
-      "default": 72
-    }
-  ],
-  "blocks": [
-    {
-      "type": "product",
-      "name": "Product",
-      "limit": 8,
-      "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Product"
-        }
-      ]
+      "default": 4,
+      "label": "Products to show"
     }
   ],
   "presets": [
     {
-      "name": "Featured products"
+      "name": "Featured Products"
     }
   ]
 }

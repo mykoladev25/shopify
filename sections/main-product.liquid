@@ -1,609 +1,127 @@
-{% liquid
-  assign current_variant = product.selected_or_first_available_variant
-  assign age_group = product.metafields.custom.age_group.value | default: product.metafields.custom.age_group
-  assign material = product.metafields.custom.material.value | default: product.metafields.custom.material
-  assign handmade_note = product.metafields.custom.handmade_note.value | default: product.metafields.custom.handmade_note
-  assign safety_note = product.metafields.custom.safety_note.value | default: product.metafields.custom.safety_note
-  assign benefits = product.metafields.custom.short_benefits.value
-  assign giftable = product.metafields.custom.giftable.value
-%}
+{%- style -%}
+  .product-main {
+    padding: var(--space-8) var(--space-4);
+    background: var(--color-bg);
+  }
+  .product-main__wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  @media (min-width: 768px) {
+    .product-main__wrapper {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
+    }
+  }
+  .product-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .product-gallery__main {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-contrast);
+    border: 1px solid var(--color-border);
+  }
+  .product-gallery__main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .product-info__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 0;
+    line-height: 1.1;
+  }
+  .product-info__price {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .product-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .product-form__quantity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .product-form__quantity input {
+    width: 60px;
+    padding: var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    background: var(--color-surface);
+    color: var(--color-text-dark);
+  }
+  .product-info__description {
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+{%- endstyle -%}
 
-<section
-  class="section-shell product-page"
-  style="--section-top: 20px; --section-bottom: 96px;"
-  data-product-section
-  data-section-id="{{ section.id }}"
-  data-low-stock-threshold="{{ section.settings.low_stock_threshold }}"
->
-  <div class="section-shell__inner">
-    <div class="product-page__grid">
-      <div class="product-gallery" data-product-gallery>
-        <div class="product-gallery__viewport" data-gallery-viewport>
-          {% if product.media.size > 0 %}
-            {% for media in product.media %}
-              <article class="product-gallery__slide" data-media-id="{{ media.id }}">
-                {% case media.media_type %}
-                  {% when 'image' %}
-                    {% if forloop.first %}
-                      {{ media | image_url: width: 1400 | image_tag: widths: '420,640,840,1080,1400', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'eager', fetchpriority: 'high', alt: media.alt | default: product.title }}
-                    {% else %}
-                      {{ media | image_url: width: 1400 | image_tag: widths: '420,640,840,1080,1400', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: media.alt | default: product.title }}
-                    {% endif %}
-                  {% else %}
-                    {{ media | media_tag: image_size: '1400x', controls: true, autoplay: false, loop: false, preload: 'none' }}
-                {% endcase %}
-              </article>
-            {% endfor %}
-          {% else %}
-            <article class="product-gallery__slide">
-              {{ 'product-1' | placeholder_svg_tag }}
-            </article>
-          {% endif %}
-        </div>
-
-        {% if product.media.size > 1 %}
-          <div class="product-gallery__thumbs">
-            {% for media in product.media %}
-              <button
-                type="button"
-                class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}"
-                data-gallery-thumb="{{ media.id }}"
-                aria-label="Show media {{ forloop.index }}"
-              >
-                {% if media.preview_image != blank %}
-                  {{ media.preview_image | image_url: width: 160 | image_tag: widths: '80,120,160', sizes: '80px', loading: 'lazy', alt: media.preview_image.alt | default: product.title }}
-                {% endif %}
-              </button>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
-
-      <div class="product-page__content">
-        <div class="product-page__purchase" data-purchase-box>
-          <div class="product-page__title-wrap">
-            <div class="badge-list">
-              {% if product.metafields.custom.badge_label.value != blank %}
-                {% render 'badge', label: product.metafields.custom.badge_label.value, tone: 'accent' %}
-              {% elsif product.tags contains 'Bestseller' %}
-                {% render 'badge', label: 'theme.bestseller' | t, tone: 'accent' %}
-              {% endif %}
-
-              {% if giftable == true %}
-                {% render 'badge', label: 'theme.gift_ready' | t %}
-              {% endif %}
-
-              {% if age_group != blank %}
-                {% render 'badge', label: age_group %}
-              {% endif %}
-            </div>
-
-            <h1>{{ product.title }}</h1>
-
-            {% if handmade_note != blank %}
-              <p class="product-page__subcopy">{{ handmade_note }}</p>
-            {% endif %}
-
-            {% render 'price', product: product, variant: current_variant, show_note: true, note: section.settings.price_disclaimer %}
-
-            <div class="product-page__status">
-              <span>
-                <strong
-                  data-availability-text
-                  data-ready-to-ship-label="{{ 'theme.ready_to_ship' | t }}"
-                  data-sold-out-label="{{ 'product.sold_out' | t }}"
-                >
-                  {% if current_variant.available %}{{ 'theme.ready_to_ship' | t }}{% else %}{{ 'product.sold_out' | t }}{% endif %}
-                </strong>
-              </span>
-              {% if material != blank %}
-                <span>{{ material }}</span>
-              {% endif %}
-              {% if section.settings.shipping_note != blank %}
-                <span>{{ section.settings.shipping_note }}</span>
-              {% endif %}
-            </div>
-
-            <p class="product-form__error" data-stock-message role="status"></p>
-          </div>
-
-          <div class="meta-pills">
-            {% if age_group != blank %}
-              <span class="meta-pill">
-                {% render 'icon-ui', icon: 'star' %}
-                {{ age_group }}
-              </span>
-            {% endif %}
-
-            {% if safety_note != blank %}
-              <span class="meta-pill">
-                {% render 'icon-ui', icon: 'shield' %}
-                {{ safety_note }}
-              </span>
-            {% endif %}
-
-            {% if giftable == true %}
-              <span class="meta-pill">
-                {% render 'icon-ui', icon: 'gift' %}
-                {{ section.settings.gift_note }}
-              </span>
-            {% endif %}
-          </div>
-
-          {% form 'product', product, data-product-form: '', data-product-title: product.title, class: 'product-form' %}
-            {% unless product.has_only_default_variant %}
-              {% for option in product.options_with_values %}
-                <fieldset class="product-form__group">
-                  <legend class="product-form__legend">{{ option.name }}</legend>
-                  <div class="product-form__option-values">
-                    {% for value in option.values %}
-                      {% assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index %}
-                      <input
-                        class="visually-hidden product-form__option-input"
-                        type="radio"
-                        name="options[{{ option.name | escape }}]"
-                        value="{{ value | escape }}"
-                        id="{{ input_id }}"
-                        {% if option.selected_value == value %}checked{% endif %}
-                        data-variant-option
-                      >
-                      <label class="product-form__option-label" for="{{ input_id }}">{{ value }}</label>
-                    {% endfor %}
-                  </div>
-                </fieldset>
-              {% endfor %}
-            {% endunless %}
-
-            <div class="product-form__group{% unless product.has_only_default_variant %} product-form__variant-fallback--enhanced{% endunless %}">
-              <label class="product-form__label visually-hidden" for="variant-select-{{ section.id }}">Variant</label>
-              <select class="product-form__variant-fallback{% unless product.has_only_default_variant %} product-form__variant-fallback--enhanced{% endunless %}" id="variant-select-{{ section.id }}" name="id" data-variant-id-select data-variant-id-input>
-                {% for variant in product.variants %}
-                  <option value="{{ variant.id }}" {% if variant == current_variant %}selected{% endif %}>
-                    {{ variant.title }} - {{ variant.price | money }}
-                  </option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="product-form__inline">
-              <label class="product-form__label" for="quantity-{{ section.id }}">{{ 'theme.quantity' | t }}</label>
-              <div class="quantity" data-quantity>
-                <button type="button" aria-label="{{ 'theme.decrease_quantity' | t }}" data-quantity-button="decrease">
-                  {% render 'icon-ui', icon: 'minus' %}
-                </button>
-                <input id="quantity-{{ section.id }}" type="number" name="quantity" value="1" min="1" inputmode="numeric">
-                <button type="button" aria-label="{{ 'theme.increase_quantity' | t }}" data-quantity-button="increase">
-                  {% render 'icon-ui', icon: 'plus' %}
-                </button>
-              </div>
-            </div>
-
-            <div class="product-form__submit-wrap">
-              <button type="submit" class="button button--full" data-product-submit>
-                <span class="button__spinner" aria-hidden="true"></span>
-                <span
-                  class="button__label"
-                  data-add-to-cart-label="{{ 'product.add_to_cart' | t }}"
-                  data-sold-out-label="{{ 'product.sold_out' | t }}"
-                >
-                  {{ 'product.add_to_cart' | t }}
-                </span>
-              </button>
-              <p class="product-form__error" data-product-form-error role="status"></p>
-
-              {% if section.settings.show_dynamic_checkout %}
-                {{ form | payment_button }}
-              {% endif %}
-            </div>
-          {% endform %}
-
-          {% assign trust_count = 0 %}
-          {% for block in section.blocks %}
-            {% if block.type == 'trust_point' %}
-              {% assign trust_count = trust_count | plus: 1 %}
-            {% endif %}
-          {% endfor %}
-
-          {% if trust_count > 0 %}
-            <div class="product-form__trust">
-              <div class="trust-points">
-                {% for block in section.blocks %}
-                  {% if block.type == 'trust_point' %}
-                    <div class="trust-points__item" {{ block.shopify_attributes }}>
-                      <span class="icon-circle">
-                        {% render 'icon-ui', icon: block.settings.icon %}
-                      </span>
-                      <div>
-                        <strong>{{ block.settings.heading }}</strong>
-                        {% if block.settings.text != blank %}
-                          <p>{{ block.settings.text }}</p>
-                        {% endif %}
-                      </div>
-                    </div>
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-          {% endif %}
-
-          {% if benefits != blank %}
-            <ul class="benefits-list">
-              {% for item in benefits %}
-                <li>
-                  <span class="icon-circle">
-                    {% render 'icon-ui', icon: 'check' %}
-                  </span>
-                  <span>{{ item }}</span>
-                </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-
-          {% if section.settings.returns_note != blank %}
-            <p class="product-page__policy-note">{{ section.settings.returns_note }}</p>
-          {% endif %}
-
-          {% for block in section.blocks %}
-            {% if block.type == 'gift_panel' %}
-              <div class="gift-panel surface-card" {{ block.shopify_attributes }}>
-                {% if block.settings.heading != blank %}
-                  <h3 class="gift-panel__heading">{{ block.settings.heading }}</h3>
-                {% endif %}
-                {% if block.settings.text != blank %}
-                  <div class="gift-panel__text rte">{{ block.settings.text }}</div>
-                {% endif %}
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-
-        <div class="accordion-list">
-          {% if product.description != blank %}
-            <details class="accordion" open>
-              <summary>
-                <span>{{ 'theme.about_toy' | t }}</span>
-                {% render 'icon-ui', icon: 'chevron' %}
-              </summary>
-              <div class="accordion__content rte">
-                {{ product.description }}
-              </div>
-            </details>
-          {% endif %}
-
-          {% for block in section.blocks %}
-            {% if block.type == 'detail' %}
-              <details class="accordion" {{ block.shopify_attributes }}>
-                <summary>
-                  <span>{{ block.settings.heading }}</span>
-                  {% render 'icon-ui', icon: 'chevron' %}
-                </summary>
-                <div class="accordion__content rte">
-                  {{ block.settings.text }}
-                </div>
-              </details>
-            {% endif %}
-          {% endfor %}
-        </div>
+<section class="product-main">
+  <div class="product-main__wrapper">
+    <div class="product-gallery">
+      <div class="product-gallery__main">
+        {%- if product.featured_image -%}
+          <img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title | escape }}" loading="eager">
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag }}
+        {%- endif -%}
       </div>
     </div>
-
-    {% assign faq_count = 0 %}
-    {% assign review_count = 0 %}
-    {% assign manual_related_count = 0 %}
-
-    {% for block in section.blocks %}
-      {% case block.type %}
-        {% when 'faq' %}
-          {% assign faq_count = faq_count | plus: 1 %}
-        {% when 'review' %}
-          {% assign review_count = review_count | plus: 1 %}
-        {% when 'complementary_product' %}
-          {% if block.settings.product != blank %}
-            {% assign manual_related_count = manual_related_count | plus: 1 %}
-          {% endif %}
-      {% endcase %}
-    {% endfor %}
-
-    {% if faq_count > 0 %}
-      <div class="product-page__faq section-shell" style="--section-top: 28px; --section-bottom: 0;">
-        <div class="section-heading">
-          <p class="section-heading__eyebrow">{{ 'theme.faq' | t }}</p>
-          <h2>{{ section.settings.faq_heading }}</h2>
-        </div>
-        <div class="accordion-list">
-          {% for block in section.blocks %}
-            {% if block.type == 'faq' %}
-              <details class="accordion" {{ block.shopify_attributes }}>
-                <summary>
-                  <span>{{ block.settings.question }}</span>
-                  {% render 'icon-ui', icon: 'chevron' %}
-                </summary>
-                <div class="accordion__content rte">
-                  {{ block.settings.answer }}
-                </div>
-              </details>
-            {% endif %}
-          {% endfor %}
-        </div>
+    
+    <div class="product-info">
+      <h1 class="product-info__title">{{ product.title | default: 'Еко-іграшка з дерева' }}</h1>
+      <div class="product-info__price">{{ product.price | default: 250000 | money }}</div>
+      
+      <div class="product-info__description">
+        {{ product.description | default: '<p>Чудова дерев’яна іграшка, створена з любов’ю та турботою про вашу дитину. Екологічні матеріали, безпечні фарби.</p>' }}
       </div>
-    {% endif %}
-
-    {% if review_count > 0 %}
-      <div class="product-page__reviews section-shell" style="--section-top: 36px; --section-bottom: 0;">
-        <div class="section-heading">
-          <p class="section-heading__eyebrow">{{ 'theme.parent_feedback' | t }}</p>
-          <h2>{{ section.settings.review_heading }}</h2>
+      
+      <form action="/cart/add" method="post" class="product-form" id="product-form-{{ section.id }}">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        
+        <div class="product-form__quantity">
+          <label for="Quantity-{{ section.id }}">Кількість</label>
+          <input type="number" id="Quantity-{{ section.id }}" name="quantity" value="1" min="1" form="product-form-{{ section.id }}">
         </div>
-        <div class="review-grid">
-          {% for block in section.blocks %}
-            {% if block.type == 'review' %}
-              <article class="review-card surface-card" {{ block.shopify_attributes }}>
-                <div class="badge-list">
-                  {% render 'badge', label: block.settings.label | default: ('theme.verified_order' | t) %}
-                </div>
-                <h3>{{ block.settings.quote }}</h3>
-                {% if block.settings.text != blank %}
-                  <p>{{ block.settings.text }}</p>
-                {% endif %}
-                <p class="review-card__author">{{ block.settings.author }}</p>
-              </article>
-            {% endif %}
-          {% endfor %}
-        </div>
+        
+        <button type="submit" class="btn btn--full" {% unless product.available or product == blank %}disabled{% endunless %}>
+          {%- if product.available or product == blank -%}
+            Додати в кошик
+          {%- else -%}
+            Немає в наявності
+          {%- endif -%}
+        </button>
+      </form>
+      
+      <div class="trust-mini" style="margin-top: var(--space-4); font-size: 0.875rem; color: var(--color-text);">
+        <p>✓ Екологічні матеріали, сертифіковані для найменших.</p>
+        <p>✓ Працюємо офіційно. Безпечна покупка.</p>
       </div>
-    {% endif %}
-
-    {% assign related_source_collection = product.collections.first %}
-    {% if manual_related_count > 0 or related_source_collection != blank %}
-      <div class="product-page__related section-shell" style="--section-top: 36px; --section-bottom: 0;">
-        <div class="section-heading section-heading--split">
-          <div>
-            <p class="section-heading__eyebrow">{{ 'theme.keep_browsing' | t }}</p>
-            <h2>{{ section.settings.related_heading }}</h2>
-          </div>
-        </div>
-
-        <div class="product-grid">
-          {% if manual_related_count > 0 %}
-            {% for block in section.blocks %}
-              {% if block.type == 'complementary_product' and block.settings.product != blank %}
-                {% render 'product-card', product: block.settings.product %}
-              {% endif %}
-            {% endfor %}
-          {% elsif related_source_collection != blank %}
-            {% assign related_limit = 0 %}
-            {% for related_product in related_source_collection.products %}
-              {% if related_product.id != product.id and related_limit < 4 %}
-                {% render 'product-card', product: related_product %}
-                {% assign related_limit = related_limit | plus: 1 %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-        </div>
-      </div>
-    {% endif %}
-  </div>
-
-  <div class="sticky-atc" data-sticky-atc>
-    <div class="sticky-atc__inner">
-      <div class="sticky-atc__meta">
-        <strong>{{ product.title }}</strong>
-        <span data-sticky-price>{{ current_variant.price | money }}</span>
-      </div>
-      <button type="button" class="button" data-sticky-atc-button>
-        {{ 'product.add_to_cart' | t }}
-      </button>
     </div>
   </div>
-
-  <script type="application/json" data-product-json>
-    {{ product | json }}
-  </script>
 </section>
 
 {% schema %}
 {
-  "name": "Main product",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_dynamic_checkout",
-      "label": "Show dynamic checkout button",
-      "default": false
-    },
-    {
-      "type": "textarea",
-      "id": "price_disclaimer",
-      "label": "Price note",
-      "info": "Shown under the price when the product is available. Leave blank to use the theme translation."
-    },
-    {
-      "type": "textarea",
-      "id": "returns_note",
-      "label": "Returns, exchanges, or care note",
-      "default": "Need to adjust sizing or packaging? Message us before dispatch — we answer clearly and quickly."
-    },
-    {
-      "type": "text",
-      "id": "shipping_note",
-      "label": "Shipping note",
-      "default": "Реальні строки відправки: 1-3 робочі дні"
-    },
-    {
-      "type": "text",
-      "id": "gift_note",
-      "label": "Gift note label",
-      "default": "Готово для вручення"
-    },
-    {
-      "type": "range",
-      "id": "low_stock_threshold",
-      "label": "Low stock threshold",
-      "min": 0,
-      "max": 20,
-      "step": 1,
-      "default": 5
-    },
-    {
-      "type": "text",
-      "id": "faq_heading",
-      "label": "FAQ heading",
-      "default": "Що важливо знати перед замовленням"
-    },
-    {
-      "type": "text",
-      "id": "review_heading",
-      "label": "Review heading",
-      "default": "Чому цю іграшку обирають повторно"
-    },
-    {
-      "type": "text",
-      "id": "related_heading",
-      "label": "Related heading",
-      "default": "Вам також може сподобатись"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "gift_panel",
-      "name": "Gift messaging",
-      "limit": 2,
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Gift-ready presentation"
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>Calm, finished packaging parents feel confident handing over — no loud plastics or busy inserts.</p>"
-        }
-      ]
-    },
-    {
-      "type": "trust_point",
-      "name": "Trust point",
-      "limit": 4,
-      "settings": [
-        {
-          "type": "select",
-          "id": "icon",
-          "label": "Icon",
-          "options": [
-            { "value": "handmade", "label": "Handmade" },
-            { "value": "shipping", "label": "Shipping" },
-            { "value": "shield", "label": "Safety" },
-            { "value": "gift", "label": "Gift" }
-          ],
-          "default": "handmade"
-        },
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Зроблено руками"
-        },
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Text",
-          "default": "У кожній деталі відчутна уважна майстерність."
-        }
-      ]
-    },
-    {
-      "type": "detail",
-      "name": "Detail accordion",
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Матеріали та фактура"
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>Природна фактура, продумані покриття і приємне відчуття речі в руках.</p>"
-        }
-      ]
-    },
-    {
-      "type": "faq",
-      "name": "FAQ",
-      "settings": [
-        {
-          "type": "text",
-          "id": "question",
-          "label": "Question",
-          "default": "Чи підійде ця іграшка як подарунок?"
-        },
-        {
-          "type": "richtext",
-          "id": "answer",
-          "label": "Answer",
-          "default": "<p>Так. Вона приїжджає з подачею, яка виглядає доречно і без зайвого клопоту.</p>"
-        }
-      ]
-    },
-    {
-      "type": "review",
-      "name": "Review",
-      "settings": [
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Label",
-          "default": "Підтверджене замовлення"
-        },
-        {
-          "type": "text",
-          "id": "quote",
-          "label": "Quote",
-          "default": "Дуже тепла річ: гарно виглядає, спокійно дарується і приїхала вчасно."
-        },
-        {
-          "type": "textarea",
-          "id": "text",
-          "label": "Supporting text"
-        },
-        {
-          "type": "text",
-          "id": "author",
-          "label": "Author",
-          "default": "Марія, Київ"
-        }
-      ]
-    },
-    {
-      "type": "complementary_product",
-      "name": "Complementary product",
-      "limit": 4,
-      "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Product"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Main product",
-      "blocks": [
-        { "type": "trust_point" },
-        { "type": "trust_point" },
-        { "type": "gift_panel" },
-        { "type": "detail" },
-        { "type": "faq" },
-        { "type": "review" }
-      ]
-    }
-  ]
+  "name": "Main Product",
+  "tag": "section",
+  "settings": []
 }
 {% endschema %}

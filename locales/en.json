@@ -8,133 +8,18 @@
  * ------------------------------------------------------------
  */
 {
-  "404": {
-    "title": "404",
-    "not_found": "Page not found.",
-    "back_to_shopping": "Back to shopping"
-  },
-  "blog": {
-    "article_comments": "Comments",
-    "article_metadata_html": "{{ date }} by {{ author }}",
-    "comment_form_body": "Comment",
-    "comment_form_email": "Email",
-    "comment_form_name": "Name",
-    "comment_form_submit": "Post",
-    "comment_form_title": "Add a comment"
-  },
-  "cart": {
-    "checkout": "Checkout",
-    "subtotal": "Subtotal:",
-    "summary_title": "Your order",
-    "taxes_note": "Taxes and shipping are calculated at checkout.",
-    "title": "Cart",
-    "update": "Update",
-    "remove": "Remove",
-    "close": "Close"
-  },
-  "customers": {
-    "login": {
-      "email": "Email",
-      "password": "Password",
-      "submit": "Sign in",
-      "title": "Login"
+  "general": {
+    "cart": {
+      "title": "Cart",
+      "empty": "Your cart is empty",
+      "checkout": "Checkout",
+      "subtotal": "Subtotal",
+      "continue_shopping": "Continue shopping"
+    },
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "quantity": "Quantity"
     }
-  },
-  "collections": {
-    "title": "Collections"
-  },
-  "featured_collection": {
-    "title": "Bestsellers",
-    "placeholder_title": "Product title"
-  },
-  "gift_card": {
-    "add_to_apple_wallet": "Add to Apple Wallet",
-    "card": "Gift card",
-    "expired": "This gift card has expired",
-    "expires_on": "Expires on {{ expires_on }}",
-    "use_at_checkout": "Use this gift card at checkout"
-  },
-  "header": {
-    "announcement": "Made by hand, gift-ready, and easy to shop.",
-    "open_menu": "Open menu",
-    "close_menu": "Close menu",
-    "language": "Language"
-  },
-  "hero_banner": {
-    "subtitle": "wooden toys made with care",
-    "title": "Handmade toys",
-    "cta": "Shop now"
-  },
-  "password": {
-    "title": "This shop is private",
-    "password": "Password",
-    "enter": "Enter"
-  },
-  "product": {
-    "add_to_cart": "Add to cart",
-    "sold_out": "Sold out",
-    "add_to_wishlist": "Add to wishlist"
-  },
-  "search": {
-    "title": "Search",
-    "placeholder": "Search articles, pages, or products",
-    "submit": "Search",
-    "no_results_html": "No results found for {{ terms }}",
-    "results_for_html": "{{ count }} results found for {{ terms }}"
-  },
-  "theme": {
-    "about_toy": "About this toy",
-    "account": "Account",
-    "add_gift_extra": "Add gift extra",
-    "added_fallback": "Product",
-    "added_to_cart": "added to cart.",
-    "add_to_cart_error": "Unable to add this product to cart.",
-    "apply_filters": "Apply filters",
-    "bestseller": "Bestseller",
-    "browse_toys": "Browse toys",
-    "cart_drawer": "Cart drawer",
-    "cart_updated": "Cart updated.",
-    "choose_options": "Choose options",
-    "clear": "Clear",
-    "contact_details": "Contact details",
-    "contact_email": "Email",
-    "contact_hours": "Business hours",
-    "contact_intro": "Write to us about delivery timing, gift presentation, or shipping. We reply clearly and without delay.",
-    "contact_message": "Message",
-    "contact_name": "Name",
-    "contact_phone": "Phone",
-    "contact_shipping": "Shipping and orders",
-    "contact_subject": "Subject",
-    "contact_submit": "Send message",
-    "contact_success": "Thanks. Your message has been sent successfully.",
-    "decrease_quantity": "Decrease quantity",
-    "faq": "FAQ",
-    "filters": "Filters",
-    "gift_ready": "Ready to gift",
-    "handmade": "Made by hand",
-    "increase_quantity": "Increase quantity",
-    "item_one": "item",
-    "item_other": "items",
-    "item_removed": "Item removed from cart.",
-    "keep_browsing": "Keep browsing",
-    "low_stock": "Only [count] left in this batch.",
-    "max": "Max",
-    "min": "Min",
-    "new": "New",
-    "parent_feedback": "Parent feedback",
-    "price_note": "Taxes included where applicable. Shipping calculated at checkout.",
-    "product_fallback": "Product",
-    "quantity": "Quantity",
-    "quantity_for": "Quantity for [product]",
-    "quick_add": "Quick add",
-    "ready_to_ship": "Ready to ship",
-    "refresh_cart_error": "Unable to refresh cart data.",
-    "skip_to_content": "Skip to content",
-    "sort": "Sort",
-    "subtotal": "Subtotal",
-    "unavailable": "Unavailable",
-    "update_cart_error": "Unable to update cart.",
-    "verified_order": "Verified purchase",
-    "view_product": "View product"
   }
 }

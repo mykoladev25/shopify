@@ -1,88 +1,72 @@
-{% liquid
-  assign selected_variant = product.selected_or_first_available_variant
-  assign age_group = product.metafields.custom.age_group.value | default: product.metafields.custom.age_group
-  assign handmade_note = product.metafields.custom.handmade_note.value | default: product.metafields.custom.handmade_note
-  assign manual_badge = product.metafields.custom.badge_label.value | default: product.metafields.custom.badge_label
-  assign secondary_image = blank
+{%- style -%}
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--color-border);
+  }
+  .product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .product-card__image-wrapper {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--color-contrast);
+    overflow: hidden;
+  }
+  .product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .product-card__info {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .product-card__title {
+    font-size: 1rem;
+    margin: 0 0 var(--space-2) 0;
+    color: var(--color-text-dark);
+  }
+  .product-card__price {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: var(--space-4);
+  }
+  .product-card__form {
+    margin-top: auto;
+  }
+  .btn--full {
+    width: 100%;
+  }
+{%- endstyle -%}
 
-  if product.images.size > 1
-    assign secondary_image = product.images[1]
-  endif
-%}
-
-<article class="product-card">
-  <a href="{{ product.url }}" class="product-card__link">
-    <div class="product-card__media">
-      <div class="product-card__badges">
-        {% if manual_badge != blank %}
-          {% render 'badge', label: manual_badge, tone: 'accent' %}
-        {% elsif product.tags contains 'Bestseller' %}
-          {% render 'badge', label: 'theme.bestseller' | t, tone: 'accent' %}
-        {% elsif product.tags contains 'New' %}
-          {% render 'badge', label: 'theme.new' | t, tone: 'accent' %}
-        {% endif %}
-
-        {% if age_group != blank %}
-          {% render 'badge', label: age_group %}
-        {% endif %}
-
-        {% if handmade_note != blank %}
-          {% render 'badge', label: 'theme.handmade' | t %}
-        {% endif %}
-      </div>
-
-           {% if product.featured_image != blank %}
-        {% if eager_primary_image %}
-          {{ product.featured_image | image_url: width: 900 | image_tag: class: 'product-card__primary-image', widths: '320,480,640,900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'eager', fetchpriority: 'high', alt: product.title }}
-        {% else %}
-          {{ product.featured_image | image_url: width: 900 | image_tag: class: 'product-card__primary-image', widths: '320,480,640,900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: product.title }}
-        {% endif %}
-      {% else %}
-        {{ 'product-1' | placeholder_svg_tag: 'product-card__primary-image' }}
-      {% endif %}
-
-      {% if secondary_image != blank %}
-        {{ secondary_image | image_url: width: 900 | image_tag: class: 'product-card__secondary-image', widths: '320,480,640,900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: secondary_image.alt | default: product.title }}
-      {% endif %}
+<div class="product-card">
+  <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title | escape }}">
+    <div class="product-card__image-wrapper">
+      {%- if product.featured_image -%}
+        <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="product-card__image">
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__image' }}
+      {%- endif -%}
+    </div>
+    <div class="product-card__info">
+      <h3 class="product-card__title">{{ product.title | default: 'Тестова іграшка' }}</h3>
+      <div class="product-card__price">{{ product.price | default: 150000 | money }}</div>
     </div>
   </a>
-
-  <div class="product-card__body">
-    <div class="product-card__meta">
-      {% if product.metafields.custom.material.value != blank %}
-        <span>{{ product.metafields.custom.material.value }}</span>
-      {% endif %}
-      {% if product.metafields.custom.giftable.value == true %}
-        <span>{{ 'theme.gift_ready' | t }}</span>
-      {% endif %}
-    </div>
-
-    <a href="{{ product.url }}" class="product-card__link">
-      <h3 class="product-card__title">{{ product.title }}</h3>
-    </a>
-
-    {% render 'price', product: product, variant: selected_variant %}
-  </div>
-
-  <div class="product-card__actions">
-    {% if product.available == false %}
-      <button class="button button--secondary button--full" type="button" disabled aria-disabled="true">
-        {{ 'product.sold_out' | t }}
+  <div class="product-card__form" style="padding: 0 var(--space-4) var(--space-4);">
+    <form action="/cart/add" method="post">
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+      <button type="submit" class="btn btn--full" {% unless product.available or product == blank %}disabled{% endunless %}>
+        {%- if product.available or product == blank -%}У кошик{%- else -%}Немає в наявності{%- endif -%}
       </button>
-    {% elsif product.has_only_default_variant %}
-      {% form 'product', product, data-product-form: '', data-product-title: product.title %}
-        <input type="hidden" name="id" value="{{ selected_variant.id }}">
-        <input type="hidden" name="quantity" value="1">
-        <button type="submit" class="button button--full" data-product-submit>
-          <span class="button__spinner" aria-hidden="true"></span>
-          <span class="button__label">{{ 'theme.quick_add' | t }}</span>
-        </button>
-        <p class="product-form__error" data-product-form-error role="status"></p>
-      {% endform %}
-    {% else %}
-      <a href="{{ product.url }}" class="button button--secondary button--full">
-        {{ 'theme.choose_options' | t }}
-      </a>
-    {% endif %}
+    </form>
   </div>
-</article>
+</div>
