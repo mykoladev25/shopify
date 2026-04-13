@@ -21,5 +21,19 @@
       "sold_out": "Sold out",
       "quantity": "Quantity"
     }
+  },
+  "theme": {
+    "filters": "Filters",
+    "sort": "Sort",
+    "apply_filters": "Apply",
+    "clear": "Clear",
+    "min": "Min",
+    "max": "Max",
+    "sort_by": "Sort by"
+  },
+  "password": {
+    "title": "Opening soon",
+    "password": "Enter password",
+    "enter": "Enter"
   }
 }
