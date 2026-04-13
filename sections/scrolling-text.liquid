@@ -1,0 +1,45 @@
+{%- style -%}
+  .scrolling-text {
+    background-color: var(--color-text-dark);
+    color: var(--color-bg);
+    overflow: hidden;
+    padding: var(--space-4) 0;
+    white-space: nowrap;
+    position: relative;
+    transform: rotate(-1deg) scale(1.05);
+    z-index: 10;
+    box-shadow: var(--shadow-float);
+  }
+  .scrolling-text__inner {
+    display: inline-block;
+    animation: marquee 20s linear infinite;
+  }
+  .scrolling-text__content {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-style: italic;
+    padding-right: var(--space-8);
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+{%- endstyle -%}
+
+<section class="scrolling-text">
+  <div class="scrolling-text__inner">
+    {%- for i in (1..6) -%}
+      <span class="scrolling-text__content">
+        Дбайлива доставка у ваш дім ✦ Чисте дерево. Природні барвники ✦ Виготовлено вручну. Передається у спадок ✦
+      </span>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Scrolling Text",
+  "settings": [],
+  "presets": [{"name": "Scrolling Text"}]
+}
+{% endschema %}

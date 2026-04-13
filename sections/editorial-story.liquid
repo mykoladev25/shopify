@@ -1,0 +1,82 @@
+{%- style -%}
+  .editorial-story {
+    padding: clamp(var(--space-12), 10vw, var(--space-24)) var(--space-4);
+    background-color: var(--color-surface);
+  }
+  .editorial-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .editorial-wrapper {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-16);
+    }
+  }
+  .editorial-image-col {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    aspect-ratio: 4/5;
+    box-shadow: var(--shadow-float);
+  }
+  .editorial-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .editorial-text-col {
+    padding: var(--space-8) 0;
+  }
+  .editorial-eyebrow {
+    font-family: var(--font-body);
+    font-style: italic;
+    color: var(--color-accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    margin-bottom: var(--space-4);
+  }
+  .editorial-title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    margin-bottom: var(--space-6);
+    letter-spacing: -0.02em;
+    color: var(--color-text-dark);
+  }
+  .editorial-desc {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: var(--color-text);
+    margin-bottom: var(--space-8);
+    font-family: var(--font-body);
+  }
+{%- endstyle -%}
+
+<section class="editorial-story">
+  <div class="editorial-wrapper">
+    <div class="editorial-image-col animate-scale">
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'editorial-image' }}
+    </div>
+    <div class="editorial-text-col">
+      <div class="editorial-eyebrow animate-fade-up">Наша майстерня</div>
+      <h2 class="editorial-title animate-fade-up delay-1">Тільки живе дерево. Без компромісів.</h2>
+      <p class="editorial-desc animate-fade-up delay-2">Кожна деталь відшліфовується вручну до ідеально гладкої поверхні. Ми використовуємо лише натуральні олії та барвники, щоб кожна іграшка була не тільки красивою, але й абсолютно безпечною для вашого малюка з перших днів життя.</p>
+      <div class="animate-fade-up delay-3">
+        <a href="/collections/all" class="btn btn--secondary">Дізнатися більше</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Editorial Story",
+  "settings": [],
+  "presets": [{"name": "Editorial Story"}]
+}
+{% endschema %}

@@ -2,7 +2,7 @@
   .hero-{{ section.id }} {
     padding: clamp(var(--space-12), 15vw, var(--space-24)) var(--space-4);
     background-color: var(--color-bg);
-    min-height: 85vh;
+    min-height: 90vh;
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
@@ -11,7 +11,7 @@
   }
   @media (min-width: 1024px) {
     .hero-{{ section.id }} {
-      grid-template-columns: 55% 45%;
+      grid-template-columns: 50% 50%;
       padding: 0 var(--space-16);
     }
   }
@@ -20,13 +20,24 @@
     z-index: 2;
     padding-right: var(--space-8);
   }
+  .hero-{{ section.id }}__eyebrow {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+  }
   .hero-{{ section.id }}__title {
-    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    font-size: clamp(3.5rem, 8vw, 7rem);
     color: var(--color-text-dark);
     margin-bottom: var(--space-6);
-    letter-spacing: -0.04em;
-    line-height: 1;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+  .hero-{{ section.id }}__title span {
     font-style: italic;
+    color: var(--color-accent);
   }
   .hero-{{ section.id }}__text {
     font-size: clamp(1.125rem, 2vw, 1.375rem);
@@ -34,46 +45,88 @@
     margin-bottom: var(--space-8);
     max-width: 480px;
     line-height: 1.6;
-    border-left: 2px solid var(--color-accent);
-    padding-left: var(--space-4);
-    font-family: var(--font-body);
+    border-left: 1px solid var(--color-border);
+    padding-left: var(--space-6);
   }
   .hero-{{ section.id }}__cta {
     display: flex;
     gap: var(--space-4);
   }
   .hero-{{ section.id }}__image-wrapper {
-    display: none;
+    height: 60vh;
+    width: 100%;
+    margin-top: var(--space-8);
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-float);
   }
   @media (min-width: 1024px) {
     .hero-{{ section.id }}__image-wrapper {
-      display: block;
-      height: 120%;
-      width: 100%;
+      margin-top: 0;
+      height: 110%;
+      width: 120%;
       position: absolute;
-      right: -5%;
-      top: -10%;
-      background: var(--color-surface);
-      border-radius: 40% 0 0 40%;
-      transform: rotate(-3deg);
-      box-shadow: inset 0 0 100px rgba(0,0,0,0.02);
-      z-index: 0;
+      right: -10%;
+      top: -5%;
+      border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+      transform: rotate(-2deg);
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .hero-{{ section.id }}:hover .hero-{{ section.id }}__image-wrapper {
+      transform: rotate(0deg) scale(1.02);
+    }
+  }
+  .hero-{{ section.id }}__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-{{ section.id }}__badge {
+    position: absolute;
+    bottom: var(--space-8);
+    left: -20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    padding: var(--space-4) var(--space-6);
+    border-radius: 100px;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--color-text-dark);
+    box-shadow: var(--shadow-md);
+    z-index: 3;
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .hero-{{ section.id }}__badge { display: block; }
   }
 {%- endstyle -%}
 
 <section class="hero-{{ section.id }}">
-  <div class="hero-{{ section.id }}__image-wrapper"></div>
   <div class="hero-{{ section.id }}__content">
-    <h1 class="hero-{{ section.id }}__title">{{ section.settings.title | escape }}</h1>
-    <div class="hero-{{ section.id }}__text">{{ section.settings.text }}</div>
-    <div class="hero-{{ section.id }}__cta">
+    <div class="hero-{{ section.id }}__eyebrow animate-fade-up">Екологічні іграшки</div>
+    <h1 class="hero-{{ section.id }}__title animate-fade-up delay-1">
+      Тепло,<br>яке можна <span>відчути.</span>
+    </h1>
+    <div class="hero-{{ section.id }}__text animate-fade-up delay-2">{{ section.settings.text }}</div>
+    <div class="hero-{{ section.id }}__cta animate-fade-up delay-3">
       {%- if section.settings.button_label != blank -%}
         <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn">
           {{ section.settings.button_label | escape }}
         </a>
       {%- endif -%}
     </div>
+  </div>
+  
+  <div class="hero-{{ section.id }}__image-wrapper animate-scale delay-2">
+    <div class="hero-{{ section.id }}__badge animate-fade-up delay-4">Ручна робота. Ясен та дуб.</div>
+    {%- if section.settings.image != blank -%}
+      <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="Hero Image" class="hero-{{ section.id }}__image" loading="eager">
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-' | append: section.id | append: '__image' }}
+    {%- endif -%}
   </div>
 </section>
 
@@ -91,7 +144,12 @@
       "type": "richtext",
       "id": "text",
       "label": "Description",
-      "default": "<p>Чисте дерево. Природні барвники. Безкомпромісна якість.</p>"
+      "default": "<p>Ми віримо, що іграшка має залишати слід у пам'яті, а не на планеті. Кожна деталь виточується вручну з масиву ясена та дуба, покривається лляною олією та бджолиним воском.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image"
     },
     {
       "type": "text",

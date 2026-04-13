@@ -13,6 +13,25 @@
       "type": "home-hero",
       "settings": {}
     },
+    "scrolling_text": {
+      "type": "scrolling-text",
+      "settings": {}
+    },
+    "bento": {
+      "type": "bento-categories",
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "title": "Знайдіть ідеальну іграшку",
+        "products_to_show": 4
+      }
+    },
+    "editorial": {
+      "type": "editorial-story",
+      "settings": {}
+    },
     "trust": {
       "type": "trust-strip",
       "blocks": {
@@ -64,6 +83,10 @@
   },
   "order": [
     "hero",
+    "scrolling_text",
+    "bento",
+    "featured",
+    "editorial",
     "trust"
   ]
 }
