@@ -1,71 +1,50 @@
 <footer class="site-footer">
-  <div class="section-shell__inner site-footer__grid">
-    <div class="site-footer__intro">
-      <h3>{{ section.settings.heading }}</h3>
-      <p>{{ section.settings.text }}</p>
-      {% if section.settings.contact_email != blank %}
-        <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
-      {% endif %}
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <h3>{{ shop.name }}</h3>
+      <p>Створено руками. Передається у спадок.</p>
     </div>
-
     <div class="site-footer__links">
-      {% for link in section.settings.menu.links %}
-        <a href="{{ link.url }}">{{ link.title }}</a>
-      {% endfor %}
-    </div>
-
-    <div class="site-footer__intro">
-      <p class="site-footer__meta">{{ section.settings.shipping_note }}</p>
-      {% if section.settings.show_payment_icons %}
-        <div class="site-footer__payments">
-          {% for type in shop.enabled_payment_types %}
-            {{ type | payment_type_svg_tag }}
-          {% endfor %}
-        </div>
-      {% endif %}
-      <p class="site-footer__meta">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</p>
+      <p>&copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. Усі права захищено.</p>
     </div>
   </div>
 </footer>
 
+<style>
+  .site-footer {
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-8) var(--space-4);
+    margin-top: var(--space-12);
+    color: var(--color-text-dark);
+  }
+  .site-footer__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    text-align: center;
+  }
+  @media (min-width: 768px) {
+    .site-footer__inner {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+  .site-footer__brand h3 {
+    margin: 0 0 var(--space-2) 0;
+  }
+  .site-footer__brand p {
+    margin: 0;
+    color: var(--color-text);
+  }
+</style>
+
 {% schema %}
 {
   "name": "Footer",
-  "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Menu"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "Show payment icons",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Купувати тут спокійно."
-    },
-    {
-      "type": "textarea",
-      "id": "text",
-      "label": "Text",
-      "default": "Ми прямо говоримо про вироби, строки і сервіс. Саме так будується довіра до покупки."
-    },
-    {
-      "type": "text",
-      "id": "contact_email",
-      "label": "Contact email"
-    },
-    {
-      "type": "text",
-      "id": "shipping_note",
-      "label": "Shipping/payment note",
-      "default": "Подарункова подача, відстеження посилки і зрозуміла комунікація на кожному етапі."
-    }
-  ]
+  "settings": []
 }
 {% endschema %}

@@ -1,140 +1,73 @@
-{% liquid
-  assign current_language_iso = localization.language.iso_code | default: request.locale.iso_code
-%}
-
-{%- if section.settings.show_announcement and section.settings.announcement_text != blank -%}
-  <div class="announcement-bar">
-    <div class="announcement-bar__inner">
-      {{ section.settings.announcement_text }}
-    </div>
-  </div>
-{%- endif -%}
-
 <header class="site-header">
   <div class="site-header__inner">
-    <button type="button" class="site-header__menu-button mobile-only" aria-label="{{ 'header.open_menu' | t }}" data-mobile-nav-toggle>
-      {% render 'icon-ui', icon: 'menu' %}
-    </button>
-
-    <a href="{{ routes.root_url }}" class="site-header__brand">
-      {% if settings.logo != blank %}
-        {{ settings.logo | image_url: width: settings.logo_width | image_tag: widths: '120,180,240,320', alt: shop.name, loading: 'eager' }}
-      {% else %}
-        <span class="site-header__brand-name">{{ shop.name }}</span>
-      {% endif %}
+    <a href="{{ routes.root_url }}" class="site-header__logo">
+      {{ shop.name }}
     </a>
-
-    <nav class="site-header__nav" aria-label="Primary">
-      <ul>
-        {% for link in section.settings.menu.links %}
-          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-        {% endfor %}
-      </ul>
+    <nav class="site-header__nav">
+      {%- for link in linklists.main-menu.links -%}
+        <a href="{{ link.url }}" class="site-header__link">{{ link.title }}</a>
+      {%- endfor -%}
     </nav>
-
     <div class="site-header__actions">
-      {% if localization.available_languages.size > 1 %}
-        {% form 'localization', class: 'locale-switcher site-header__locale-switcher desktop-only', data-locale-form: '' %}
-          <input type="hidden" name="return_to" value="{{ request.path }}">
-          <div class="locale-switcher__options" role="group" aria-label="{{ 'header.language' | t }}">
-            {% for language in localization.available_languages %}
-              <button
-                type="button"
-                data-locale-button
-                data-locale-code="{{ language.iso_code }}"
-                class="locale-switcher__button{% if language.iso_code == current_language_iso %} is-active{% endif %}"
-                lang="{{ language.iso_code }}"
-              >
-                {{ language.iso_code | upcase }}
-              </button>
-            {% endfor %}
-          </div>
-        {% endform %}
-      {% endif %}
-
-      {% if shop.customer_accounts_enabled %}
-        <a href="{{ routes.account_url }}" class="site-header__icon-btn desktop-only" aria-label="{{ 'theme.account' | t }}">
-          {% render 'icon-ui', icon: 'account' %}
-        </a>
-      {% endif %}
-
-      <a href="{{ routes.cart_url }}" class="site-header__icon-btn" aria-label="{{ 'cart.title' | t }}" data-cart-open>
-        {% render 'icon-ui', icon: 'cart' %}
-        {% render 'cart-count-bubble' %}
-      </a>
+      <button type="button" class="site-header__cart-btn" aria-label="Відкрити кошик" onclick="document.querySelector('cart-drawer').open()">
+        Кошик (<span class="cart-count">{{ cart.item_count }}</span>)
+      </button>
     </div>
   </div>
 </header>
 
-<div class="mobile-nav" data-mobile-nav hidden>
-  <button type="button" class="mobile-nav__overlay" aria-label="{{ 'header.close_menu' | t }}" data-mobile-nav-overlay></button>
-  <div class="mobile-nav__panel">
-    <div class="mobile-nav__header">
-      <strong>{{ shop.name }}</strong>
-      <button type="button" aria-label="{{ 'header.close_menu' | t }}" data-mobile-nav-close>
-        {% render 'icon-ui', icon: 'close' %}
-      </button>
-    </div>
-
-    <div class="mobile-nav__links">
-      {% for link in section.settings.menu.links %}
-        <a href="{{ link.url }}">
-          <span>{{ link.title }}</span>
-          {% render 'icon-ui', icon: 'arrow' %}
-        </a>
-      {% endfor %}
-
-      {% if shop.customer_accounts_enabled %}
-        <a href="{{ routes.account_url }}">
-          <span>{{ 'theme.account' | t }}</span>
-          {% render 'icon-ui', icon: 'arrow' %}
-        </a>
-      {% endif %}
-    </div>
-
-    {% if localization.available_languages.size > 1 %}
-      {% form 'localization', class: 'locale-switcher mobile-nav__locale', data-locale-form: '' %}
-        <input type="hidden" name="return_to" value="{{ request.path }}">
-        <p class="mobile-nav__locale-label">{{ 'header.language' | t }}</p>
-        <div class="locale-switcher__options" role="group" aria-label="{{ 'header.language' | t }}">
-          {% for language in localization.available_languages %}
-            <button
-              type="button"
-              data-locale-button
-              data-locale-code="{{ language.iso_code }}"
-              class="locale-switcher__button{% if language.iso_code == current_language_iso %} is-active{% endif %}"
-              lang="{{ language.iso_code }}"
-            >
-              {{ language.iso_code | upcase }}
-            </button>
-          {% endfor %}
-        </div>
-      {% endform %}
-    {% endif %}
-  </div>
-</div>
+<style>
+  .site-header {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .site-header__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .site-header__logo {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-text-dark);
+    text-decoration: none;
+  }
+  .site-header__nav {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .site-header__nav {
+      display: flex;
+      gap: var(--space-6);
+    }
+  }
+  .site-header__link {
+    color: var(--color-text-dark);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .site-header__cart-btn {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-dark);
+    cursor: pointer;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+</style>
 
 {% schema %}
 {
   "name": "Header",
-  "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Menu"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_announcement",
-      "label": "Show announcement",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "announcement_text",
-      "label": "Announcement text",
-      "default": "Ручна робота, природні матеріали і подарункова подача, яку приємно вручати."
-    }
-  ]
+  "settings": []
 }
 {% endschema %}

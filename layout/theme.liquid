@@ -17,10 +17,16 @@
 
     {{ 'theme.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+
+    <script>
+      window.Shopify = window.Shopify || {};
+      window.Shopify.routes = window.Shopify.routes || {};
+      window.Shopify.routes.root = '{{ routes.root_url }}';
+    </script>
   </head>
 
   <body>
-    <a class="visually-hidden" href="#MainContent">Skip to content</a>
+    <a class="visually-hidden" href="#MainContent">Перейти до контенту</a>
 
     {% section 'header' %}
 
