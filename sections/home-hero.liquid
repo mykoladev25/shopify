@@ -1,36 +1,64 @@
 {%- style -%}
   .hero-{{ section.id }} {
-    padding: var(--space-16) var(--space-4);
+    padding: clamp(var(--space-12), 15vw, var(--space-24)) var(--space-4);
     text-align: center;
     background-color: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh; /* Make hero more prominent */
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% -20%, rgba(255,255,255,0.4) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-{{ section.id }}__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .hero-{{ section.id }}__title {
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: clamp(3rem, 8vw, 5.5rem);
     color: var(--color-text-dark);
-    margin-bottom: var(--space-4);
-    max-width: 800px;
-    margin-inline: auto;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    margin-bottom: var(--space-6);
+    max-width: 900px;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    font-weight: 500;
   }
   .hero-{{ section.id }}__text {
-    font-size: 1.125rem;
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
     color: var(--color-text);
     margin-bottom: var(--space-8);
     max-width: 600px;
-    margin-inline: auto;
+    line-height: 1.5;
+  }
+  .hero-{{ section.id }}__cta {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    justify-content: center;
   }
 {%- endstyle -%}
 
 <section class="hero-{{ section.id }}">
-  <div class="page-width">
+  <div class="hero-{{ section.id }}__inner page-width">
     <h1 class="hero-{{ section.id }}__title">{{ section.settings.title | escape }}</h1>
     <div class="hero-{{ section.id }}__text">{{ section.settings.text }}</div>
-    {%- if section.settings.button_label != blank -%}
-      <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn">
-        {{ section.settings.button_label | escape }}
-      </a>
-    {%- endif -%}
+    <div class="hero-{{ section.id }}__cta">
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn">
+          {{ section.settings.button_label | escape }}
+        </a>
+      {%- endif -%}
+    </div>
   </div>
 </section>
 
