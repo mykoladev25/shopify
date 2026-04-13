@@ -72,23 +72,23 @@
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: var(--space-6);
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: clamp(var(--space-6), 4vw, var(--space-12));
     }
   </style>
 
-  <section class="section-shell collection-page page-width" style="padding-top: var(--space-12); padding-bottom: var(--space-16);">
+  <section class="section-shell collection-page page-width" style="padding-top: var(--space-16); padding-bottom: var(--space-24);">
     <div class="section-shell__inner">
       {% paginate collection.products by products_per_page %}
-      <div class="section-heading" style="margin-bottom: var(--space-8); text-align: center;">
+      <div class="section-heading" style="margin-bottom: var(--space-12); max-width: 800px;">
         {% if section.settings.eyebrow != blank %}
-          <p class="section-heading__eyebrow" style="color: var(--color-accent); font-weight: 500; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-2);">{{ section.settings.eyebrow }}</p>
+          <p class="section-heading__eyebrow" style="color: var(--color-accent); font-family: var(--font-body); font-style: italic; font-size: 1.125rem; margin-bottom: var(--space-4);">{{ section.settings.eyebrow }}</p>
         {% endif %}
-        <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: var(--space-4);">{{ collection.title }}</h1>
+        <h1 style="font-size: clamp(3rem, 6vw, 5rem); margin-bottom: var(--space-6); line-height: 1;">{{ collection.title }}</h1>
         {% if collection.description != blank and section.settings.show_description %}
-          <div class="rte section-heading__text" style="max-width: 600px; margin: 0 auto; color: var(--color-text); font-size: 1.125rem;">{{ collection.description }}</div>
+          <div class="rte section-heading__text" style="color: var(--color-text); font-size: 1.25rem; font-family: var(--font-body); line-height: 1.6; border-left: 2px solid var(--color-border); padding-left: var(--space-6);">{{ collection.description }}</div>
         {% elsif section.settings.intro_text != blank %}
-          <p class="section-heading__text" style="max-width: 600px; margin: 0 auto; color: var(--color-text); font-size: 1.125rem;">{{ section.settings.intro_text }}</p>
+          <p class="section-heading__text" style="color: var(--color-text); font-size: 1.25rem; font-family: var(--font-body); line-height: 1.6; border-left: 2px solid var(--color-border); padding-left: var(--space-6);">{{ section.settings.intro_text }}</p>
         {% endif %}
       </div>
 

@@ -10,10 +10,10 @@
   --color-border: #D1C9C0;      /* Gentle warm border */
   
   /* Premium Typography Scale */
-  --font-heading: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-body: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Playfair Display', 'Cormorant Garamond', 'Baskerville', serif;
+  --font-body: 'Lora', 'Georgia', serif;
   --font-weight-body: 400;
-  --font-weight-heading: 500;
+  --font-weight-heading: 600;
   --font-weight-button: 500;
 
   /* Refined Geometry */
