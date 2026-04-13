@@ -53,17 +53,30 @@
     gap: var(--space-4);
   }
   .hero-{{ section.id }}__image-wrapper {
-    height: 60vh;
+    height: 50vh;
     width: 100%;
     margin-top: var(--space-8);
     position: relative;
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow-float);
+    order: -1; /* Move image above text on mobile */
+    margin-bottom: var(--space-6);
+  }
+  .hero-{{ section.id }}__content {
+    position: relative;
+    z-index: 2;
+    padding-right: 0;
   }
   @media (min-width: 1024px) {
+    .hero-{{ section.id }} {
+      grid-template-columns: 50% 50%;
+      padding: 0 var(--space-16);
+    }
     .hero-{{ section.id }}__image-wrapper {
+      order: 0;
       margin-top: 0;
+      margin-bottom: 0;
       height: 110%;
       width: 120%;
       position: absolute;
@@ -72,6 +85,9 @@
       border-radius: var(--radius-xl) 0 0 var(--radius-xl);
       transform: rotate(-2deg);
       transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hero-{{ section.id }}__content {
+      padding-right: var(--space-8);
     }
     .hero-{{ section.id }}:hover .hero-{{ section.id }}__image-wrapper {
       transform: rotate(0deg) scale(1.02);
@@ -84,27 +100,40 @@
   }
   .hero-{{ section.id }}__badge {
     position: absolute;
-    bottom: var(--space-8);
-    left: -20px;
+    bottom: var(--space-4);
+    left: var(--space-4);
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
-    padding: var(--space-4) var(--space-6);
+    padding: var(--space-2) var(--space-4);
     border-radius: 100px;
     font-family: var(--font-heading);
     font-style: italic;
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--color-text-dark);
     box-shadow: var(--shadow-md);
     z-index: 3;
-    display: none;
   }
   @media (min-width: 1024px) {
-    .hero-{{ section.id }}__badge { display: block; }
+    .hero-{{ section.id }}__badge { 
+      bottom: var(--space-8);
+      left: -20px;
+      padding: var(--space-4) var(--space-6);
+      font-size: 1.25rem;
+    }
   }
 {%- endstyle -%}
 
 <section class="hero-{{ section.id }}">
+  <div class="hero-{{ section.id }}__image-wrapper animate-scale delay-2">
+    <div class="hero-{{ section.id }}__badge animate-fade-up delay-4">Ручна робота. Ясен та дуб.</div>
+    {%- if section.settings.image != blank -%}
+      <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="Hero Image" class="hero-{{ section.id }}__image" loading="eager">
+    {%- else -%}
+      <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Wooden toy" class="hero-{{ section.id }}__image" loading="eager">
+    {%- endif -%}
+  </div>
+  
   <div class="hero-{{ section.id }}__content">
     <div class="hero-{{ section.id }}__eyebrow animate-fade-up">Екологічні іграшки</div>
     <h1 class="hero-{{ section.id }}__title animate-fade-up delay-1">
@@ -118,15 +147,6 @@
         </a>
       {%- endif -%}
     </div>
-  </div>
-  
-  <div class="hero-{{ section.id }}__image-wrapper animate-scale delay-2">
-    <div class="hero-{{ section.id }}__badge animate-fade-up delay-4">Ручна робота. Ясен та дуб.</div>
-    {%- if section.settings.image != blank -%}
-      <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="Hero Image" class="hero-{{ section.id }}__image" loading="eager">
-    {%- else -%}
-      <img src="https://picsum.photos/seed/woodentoy/1200/1600" alt="Wooden toy" class="hero-{{ section.id }}__image" loading="eager">
-    {%- endif -%}
   </div>
 </section>
 
