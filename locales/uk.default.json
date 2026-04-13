@@ -31,7 +31,17 @@
     "max": "До",
     "sort_by": "Сортувати за",
     "from": "Звідки",
-    "to": "Куди"
+    "to": "Куди",
+    "contact_intro": "Напишіть нам, якщо важливі строки, подарунок або доставка.",
+    "contact_name": "Ім'я",
+    "contact_email": "Email",
+    "contact_phone": "Телефон",
+    "contact_subject": "Тема",
+    "contact_message": "Повідомлення",
+    "contact_submit": "Відправити",
+    "contact_details": "Деталі контакту",
+    "contact_hours": "Години роботи",
+    "contact_shipping": "Доставка та оплата"
   },
   "password": {
     "title": "Незабаром відкриття",

@@ -1,13 +1,13 @@
 :root {
-  /* Warm Artisan Palette */
-  --color-bg: #EAE3DA;          /* Lighter, softer sand for main background */
-  --color-surface: #F5EFEB;     /* Very soft off-white for cards/blocks */
-  --color-surface-hover: #FDF9F5;
-  --color-text: #7A7869;        /* Warm olive-gray for secondary text */
-  --color-text-dark: #525042;   /* Deep olive-charcoal for headings/primary text */
-  --color-accent: #646252;      /* Primary interactive element color */
-  --color-contrast: #FFFFFF;    /* Clean white for contrast elements */
-  --color-border: #D1C9C0;      /* Gentle warm border */
+  /* Minimalist Luxury Palette */
+  --color-bg: #FAFAF8;          /* Clean, warm off-white */
+  --color-surface: #FFFFFF;     /* Pure white for cards/blocks */
+  --color-surface-hover: #F2F0EC;
+  --color-text: #6B6862;        /* Soft dark grey for secondary text */
+  --color-text-dark: #2B2A28;   /* Deep charcoal for headings/primary text */
+  --color-accent: #8E7C68;      /* Warm taupe/wood accent */
+  --color-contrast: #FFFFFF;    
+  --color-border: #E8E5DF;      /* Very subtle border */
   
   /* Premium Typography Scale */
   --font-heading: 'Playfair Display', 'Cormorant Garamond', 'Baskerville', serif;
@@ -32,10 +32,12 @@
   --space-16: 4rem;
   --space-24: 6rem;
   
-  /* Artisan Shadows (Soft & Diffused) */
-  --shadow-sm: 0 2px 8px -2px rgba(82, 80, 66, 0.05);
-  --shadow-md: 0 8px 24px -4px rgba(82, 80, 66, 0.08), 0 4px 8px -2px rgba(82, 80, 66, 0.04);
-  --shadow-float: 0 12px 32px -4px rgba(82, 80, 66, 0.12), 0 4px 12px -2px rgba(82, 80, 66, 0.06);
+  /* Artisan Shadows & Glass (Soft & Diffused) */
+  --shadow-sm: 0 2px 8px -2px rgba(30, 30, 30, 0.05);
+  --shadow-md: 0 8px 24px -4px rgba(30, 30, 30, 0.08), 0 4px 8px -2px rgba(30, 30, 30, 0.04);
+  --shadow-float: 0 20px 40px -10px rgba(30, 30, 30, 0.12), 0 8px 16px -4px rgba(30, 30, 30, 0.06);
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.5);
 }
 
 * {
@@ -51,7 +53,34 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleReveal {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale {
+  opacity: 0;
+  animation: scaleReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
 
 /* Elegant Headings */
 h1, h2, h3, h4, h5, h6 {
@@ -88,28 +117,40 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.875rem var(--space-8);
+  padding: 1rem var(--space-8);
   background-color: var(--color-accent);
   color: var(--color-contrast);
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: 100px; /* Pill shape for premium feel */
+  font-family: var(--font-heading);
   font-weight: var(--font-weight-button);
-  font-size: 0.9375rem;
-  letter-spacing: 0.01em;
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
   box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  pointer-events: none;
 }
 
 .btn:hover {
   background-color: var(--color-text-dark);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
 .btn:active {
-  transform: translateY(1px);
+  transform: translateY(1px) scale(0.98);
   box-shadow: none;
 }
 
@@ -160,6 +201,15 @@ svg {
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
-  border: 1px solid rgba(255,255,255,0.4); /* subtle glass effect */
+  border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-sm);
+}
+
+/* Liquid Glass Utilities */
+.liquid-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), var(--shadow-md);
 }

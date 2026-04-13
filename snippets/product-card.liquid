@@ -24,10 +24,10 @@
     position: relative;
     aspect-ratio: 4 / 5;
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     overflow: hidden;
     transition: box-shadow 0.3s ease;
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid var(--color-border);
     margin-bottom: var(--space-4);
   }
   .product-card__image {
@@ -66,9 +66,9 @@
   <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title | escape }}">
     <div class="product-card__image-wrapper">
       {%- if product.featured_image -%}
-        <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="product-card__image">
+        <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy" class="product-card__image">
       {%- else -%}
-        {{ 'product-1' | placeholder_svg_tag: 'product-card__image' }}
+        <img src="https://picsum.photos/seed/{{ product.id | default: 'wood' }}/600/800" alt="Placeholder" loading="lazy" class="product-card__image">
       {%- endif -%}
     </div>
     <div class="product-card__info">

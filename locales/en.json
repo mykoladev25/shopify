@@ -29,7 +29,17 @@
     "clear": "Clear",
     "min": "Min",
     "max": "Max",
-    "sort_by": "Sort by"
+    "sort_by": "Sort by",
+    "contact_intro": "Message us about deadlines, gifts or shipping.",
+    "contact_name": "Name",
+    "contact_email": "Email",
+    "contact_phone": "Phone",
+    "contact_subject": "Subject",
+    "contact_message": "Message",
+    "contact_submit": "Send",
+    "contact_details": "Contact Details",
+    "contact_hours": "Business Hours",
+    "contact_shipping": "Shipping & Returns"
   },
   "password": {
     "title": "Opening soon",

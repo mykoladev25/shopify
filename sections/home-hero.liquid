@@ -125,7 +125,7 @@
     {%- if section.settings.image != blank -%}
       <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="Hero Image" class="hero-{{ section.id }}__image" loading="eager">
     {%- else -%}
-      {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-' | append: section.id | append: '__image' }}
+      <img src="https://picsum.photos/seed/woodentoy/1200/1600" alt="Wooden toy" class="hero-{{ section.id }}__image" loading="eager">
     {%- endif -%}
   </div>
 </section>
