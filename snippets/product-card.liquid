@@ -1,37 +1,88 @@
-<div class="product-card">
-  <div class="product-card__image-wrapper">
-    <a href="{{ product.url }}" class="product-card__link" tabindex="-1">
-      {% if product.featured_image != blank %}
-        {{ product.featured_image | image_url: width: 600 | image_tag: class: 'product-card__image', loading: 'lazy' }}
-      {% else %}
-        {{ 'product-1' | placeholder_svg_tag: 'product-card__image' }}
-      {% endif %}
-    </a>
+{% liquid
+  assign selected_variant = product.selected_or_first_available_variant
+  assign age_group = product.metafields.custom.age_group.value | default: product.metafields.custom.age_group
+  assign handmade_note = product.metafields.custom.handmade_note.value | default: product.metafields.custom.handmade_note
+  assign manual_badge = product.metafields.custom.badge_label.value | default: product.metafields.custom.badge_label
+  assign secondary_image = blank
 
-    <button type="button" class="product-card__wishlist-btn" data-product-handle="{{ product.handle }}" aria-label="{{ 'product.add_to_wishlist' | t }}">
-      {% render 'icon-wishlist' %}
-    </button>
-  </div>
-  
-  <div class="product-card__info">
+  if product.images.size > 1
+    assign secondary_image = product.images[1]
+  endif
+%}
+
+<article class="product-card">
+  <a href="{{ product.url }}" class="product-card__link">
+    <div class="product-card__media">
+      <div class="product-card__badges">
+        {% if manual_badge != blank %}
+          {% render 'badge', label: manual_badge, tone: 'accent' %}
+        {% elsif product.tags contains 'Bestseller' %}
+          {% render 'badge', label: 'theme.bestseller' | t, tone: 'accent' %}
+        {% elsif product.tags contains 'New' %}
+          {% render 'badge', label: 'theme.new' | t, tone: 'accent' %}
+        {% endif %}
+
+        {% if age_group != blank %}
+          {% render 'badge', label: age_group %}
+        {% endif %}
+
+        {% if handmade_note != blank %}
+          {% render 'badge', label: 'theme.handmade' | t %}
+        {% endif %}
+      </div>
+
+           {% if product.featured_image != blank %}
+        {% if eager_primary_image %}
+          {{ product.featured_image | image_url: width: 900 | image_tag: class: 'product-card__primary-image', widths: '320,480,640,900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'eager', fetchpriority: 'high', alt: product.title }}
+        {% else %}
+          {{ product.featured_image | image_url: width: 900 | image_tag: class: 'product-card__primary-image', widths: '320,480,640,900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: product.title }}
+        {% endif %}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__primary-image' }}
+      {% endif %}
+
+      {% if secondary_image != blank %}
+        {{ secondary_image | image_url: width: 900 | image_tag: class: 'product-card__secondary-image', widths: '320,480,640,900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: secondary_image.alt | default: product.title }}
+      {% endif %}
+    </div>
+  </a>
+
+  <div class="product-card__body">
+    <div class="product-card__meta">
+      {% if product.metafields.custom.material.value != blank %}
+        <span>{{ product.metafields.custom.material.value }}</span>
+      {% endif %}
+      {% if product.metafields.custom.giftable.value == true %}
+        <span>{{ 'theme.gift_ready' | t }}</span>
+      {% endif %}
+    </div>
+
     <a href="{{ product.url }}" class="product-card__link">
       <h3 class="product-card__title">{{ product.title }}</h3>
     </a>
-    <span class="product-card__price">{{ product.price | money }}</span>
+
+    {% render 'price', product: product, variant: selected_variant %}
   </div>
 
   <div class="product-card__actions">
-    {% form 'product', product %}
-      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-      
-      <button type="submit" class="button product-card__cart-btn" {% unless product.available %}disabled{% endunless %}>
-        {% if product.available %}
-          {% render 'icon-cart' %}
-          <span>{{ 'product.add_to_cart' | t }}</span>
-        {% else %}
-          <span>{{ 'product.sold_out' | t }}</span>
-        {% endif %}
+    {% if product.available == false %}
+      <button class="button button--secondary button--full" type="button" disabled aria-disabled="true">
+        {{ 'product.sold_out' | t }}
       </button>
-    {% endform %}
+    {% elsif product.has_only_default_variant %}
+      {% form 'product', product, data-product-form: '', data-product-title: product.title %}
+        <input type="hidden" name="id" value="{{ selected_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="button button--full" data-product-submit>
+          <span class="button__spinner" aria-hidden="true"></span>
+          <span class="button__label">{{ 'theme.quick_add' | t }}</span>
+        </button>
+        <p class="product-form__error" data-product-form-error role="status"></p>
+      {% endform %}
+    {% else %}
+      <a href="{{ product.url }}" class="button button--secondary button--full">
+        {{ 'theme.choose_options' | t }}
+      </a>
+    {% endif %}
   </div>
-</div>
+</article>

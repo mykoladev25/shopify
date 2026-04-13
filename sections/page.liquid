@@ -1,17 +1,176 @@
-{% comment %}
-  This section is used in the page template to render store pages like About us
-  or Contact us.
+{% liquid
+  assign is_contact_page = false
+  if page.handle == 'contact'
+    assign is_contact_page = true
+  endif
+%}
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/page
-{% endcomment %}
+<section class="section-shell page-template" style="--section-top: 24px; --section-bottom: 88px;">
+  <div class="section-shell__inner">
+    <div class="section-heading">
+      {% if page.metafields.custom.eyebrow.value != blank %}
+        <p class="section-heading__eyebrow">{{ page.metafields.custom.eyebrow.value }}</p>
+      {% endif %}
+      <h1>{{ page.title }}</h1>
+      {% if page.content != blank and is_contact_page == false %}
+        <div class="rte section-heading__text">{{ page.content }}</div>
+      {% endif %}
+    </div>
 
-<h1>{{ page.title }}</h1>
+    {% if is_contact_page %}
+      <div class="contact-layout">
+        <div class="contact-layout__main surface-card">
+          <div class="contact-layout__intro">
+            <h2>{{ section.settings.contact_heading }}</h2>
+            {% if page.content != blank %}
+              <div class="rte">{{ page.content }}</div>
+            {% else %}
+              <p>{{ 'theme.contact_intro' | t }}</p>
+            {% endif %}
+          </div>
 
-{{ page.content }}
+          {% form 'contact', class: 'contact-form' %}
+            {% if form.posted_successfully? %}
+              <div class="form-status form-status--success" tabindex="-1">
+                {{ 'theme.contact_success' | t }}
+              </div>
+            {% elsif form.errors %}
+              <div class="form-status form-status--error" tabindex="-1">
+                {{ form.errors | default_errors }}
+              </div>
+            {% endif %}
+
+            <div class="contact-form__grid">
+              <label class="contact-form__field">
+                <span>{{ 'theme.contact_name' | t }}</span>
+                <input
+                  class="field"
+                  type="text"
+                  name="contact[name]"
+                  value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                  autocomplete="name"
+                >
+              </label>
+
+              <label class="contact-form__field">
+                <span>{{ 'theme.contact_email' | t }}</span>
+                <input
+                  class="field"
+                  type="email"
+                  name="contact[email]"
+                  value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                  autocomplete="email"
+                  required
+                >
+              </label>
+            </div>
+
+            <div class="contact-form__grid">
+              <label class="contact-form__field">
+                <span>{{ 'theme.contact_phone' | t }}</span>
+                <input
+                  class="field"
+                  type="tel"
+                  name="contact[phone]"
+                  value="{{ form.phone }}"
+                  autocomplete="tel"
+                >
+              </label>
+
+              <label class="contact-form__field">
+                <span>{{ 'theme.contact_subject' | t }}</span>
+                <input
+                  class="field"
+                  type="text"
+                  name="contact[subject]"
+                  value="{{ form.subject }}"
+                >
+              </label>
+            </div>
+
+            <label class="contact-form__field">
+              <span>{{ 'theme.contact_message' | t }}</span>
+              <textarea class="field field--textarea" name="contact[body]" rows="7" required>{{ form.body }}</textarea>
+            </label>
+
+            <button type="submit" class="button">
+              {{ 'theme.contact_submit' | t }}
+            </button>
+          {% endform %}
+        </div>
+
+        <aside class="contact-layout__aside">
+          <div class="contact-card surface-card">
+            <h3>{{ 'theme.contact_details' | t }}</h3>
+            <div class="contact-card__list">
+              {% if section.settings.contact_email != blank %}
+                <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
+              {% endif %}
+              {% if section.settings.contact_phone != blank %}
+                <a href="tel:{{ section.settings.contact_phone | replace: ' ', '' }}">{{ section.settings.contact_phone }}</a>
+              {% endif %}
+              {% if section.settings.contact_instagram != blank %}
+                <a href="{{ section.settings.contact_instagram }}" target="_blank" rel="noopener">Instagram</a>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="contact-card surface-card">
+            <h3>{{ 'theme.contact_hours' | t }}</h3>
+            <p>{{ section.settings.contact_hours }}</p>
+          </div>
+
+          <div class="contact-card surface-card">
+            <h3>{{ 'theme.contact_shipping' | t }}</h3>
+            <p>{{ section.settings.contact_shipping_note }}</p>
+          </div>
+        </aside>
+      </div>
+    {% else %}
+      <div class="page-template__content surface-card rte">
+        {{ page.content }}
+      </div>
+    {% endif %}
+  </div>
+</section>
 
 {% schema %}
 {
-  "name": "t:general.page",
-  "settings": []
+  "name": "Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Contact heading",
+      "default": "Напишіть нам, якщо важливі строки, подарунок або доставка."
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Contact phone"
+    },
+    {
+      "type": "url",
+      "id": "contact_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "text",
+      "id": "contact_hours",
+      "label": "Business hours",
+      "default": "Пн-Пт, 10:00-18:00"
+    },
+    {
+      "type": "textarea",
+      "id": "contact_shipping_note",
+      "label": "Shipping note",
+      "default": "Пишіть, якщо хочете уточнити строки відправки, подарункову подачу або доставку за межі України."
+    }
+  ]
 }
 {% endschema %}

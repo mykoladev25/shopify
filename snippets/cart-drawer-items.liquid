@@ -1,0 +1,53 @@
+{% if cart.item_count > 0 %}
+  <div class="cart-items">
+    {% for item in cart.items %}
+      <div class="cart-item" data-cart-line data-line-key="{{ item.key }}">
+        <a href="{{ item.url }}" class="cart-item__image">
+          {% if item.image != blank %}
+            {{ item.image | image_url: width: 220 | image_tag: widths: '110,160,220', sizes: '88px', loading: 'lazy', alt: item.product.title }}
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag }}
+          {% endif %}
+        </a>
+
+        <div class="cart-item__content">
+          <a href="{{ item.url }}">{{ item.product.title }}</a>
+
+          {% unless item.variant.title == 'Default Title' %}
+            <p class="cart-item__variant">{{ item.variant.title }}</p>
+          {% endunless %}
+
+          <div class="price">
+            <span class="price__current">{{ item.final_line_price | money }}</span>
+            {% if item.original_line_price > item.final_line_price %}
+              <span class="price__compare">{{ item.original_line_price | money }}</span>
+            {% endif %}
+          </div>
+
+          <div class="cart-item__actions">
+            <div class="quantity" data-quantity>
+              <button type="button" aria-label="{{ 'theme.decrease_quantity' | t }}" data-quantity-button="decrease">
+                {% render 'icon-ui', icon: 'minus' %}
+              </button>
+              <input
+                type="number"
+                value="{{ item.quantity }}"
+                min="0"
+                inputmode="numeric"
+                aria-label="{{ 'theme.quantity_for' | t: product: item.product.title | escape }}"
+                data-cart-line-input
+              >
+              <button type="button" aria-label="{{ 'theme.increase_quantity' | t }}" data-quantity-button="increase">
+                {% render 'icon-ui', icon: 'plus' %}
+              </button>
+            </div>
+
+            <button type="button" class="cart-item__remove" data-cart-remove="{{ item.key }}">
+              {{ 'cart.remove' | t }}
+            </button>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

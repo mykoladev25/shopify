@@ -9,29 +9,182 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "hero-banner",
+    "hero": {
+      "type": "home-hero",
       "settings": {
-        "home_banner_desktop": "shopify://shop_images/Gemini_Generated_Image_he4iykhe4iykhe4i.png",
-        "home_banner_mobile": "shopify://shop_images/Gemini_Generated_Image_2ezzj12ezzj12ezz.png",
-        "home_banner_subtitle": "wooden toys made with care",
-        "home_banner_title": "Handmade toys",
-        "home_banner_cta_text": "Shop now",
-        "home_banner_link": "shopify://collections/all"
+        "badge_text": "Зроблено руками",
+        "eyebrow": "Дерев'яні іграшки для спокійної гри, добрих подарунків і теплих дитячих спогадів",
+        "heading": "Іграшки, які приємно дарувати і хочеться зберігати.",
+        "text": "<p>Природна фактура, уважна ручна робота, подарункова подача і доставка по Україні та за кордон.</p>",
+        "primary_label": "Переглянути каталог",
+        "primary_link": "shopify://collections/all",
+        "secondary_label": "Ідеї для подарунка",
+        "secondary_link": "shopify://collections/all",
+        "support_label": "Подарункова подача",
+        "support_heading": "Можна дарувати одразу",
+        "support_text": "Оформлення підсилює враження від речі ще до моменту вручення.",
+        "support_link_label": "Дивитися підбірку",
+        "support_link": "shopify://collections/all",
+        "padding_top": 16,
+        "padding_bottom": 40
       }
     },
-    "featured_collection_qHEFXH": {
-      "type": "featured-collection",
-      "name": "t:general.featured_collection",
+    "trust_strip": {
+      "type": "trust-strip",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Реальні строки",
+            "text": "Одразу кажемо, коли чекати замовлення."
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "icon": "handmade",
+            "heading": "Зроблено руками",
+            "text": "У кожній деталі відчутна уважна майстерність."
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Живі матеріали",
+            "text": "Природна фактура, яку приємно бачити і торкатися."
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "icon": "gift",
+            "heading": "Можна дарувати одразу",
+            "text": "Подача зібрана так, щоб подарунок виглядав завершено."
+          }
+        },
+        "item_5": {
+          "type": "item",
+          "settings": {
+            "icon": "star",
+            "heading": "Прозорий сервіс",
+            "text": "Ви знаєте, що замовляєте, коли отримаєте і до кого звернутись."
+          }
+        }
+      },
+      "block_order": ["item_1", "item_2", "item_3", "item_4", "item_5"],
       "settings": {
-        "title": "Bestsellers",
-        "collection": "частіше-за-все-купують",
-        "products_to_show": 4
+        "eyebrow": "Що важливо перед покупкою",
+        "heading": "Тут усе працює на спокійне замовлення.",
+        "text": "Реальні строки, природні матеріали, ручна робота і сервіс без неясностей.",
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "featured_categories": {
+      "type": "featured-categories",
+      "blocks": {
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "badge": "Дарувати легко",
+            "heading": "Для подарунка",
+            "text": "Речі з подачею, яка одразу виглядає завершено.",
+            "custom_link": "shopify://collections/all",
+            "button_label": "Переглянути"
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "badge": "Часто обирають",
+            "heading": "Машинки і транспорт",
+            "text": "Ті самі моделі, які подобаються з першого погляду і довго лишаються улюбленими.",
+            "custom_link": "shopify://collections/all",
+            "button_label": "Переглянути"
+          }
+        },
+        "category_3": {
+          "type": "category",
+          "settings": {
+            "badge": "Перший вибір",
+            "heading": "Для найменших",
+            "text": "Спокійні форми, тепла фактура і м'який старт знайомства з дерев'яною іграшкою.",
+            "custom_link": "shopify://collections/all",
+            "button_label": "Переглянути"
+          }
+        },
+        "category_4": {
+          "type": "category",
+          "settings": {
+            "badge": "Увесь вибір",
+            "heading": "Увесь каталог",
+            "text": "Перейдіть до всіх моделей і підберіть іграшку під вік, подію чи бюджет.",
+            "custom_link": "shopify://collections/all",
+            "button_label": "Увесь каталог"
+          }
+        }
+      },
+      "block_order": [
+        "category_1",
+        "category_2",
+        "category_3",
+        "category_4"
+      ],
+      "settings": {
+        "eyebrow": "Почніть з потрібного",
+        "heading": "Оберіть категорію під свій запит.",
+        "text": "Подарунок, перша дерев'яна іграшка, улюблений транспорт або весь каталог.",
+        "cta_label": "Усі колекції",
+        "cta_link": "shopify://collections/all",
+        "padding_top": 28,
+        "padding_bottom": 32
+      }
+    },
+    "featured_products": {
+      "type": "featured-products",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": "mashynka-z-kruhloyu-ruchkoyu"
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "product": "dzhyp"
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": "kabriolet-2-0"
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3"
+      ],
+      "settings": {
+        "eyebrow": "Почати легко",
+        "heading": "Іграшки, які найчастіше обирають для подарунка і першого знайомства.",
+        "text": "Короткий шлях до речей, які добре виглядають, приємно даруються і легко замовляються.",
+        "products_to_show": 4,
+        "cta_label": "Увесь каталог",
+        "cta_link": "shopify://collections/all",
+        "padding_top": 32,
+        "padding_bottom": 72
       }
     }
   },
   "order": [
-    "main",
-    "featured_collection_qHEFXH"
+    "hero",
+    "trust_strip",
+    "featured_categories",
+    "featured_products"
   ]
 }

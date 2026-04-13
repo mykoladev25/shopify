@@ -1,35 +1,51 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html lang="{{ localization.language.iso_code | default: request.locale.iso_code }}">
   <head>
-    {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
 
-    {% comment %}
-      Font preloading:
-      1. Preconnect to font CDN for faster connection
-      2. Preload only the critical font variant (base weight)
-      3. Additional variants load on-demand via @font-face
-    {% endcomment %}
     {% unless settings.type_primary_font.system? %}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-
-      {% comment %} Preload the base font variant for initial page render {% endcomment %}
       {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
     {% endunless %}
 
-    {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-
-    {% # Social, title, etc. %}
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
     {% render 'meta-tags' %}
-
     {{ content_for_header }}
+    <script>
+      window.ShopTheme = {
+        root: {{ routes.root_url | json }},
+        cartUrl: {{ routes.cart_url | json }},
+        currency: {{ cart.currency.iso_code | json }},
+        currentLocale: {{ localization.language.iso_code | default: request.locale.iso_code | json }},
+        defaultLocale: {{ 'uk' | json }},
+        strings: {
+          addToCart: {{ 'product.add_to_cart' | t | json }},
+          soldOut: {{ 'product.sold_out' | t | json }},
+          unavailable: {{ 'theme.unavailable' | t | json }},
+          addedFallback: {{ 'theme.product_fallback' | t | json }},
+          addedToCart: {{ 'theme.added_to_cart' | t | json }},
+          readyToShip: {{ 'theme.ready_to_ship' | t | json }},
+          lowStock: {{ 'theme.low_stock' | t | json }},
+          addToCartError: {{ 'theme.add_to_cart_error' | t | json }},
+          refreshCartError: {{ 'theme.refresh_cart_error' | t | json }},
+          updateCartError: {{ 'theme.update_cart_error' | t | json }},
+          cartUpdated: {{ 'theme.cart_updated' | t | json }},
+          itemRemoved: {{ 'theme.item_removed' | t | json }}
+        }
+      };
+    </script>
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
   </head>
 
-  <body>
+  <body class="template-{{ template.name | handle }}">
+    <a href="#MainContent" class="skip-link">{{ 'theme.skip_to_content' | t }}</a>
     {% sections 'header-group' %}
-
-    {{ content_for_layout }}
+    {% section 'cart-drawer' %}
+    <main id="MainContent" role="main">
+      {{ content_for_layout }}
+    </main>
+    <div class="sr-only" aria-live="polite" data-cart-live-region></div>
 
     {% sections 'footer-group' %}
   </body>

@@ -1,0 +1,9 @@
+{% liquid
+  assign tone_value = tone | default: 'subtle'
+%}
+
+{% if label != blank %}
+  <span class="badge badge--{{ tone_value }}">
+    {{ label }}
+  </span>
+{% endif %}

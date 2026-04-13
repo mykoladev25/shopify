@@ -1,0 +1,77 @@
+{% liquid
+  assign icon_name = icon | default: 'arrow'
+%}
+
+{% case icon_name %}
+  {% when 'menu' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M4 7H20M4 12H20M4 17H14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  {% when 'close' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  {% when 'cart' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M4 5H6L8.2 15.2C8.35 15.92 8.99 16.43 9.72 16.43H17.6C18.29 16.43 18.9 15.97 19.08 15.3L20.6 9.7C20.86 8.74 20.14 7.8 19.15 7.8H7.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 20.2C10 20.64 9.64 21 9.2 21C8.76 21 8.4 20.64 8.4 20.2C8.4 19.76 8.76 19.4 9.2 19.4C9.64 19.4 10 19.76 10 20.2Z" fill="currentColor"/>
+      <path d="M18.4 20.2C18.4 20.64 18.04 21 17.6 21C17.16 21 16.8 20.64 16.8 20.2C16.8 19.76 17.16 19.4 17.6 19.4C18.04 19.4 18.4 19.76 18.4 20.2Z" fill="currentColor"/>
+    </svg>
+  {% when 'account' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M12 12.2C14.32 12.2 16.2 10.32 16.2 8C16.2 5.68 14.32 3.8 12 3.8C9.68 3.8 7.8 5.68 7.8 8C7.8 10.32 9.68 12.2 12 12.2Z" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M4.8 19.8C6.21 16.99 8.89 15.4 12 15.4C15.11 15.4 17.79 16.99 19.2 19.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  {% when 'arrow' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M5 12H19M13 6L19 12L13 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  {% when 'chevron' %}
+    <svg class="icon-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  {% when 'plus' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  {% when 'minus' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  {% when 'check' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M5 12.5L10 17L19 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  {% when 'gift' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M12 9.8V20M4.4 9.8H19.6V20H4.4V9.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M3.8 6.2H20.2V9.8H3.8V6.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M12 6.2C12 4.54 10.88 3.4 9.5 3.4C8.12 3.4 7 4.54 7 6.2H12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M12 6.2C12 4.54 13.12 3.4 14.5 3.4C15.88 3.4 17 4.54 17 6.2H12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  {% when 'shipping' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M3.8 7.2H14.6V16.8H3.8V7.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M14.6 10H18L20.2 12.2V16.8H14.6V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M8 18.6C8 19.48 7.28 20.2 6.4 20.2C5.52 20.2 4.8 19.48 4.8 18.6C4.8 17.72 5.52 17 6.4 17C7.28 17 8 17.72 8 18.6Z" fill="currentColor"/>
+      <path d="M19.2 18.6C19.2 19.48 18.48 20.2 17.6 20.2C16.72 20.2 16 19.48 16 18.6C16 17.72 16.72 17 17.6 17C18.48 17 19.2 17.72 19.2 18.6Z" fill="currentColor"/>
+    </svg>
+  {% when 'shield' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M12 3.8L18.6 6.2V11.2C18.6 15.21 15.91 18.84 12 20.2C8.09 18.84 5.4 15.21 5.4 11.2V6.2L12 3.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M9.2 11.9L11.2 13.9L15.2 9.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  {% when 'handmade' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M9.5 12.6L12 10.2L14.5 12.6L12 15L9.5 12.6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M12 3.8L19 8V16L12 20.2L5 16V8L12 3.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  {% when 'star' %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M12 4.4L14.36 9.18L19.64 9.95L15.82 13.67L16.72 18.93L12 16.45L7.28 18.93L8.18 13.67L4.36 9.95L9.64 9.18L12 4.4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  {% else %}
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M5 12H19M13 6L19 12L13 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+{% endcase %}

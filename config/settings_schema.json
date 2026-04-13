@@ -1,31 +1,31 @@
 [
   {
-    "name": "t:general.logo",
+    "name": "Brand",
     "settings": [
       {
         "type": "image_picker",
         "id": "logo",
-        "label": "t:labels.site_logo"
+        "label": "Logo"
       },
       {
         "type": "range",
         "id": "logo_width",
         "min": 50,
-        "max": 250,
+        "max": 260,
         "step": 10,
-        "default": 100,
+        "default": 180,
         "unit": "px",
-        "label": "t:labels.logo_width"
+        "label": "Logo width"
       }
     ]
   },
   {
-    "name": "t:general.account",
+    "name": "Account",
     "settings": [
       {
         "type": "text",
         "id": "account_url",
-        "label": "t:labels.account_url",
+        "label": "Legacy account URL",
         "default": "https://shopify.com/97587429656/account"
       }
     ]
@@ -39,35 +39,39 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
-    "name": "t:general.typography",
+    "name": "Typography",
     "settings": [
       {
         "type": "header",
-        "content": "t:general.fonts"
+        "content": "Fonts"
       },
       {
         "type": "font_picker",
         "id": "type_primary_font",
         "default": "work_sans_n4",
-        "label": "t:general.primary"
+        "label": "Primary font"
       }
     ]
   },
   {
-    "name": "t:general.layout",
+    "name": "Layout",
     "settings": [
       {
         "type": "select",
         "id": "max_page_width",
-        "label": "t:labels.page_width",
+        "label": "Page width",
         "options": [
           {
-            "value": "90rem",
-            "label": "t:options.page_width.narrow"
+            "value": "78rem",
+            "label": "Contained"
           },
           {
-            "value": "110rem",
-            "label": "t:options.page_width.wide"
+            "value": "90rem",
+            "label": "Wide"
+          },
+          {
+            "value": "100rem",
+            "label": "Extra wide"
           }
         ],
         "default": "90rem"
@@ -76,38 +80,100 @@
         "type": "range",
         "id": "min_page_margin",
         "min": 10,
-        "max": 100,
-        "step": 1,
+        "max": 40,
+        "step": 2,
         "unit": "px",
-        "label": "t:labels.page_margin",
-        "default": 20
+        "label": "Page margin",
+        "default": 18
+      },
+      {
+        "type": "range",
+        "id": "section_spacing",
+        "min": 32,
+        "max": 120,
+        "step": 4,
+        "unit": "px",
+        "label": "Default section spacing",
+        "default": 72
       }
     ]
   },
   {
-    "name": "t:general.colors",
+    "name": "Colors and style",
     "settings": [
       {
         "type": "color",
         "id": "background_color",
-        "default": "#FFFFFF",
-        "label": "t:labels.background"
+        "default": "#D8CEC2",
+        "label": "Background"
       },
       {
         "type": "color",
         "id": "foreground_color",
-        "default": "#333333",
-        "label": "t:labels.foreground"
+        "default": "#3F3A34",
+        "label": "Text"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "default": "#E7DED4",
+        "label": "Surface"
+      },
+      {
+        "type": "color",
+        "id": "color_surface_alt",
+        "default": "#F4EEE7",
+        "label": "Surface alt"
+      },
+      {
+        "type": "color",
+        "id": "color_muted",
+        "default": "#7D756A",
+        "label": "Muted text"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "default": "#8B8A78",
+        "label": "Accent"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_dark",
+        "default": "#6F6E5F",
+        "label": "Accent dark"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "default": "#C8BDAF",
+        "label": "Border"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text",
+        "default": "#F4EEE7",
+        "label": "Button text"
       },
       {
         "type": "range",
         "id": "input_corner_radius",
-        "min": 0,
-        "max": 10,
-        "step": 1,
+        "min": 4,
+        "max": 32,
+        "step": 2,
         "unit": "px",
-        "label": "t:labels.input_corner_radius",
-        "default": 4
+        "label": "Input radius",
+        "default": 18
+      },
+      {
+        "type": "range",
+        "id": "card_corner_radius",
+        "min": 8,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Card radius",
+        "default": 26
       }
     ]
   }

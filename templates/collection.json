@@ -10,8 +10,19 @@
 {
   "sections": {
     "main": {
-      "type": "collection",
-      "settings": {}
+      "type": "main-collection",
+      "settings": {
+        "eyebrow": "Іграшки, створені з увагою",
+        "show_description": true,
+        "intro_text": "Добірка для тих, хто хоче швидко знайти доречний подарунок або спокійну іграшку на щодень.",
+        "products_per_page": 12,
+        "show_promo_card": true,
+        "promo_position": 3,
+        "promo_badge": "Чому замовляють",
+        "promo_heading": "Речі, які приємно дарувати і спокійно замовляти.",
+        "promo_text": "Природні матеріали, уважна ручна робота і сервіс, де все зрозуміло від початку.",
+        "promo_link_label": "Наша історія"
+      }
     }
   },
   "order": [

@@ -11,6 +11,21 @@
   "current": {
     "logo": "shopify://shop_images/482267747_1296315014926274_1806318694979643643_n.svg",
     "type_primary_font": "inter_n4",
+    "background_color": "#D8CEC2",
+    "foreground_color": "#3F3A34",
+    "color_surface": "#E7DED4",
+    "color_surface_alt": "#F4EEE7",
+    "color_muted": "#7D756A",
+    "color_accent": "#8B8A78",
+    "color_accent_dark": "#6F6E5F",
+    "color_border": "#C8BDAF",
+    "color_button_text": "#F4EEE7",
+    "logo_width": 180,
+    "max_page_width": "90rem",
+    "min_page_margin": 18,
+    "section_spacing": 72,
+    "input_corner_radius": 18,
+    "card_corner_radius": 26,
     "content_for_index": []
   }
 }

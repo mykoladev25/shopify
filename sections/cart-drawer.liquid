@@ -1,0 +1,237 @@
+{% liquid
+  assign free_shipping_cents = section.settings.free_shipping_threshold | times: 100
+  assign shipping_progress = 0
+
+  if free_shipping_cents > 0
+    assign shipping_progress = cart.total_price | times: 100.0 | divided_by: free_shipping_cents
+    if shipping_progress > 100
+      assign shipping_progress = 100
+    endif
+  endif
+
+  assign cross_sell = section.settings.cross_sell_product
+  if cross_sell == blank and section.settings.cross_sell_collection != blank
+    for product in section.settings.cross_sell_collection.products limit: 24
+      assign already_in_cart = false
+      for item in cart.items
+        if item.product_id == product.id
+          assign already_in_cart = true
+          break
+        endif
+      endfor
+      unless already_in_cart
+        if product.available
+          assign cross_sell = product
+          break
+        endif
+      endunless
+    endfor
+  endif
+%}
+
+<div class="cart-drawer" data-cart-drawer aria-hidden="true" hidden>
+  <button type="button" class="cart-drawer__overlay" aria-label="{{ 'cart.close' | t }}" data-cart-overlay></button>
+
+  <aside class="cart-drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'theme.cart_drawer' | t }}">
+    <div class="cart-drawer__header">
+      <div class="cart-drawer__title-row">
+        <div>
+          <h3>{{ section.settings.heading }}</h3>
+          <p class="cart-item__variant">{{ cart.item_count }} {% if cart.item_count == 1 %}{{ 'theme.item_one' | t }}{% else %}{{ 'theme.item_other' | t }}{% endif %}</p>
+        </div>
+
+        <button type="button" aria-label="{{ 'cart.close' | t }}" data-cart-close>
+          {% render 'icon-ui', icon: 'close' %}
+        </button>
+      </div>
+    </div>
+
+    <div class="cart-drawer__body">
+      <div class="cart-drawer__error" data-cart-error role="status"></div>
+
+      {% if free_shipping_cents > 0 %}
+        <div class="cart-progress">
+          {% if cart.total_price >= free_shipping_cents %}
+            <p class="cart-drawer__shipping">{{ section.settings.free_shipping_success_text }}</p>
+          {% else %}
+            {% assign amount_remaining = free_shipping_cents | minus: cart.total_price %}
+            {% assign amount_remaining_money = amount_remaining | money %}
+            <p class="cart-drawer__shipping">
+              {{ section.settings.free_shipping_text | replace: '[amount]', amount_remaining_money }}
+            </p>
+          {% endif %}
+
+          <div class="cart-progress__bar" aria-hidden="true">
+            <span style="width: {{ shipping_progress }}%;"></span>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if cart.item_count > 0 %}
+        {% render 'cart-drawer-items' %}
+
+        {% if cross_sell != blank %}
+          <div class="cart-cross-sell surface-card">
+            <div>
+              <strong>{{ section.settings.cross_sell_heading }}</strong>
+              {% if section.settings.cross_sell_text != blank %}
+                <p>{{ section.settings.cross_sell_text }}</p>
+              {% endif %}
+            </div>
+
+            <div class="cart-cross-sell__card">
+              <a href="{{ cross_sell.url }}" class="cart-cross-sell__image">
+                {% if cross_sell.featured_image != blank %}
+                  {{ cross_sell.featured_image | image_url: width: 220 | image_tag: widths: '110,160,220', sizes: '80px', loading: 'lazy', alt: cross_sell.title }}
+                {% endif %}
+              </a>
+
+              <div class="cart-cross-sell__body">
+                <a href="{{ cross_sell.url }}">{{ cross_sell.title }}</a>
+                {% render 'price', product: cross_sell, variant: cross_sell.selected_or_first_available_variant %}
+
+                {% if cross_sell.available and cross_sell.has_only_default_variant %}
+                  {% form 'product', cross_sell, data-product-form: '', data-product-title: cross_sell.title %}
+                    <input type="hidden" name="id" value="{{ cross_sell.selected_or_first_available_variant.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="button button--secondary" data-product-submit>
+                      <span class="button__spinner" aria-hidden="true"></span>
+                      <span class="button__label">{{ 'theme.add_gift_extra' | t }}</span>
+                    </button>
+                    <p class="product-form__error" data-product-form-error role="status"></p>
+                  {% endform %}
+                {% else %}
+                  <a href="{{ cross_sell.url }}" class="button button--secondary">{{ 'theme.view_product' | t }}</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="cart-drawer__empty">
+          <h4>{{ section.settings.empty_heading }}</h4>
+          <p>{{ section.settings.empty_text }}</p>
+          <a href="{{ section.settings.empty_link | default: routes.all_products_collection_url }}" class="button">
+            {{ section.settings.empty_button_label }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <div class="cart-drawer__footer">
+        <div class="cart-drawer__subtotal">
+          <span>{{ 'theme.subtotal' | t }}</span>
+          <strong>{{ cart.total_price | money }}</strong>
+        </div>
+        <p class="cart-drawer__tax-note">{{ section.settings.tax_note }}</p>
+        <div class="cart-drawer__footer-actions">
+          <a href="/checkout" class="button button--full">{{ section.settings.checkout_label }}</a>
+          <button type="button" class="button button--secondary button--full" data-cart-close>
+            {{ section.settings.continue_label }}
+          </button>
+        </div>
+      </div>
+    {% endif %}
+  </aside>
+</div>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ваш кошик"
+    },
+    {
+      "type": "range",
+      "id": "free_shipping_threshold",
+      "label": "Free shipping threshold",
+      "min": 0,
+      "max": 500,
+      "step": 5,
+      "unit": "$",
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_text",
+      "label": "Free shipping progress text",
+      "default": "Додайте ще [amount] для безкоштовної доставки."
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_success_text",
+      "label": "Free shipping success text",
+      "default": "Для цього замовлення безкоштовна доставка вже активна."
+    },
+    {
+      "type": "product",
+      "id": "cross_sell_product",
+      "label": "Cross-sell product",
+      "info": "If set, this product is shown. Otherwise the first available product from the cross-sell collection (not already in cart) is used."
+    },
+    {
+      "type": "collection",
+      "id": "cross_sell_collection",
+      "label": "Cross-sell collection (fallback)"
+    },
+    {
+      "type": "text",
+      "id": "cross_sell_heading",
+      "label": "Cross-sell heading",
+      "default": "Влучне доповнення"
+    },
+    {
+      "type": "textarea",
+      "id": "cross_sell_text",
+      "label": "Cross-sell text",
+      "default": "Запропонуйте один доречний додаток, який справді підсилює подарунок або досвід гри."
+    },
+    {
+      "type": "text",
+      "id": "checkout_label",
+      "label": "Checkout label",
+      "default": "Безпечне оформлення"
+    },
+    {
+      "type": "text",
+      "id": "continue_label",
+      "label": "Continue shopping label",
+      "default": "Продовжити покупки"
+    },
+    {
+      "type": "text",
+      "id": "tax_note",
+      "label": "Tax/shipping note",
+      "default": "Податки включено, де це застосовується. Доставка розраховується під час оформлення."
+    },
+    {
+      "type": "text",
+      "id": "empty_heading",
+      "label": "Empty cart heading",
+      "default": "Кошик поки порожній"
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Empty cart text",
+      "default": "Почніть з іграшки ручної роботи, яку батьки люблять дарувати, а діти хочуть зберігати."
+    },
+    {
+      "type": "text",
+      "id": "empty_button_label",
+      "label": "Empty cart button label",
+      "default": "Переглянути іграшки"
+    },
+    {
+      "type": "url",
+      "id": "empty_link",
+      "label": "Empty cart button link"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,140 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "404": {
+    "title": "404",
+    "not_found": "Сторінку не знайдено.",
+    "back_to_shopping": "Повернутися до покупок"
+  },
+  "blog": {
+    "article_comments": "Коментарі",
+    "article_metadata_html": "{{ date }} від {{ author }}",
+    "comment_form_body": "Коментар",
+    "comment_form_email": "Email",
+    "comment_form_name": "Ім'я",
+    "comment_form_submit": "Опублікувати",
+    "comment_form_title": "Додати коментар"
+  },
+  "cart": {
+    "checkout": "Оформити замовлення",
+    "subtotal": "Разом:",
+    "summary_title": "Ваше замовлення",
+    "taxes_note": "Податки та доставка розраховуються на етапі оформлення.",
+    "title": "Кошик",
+    "update": "Оновити",
+    "remove": "Видалити",
+    "close": "Закрити"
+  },
+  "customers": {
+    "login": {
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Увійти",
+      "title": "Вхід"
+    }
+  },
+  "collections": {
+    "title": "Колекції"
+  },
+  "featured_collection": {
+    "title": "Часто обирають",
+    "placeholder_title": "Назва товару"
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Додати в Apple Wallet",
+    "card": "Подарункова картка",
+    "expired": "Термін дії цієї подарункової картки минув",
+    "expires_on": "Дійсна до {{ expires_on }}",
+    "use_at_checkout": "Використайте цю подарункову картку під час оформлення замовлення"
+  },
+  "header": {
+    "announcement": "Ручна робота, природні матеріали і подарункова подача, яку приємно вручати.",
+    "open_menu": "Відкрити меню",
+    "close_menu": "Закрити меню",
+    "language": "Мова"
+  },
+  "hero_banner": {
+    "subtitle": "дерев'яні іграшки з душею",
+    "title": "Іграшки ручної роботи",
+    "cta": "Переглянути"
+  },
+  "password": {
+    "title": "Цей магазин приватний",
+    "password": "Пароль",
+    "enter": "Увійти"
+  },
+  "product": {
+    "add_to_cart": "В кошик",
+    "sold_out": "Немає в наявності",
+    "add_to_wishlist": "Додати у вибране"
+  },
+  "search": {
+    "title": "Пошук",
+    "placeholder": "Шукати статті, сторінки або товари",
+    "submit": "Шукати",
+    "no_results_html": "За запитом {{ terms }} нічого не знайдено",
+    "results_for_html": "За запитом {{ terms }} знайдено: {{ count }}"
+  },
+  "theme": {
+    "about_toy": "Про іграшку",
+    "account": "Кабінет",
+    "add_gift_extra": "Додати до подарунка",
+    "added_fallback": "Товар",
+    "added_to_cart": "додано до кошика.",
+    "add_to_cart_error": "Не вдалося додати товар до кошика.",
+    "apply_filters": "Застосувати фільтри",
+    "bestseller": "Хіт продажу",
+    "browse_toys": "Переглянути іграшки",
+    "cart_drawer": "Кошик",
+    "cart_updated": "Кошик оновлено.",
+    "choose_options": "Обрати опції",
+    "clear": "Скинути",
+    "contact_details": "Контакти",
+    "contact_email": "Email",
+    "contact_hours": "Графік роботи",
+    "contact_intro": "Напишіть нам щодо строків відправки, подарункової подачі чи доставки. Відповідаємо коротко, ясно і без затримок.",
+    "contact_message": "Повідомлення",
+    "contact_name": "Ім'я",
+    "contact_phone": "Телефон",
+    "contact_shipping": "Доставка та замовлення",
+    "contact_subject": "Тема",
+    "contact_submit": "Надіслати повідомлення",
+    "contact_success": "Дякуємо. Ваше повідомлення успішно надіслано.",
+    "decrease_quantity": "Зменшити кількість",
+    "faq": "Поширені питання",
+    "filters": "Фільтри",
+    "gift_ready": "Готово для вручення",
+    "handmade": "Зроблено руками",
+    "increase_quantity": "Збільшити кількість",
+    "item_one": "товар",
+    "item_other": "товари",
+    "item_removed": "Товар видалено з кошика.",
+    "keep_browsing": "Дивіться далі",
+    "low_stock": "У цій партії залишилося лише [count] шт.",
+    "max": "До",
+    "min": "Від",
+    "new": "Новинка",
+    "parent_feedback": "Відгуки батьків",
+    "price_note": "Податки враховано, де це застосовно. Доставка — під час оформлення.",
+    "product_fallback": "Товар",
+    "quantity": "Кількість",
+    "quantity_for": "Кількість для [product]",
+    "quick_add": "Швидко в кошик",
+    "ready_to_ship": "Готово до відправки",
+    "refresh_cart_error": "Не вдалося оновити дані кошика.",
+    "skip_to_content": "Перейти до вмісту",
+    "sort": "Сортування",
+    "subtotal": "Разом",
+    "unavailable": "Недоступно",
+    "update_cart_error": "Не вдалося оновити кошик.",
+    "verified_order": "Підтверджена покупка",
+    "view_product": "Переглянути товар"
+  }
+}

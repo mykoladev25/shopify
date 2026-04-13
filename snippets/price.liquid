@@ -1,0 +1,21 @@
+{% liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign note_out = note
+  if note_out == blank and show_note
+    assign note_out = 'theme.price_note' | t
+  endif
+%}
+
+{% if target != blank %}
+  <div class="price{% if class != blank %} {{ class }}{% endif %}">
+    <span class="price__current" data-price-current>{{ target.price | money }}</span>
+    <span class="price__compare"{% if target.compare_at_price <= target.price or target.compare_at_price == blank %} hidden{% endif %} data-price-compare>
+      {% if target.compare_at_price > target.price %}
+        {{ target.compare_at_price | money }}
+      {% endif %}
+    </span>
+    {% if show_note and product.available and note_out != blank %}
+      <span class="price__note">{{ note_out }}</span>
+    {% endif %}
+  </div>
+{% endif %}

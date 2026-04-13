@@ -1,0 +1,287 @@
+{% liquid
+  assign products_per_page = section.settings.products_per_page
+  assign promo_insert_index = section.settings.promo_position
+  assign active_filter_count = 0
+  assign current_sort = collection.sort_by | default: collection.default_sort_by
+
+  for filter in collection.filters
+    case filter.type
+      when 'list', 'boolean'
+        assign active_filter_count = active_filter_count | plus: filter.active_values.size
+      when 'price_range'
+        if filter.min_value.value != blank
+          assign active_filter_count = active_filter_count | plus: 1
+        endif
+        if filter.max_value.value != blank
+          assign active_filter_count = active_filter_count | plus: 1
+        endif
+    endcase
+  endfor
+%}
+
+{% paginate collection.products by products_per_page %}
+  <section class="section-shell collection-page" style="--section-top: 24px; --section-bottom: 88px;">
+    <div class="section-shell__inner">
+      <div class="section-heading">
+        {% if section.settings.eyebrow != blank %}
+          <p class="section-heading__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        <h1>{{ collection.title }}</h1>
+        {% if collection.description != blank and section.settings.show_description %}
+          <div class="rte section-heading__text">{{ collection.description }}</div>
+        {% elsif section.settings.intro_text != blank %}
+          <p class="section-heading__text">{{ section.settings.intro_text }}</p>
+        {% endif %}
+      </div>
+
+      <div class="collection-toolbar surface-card">
+        {% if collection.filters.size > 0 %}
+          <details class="collection-toolbar__filters" {% if active_filter_count > 0 %}open{% endif %}>
+            <summary>
+              <span class="collection-toolbar__summary-label">
+                <span>{{ 'theme.filters' | t }}</span>
+                {% if active_filter_count > 0 %}
+                  <span class="collection-toolbar__summary-count">{{ active_filter_count }}</span>
+                {% endif %}
+              </span>
+              {% render 'icon-ui', icon: 'chevron' %}
+            </summary>
+
+            <form class="collection-filters" action="{{ collection.url }}" method="get">
+              {% if current_sort != blank %}
+                <input type="hidden" name="sort_by" value="{{ current_sort }}">
+              {% endif %}
+
+              {% for filter in collection.filters %}
+                <fieldset class="collection-filters__group">
+                  <legend class="collection-filters__legend">{{ filter.label }}</legend>
+
+                  {% case filter.type %}
+                    {% when 'list', 'boolean' %}
+                      <div class="collection-filters__list">
+                        {% for filter_value in filter.values %}
+                          <label class="collection-filters__option">
+                            <span class="collection-filters__option-content">
+                              <input
+                                class="collection-filters__checkbox"
+                                type="checkbox"
+                                name="{{ filter_value.param_name }}"
+                                value="{{ filter_value.value }}"
+                                {% if filter_value.active %}checked{% endif %}
+                                {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}
+                              >
+                              <span class="collection-filters__option-text">{{ filter_value.label }}</span>
+                            </span>
+                            {% if filter_value.count > 0 %}
+                              <span class="collection-filters__option-count">{{ filter_value.count }}</span>
+                            {% endif %}
+                          </label>
+                        {% endfor %}
+                      </div>
+                    {% when 'price_range' %}
+                      <div class="collection-filters__price">
+                        <label class="collection-filters__price-field">
+                          <span class="collection-filters__price-label">{{ 'theme.min' | t }}</span>
+                          <input
+                            class="field"
+                            name="{{ filter.min_value.param_name }}"
+                            type="number"
+                            inputmode="numeric"
+                            min="0"
+                            {% if filter.min_value.value %}value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"{% endif %}
+                            placeholder="0"
+                          >
+                        </label>
+                        <label class="collection-filters__price-field">
+                          <span class="collection-filters__price-label">{{ 'theme.max' | t }}</span>
+                          <input
+                            class="field"
+                            name="{{ filter.max_value.param_name }}"
+                            type="number"
+                            inputmode="numeric"
+                            min="0"
+                            {% if filter.max_value.value %}value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"{% endif %}
+                            placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          >
+                        </label>
+                      </div>
+                  {% endcase %}
+                </fieldset>
+              {% endfor %}
+
+              <div class="collection-filters__actions">
+                <button type="submit" class="button button--secondary">{{ 'theme.apply_filters' | t }}</button>
+                {% if active_filter_count > 0 %}
+                  <a href="{{ collection.url }}" class="button button--ghost">{{ 'theme.clear' | t }}</a>
+                {% endif %}
+              </div>
+            </form>
+          </details>
+        {% endif %}
+
+        <form class="collection-toolbar__sort" action="{{ collection.url }}" method="get">
+          {% for filter in collection.filters %}
+            {% if filter.type == 'list' or filter.type == 'boolean' %}
+              {% for filter_value in filter.active_values %}
+                <input type="hidden" name="{{ filter_value.param_name }}" value="{{ filter_value.value }}">
+              {% endfor %}
+            {% elsif filter.type == 'price_range' %}
+              {% if filter.min_value.value %}
+                <input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}">
+              {% endif %}
+              {% if filter.max_value.value %}
+                <input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}">
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          <label class="product-form__label" for="sort-by-{{ section.id }}">{{ 'theme.sort' | t }}</label>
+          <select class="field" id="sort-by-{{ section.id }}" name="sort_by" data-sort-by>
+            {% for option in collection.sort_options %}
+              <option value="{{ option.value }}" {% if option.value == current_sort %}selected{% endif %}>
+                {{ option.name }}
+              </option>
+            {% endfor %}
+          </select>
+          <noscript>
+            <button type="submit" class="button button--secondary">{{ 'cart.update' | t }}</button>
+          </noscript>
+        </form>
+      </div>
+
+      {% if collection.products_count > 0 %}
+        <div class="product-grid product-grid--collection">
+          {% for product in collection.products %}
+            {% if section.settings.show_promo_card and promo_insert_index == forloop.index %}
+              <article class="collection-promo-card surface-card">
+                <div class="badge-list">
+                  {% render 'badge', label: section.settings.promo_badge %}
+                </div>
+                <h3>{{ section.settings.promo_heading }}</h3>
+                <p>{{ section.settings.promo_text }}</p>
+                {% if section.settings.promo_link_label != blank and section.settings.promo_link != blank %}
+                  <a href="{{ section.settings.promo_link }}" class="button button--secondary">
+                    {{ section.settings.promo_link_label }}
+                  </a>
+                {% endif %}
+              </article>
+            {% endif %}
+
+            {% render 'product-card', product: product %}
+          {% endfor %}
+        </div>
+
+        {% if paginate.pages > 1 %}
+          <nav class="pagination" aria-label="Pagination">
+            {{ paginate | default_pagination }}
+          </nav>
+        {% endif %}
+      {% else %}
+        <div class="collection-empty surface-card">
+          <h2>{{ section.settings.empty_heading }}</h2>
+          <p>{{ section.settings.empty_text }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="button button--secondary">
+            {{ section.settings.empty_button_label }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "Main collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Іграшки, створені з увагою"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "label": "Fallback intro text",
+      "default": "Добірка для тих, хто хоче швидко знайти доречний подарунок або спокійну іграшку на щодень."
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo_card",
+      "label": "Show promo card in grid",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "promo_position",
+      "label": "Promo card position",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "promo_badge",
+      "label": "Promo badge",
+      "default": "Чому замовляють"
+    },
+    {
+      "type": "text",
+      "id": "promo_heading",
+      "label": "Promo heading",
+      "default": "Речі, які приємно дарувати і спокійно замовляти."
+    },
+    {
+      "type": "textarea",
+      "id": "promo_text",
+      "label": "Promo text",
+      "default": "Природні матеріали, уважна ручна робота і сервіс, де все зрозуміло від початку."
+    },
+    {
+      "type": "text",
+      "id": "promo_link_label",
+      "label": "Promo link label",
+      "default": "Наша історія"
+    },
+    {
+      "type": "url",
+      "id": "promo_link",
+      "label": "Promo link"
+    },
+    {
+      "type": "text",
+      "id": "empty_heading",
+      "label": "Empty state heading",
+      "default": "Поки що нічого не знайдено за цими фільтрами"
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Empty state text",
+      "default": "Спробуйте скинути частину фільтрів або перейти до всього каталогу."
+    },
+    {
+      "type": "text",
+      "id": "empty_button_label",
+      "label": "Empty state button label",
+      "default": "Усі іграшки"
+    }
+  ]
+}
+{% endschema %}

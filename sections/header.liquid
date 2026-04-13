@@ -1,75 +1,51 @@
 {% liquid
   assign current_language_iso = localization.language.iso_code | default: request.locale.iso_code
-  assign locale_prefix = current_language_iso | slice: 0, 2
-  assign announcement_text = section.settings.announcement_text
-
-  if announcement_text == blank or locale_prefix == 'uk'
-    assign announcement_text = 'header.announcement' | t
-  endif
 %}
 
-{%- if section.settings.show_announcement and announcement_text != blank -%}
-  <p class="announcement">
-    <span class="announcement__content">
-      {{ announcement_text }}
-    </span>
-  </p>
+{%- if section.settings.show_announcement and section.settings.announcement_text != blank -%}
+  <div class="announcement-bar">
+    <div class="announcement-bar__inner">
+      {{ section.settings.announcement_text }}
+    </div>
+  </div>
 {%- endif -%}
-<header>
-  <div class="header-content">
-    <a href="{{ routes.root_url }}" class="header__logo-link header__title">
-    {%- if settings.logo != blank -%}
-      {%- assign logo_width = settings.logo_width -%}
-      {{ settings.logo | image_url: width: logo_width | image_tag: class: 'header__logo-img', loading: 'eager' }}
-    {%- else -%}
-    <h2 class="header__title">
-      {{ shop.name | link_to: routes.root_url }}
-    </h2>
-    {%- endif -%}
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <button type="button" class="site-header__menu-button mobile-only" aria-label="{{ 'header.open_menu' | t }}" data-mobile-nav-toggle>
+      {% render 'icon-ui', icon: 'menu' %}
+    </button>
+
+    <a href="{{ routes.root_url }}" class="site-header__brand">
+      {% if settings.logo != blank %}
+        {{ settings.logo | image_url: width: settings.logo_width | image_tag: widths: '120,180,240,320', alt: shop.name, loading: 'eager' }}
+      {% else %}
+        <span class="site-header__brand-name">{{ shop.name }}</span>
+      {% endif %}
     </a>
 
-    <nav class="header__menu desktop-only">
-      {% for link in section.settings.menu.links %}
-        {{ link.title | link_to: link.url }}
-      {% endfor %}
+    <nav class="site-header__nav" aria-label="Primary">
+      <ul>
+        {% for link in section.settings.menu.links %}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
     </nav>
 
-    <button id="menu-open" class="burger-btn mobile-only" aria-label="{{ 'header.open_menu' | t }}"></button>
-
-    <dialog id="mobile-menu" class="mobile-drawer">
-      <nav class="mobile-drawer__nav">
-        <ul>
-          {% for link in section.settings.menu.links %}
-            {{ link.title | link_to: link.url }}
-          {% endfor %}
-        </ul>
-      </nav>
-      <button id="menu-close" class="close-btn" aria-label="{{ 'header.close_menu' | t }}">
-        {{ 'header.close_menu' | t }}
-      </button>
-    </dialog>
-
-    <div class="header__icons">
+    <div class="site-header__actions">
       {% if localization.available_languages.size > 1 %}
-        {% form 'localization', class: 'header__locale-form' %}
-          <div class="header__locale-switcher" role="group" aria-label="{{ 'header.language' | t }}">
+        {% form 'localization', class: 'locale-switcher site-header__locale-switcher desktop-only', data-locale-form: '' %}
+          <input type="hidden" name="return_to" value="{{ request.path }}">
+          <div class="locale-switcher__options" role="group" aria-label="{{ 'header.language' | t }}">
             {% for language in localization.available_languages %}
-              {% liquid
-                assign language_label = language.iso_code | upcase
-
-                if language.iso_code == 'uk'
-                  assign language_label = 'UA'
-                endif
-              %}
-
               <button
-                type="submit"
-                name="language_code"
-                value="{{ language.iso_code }}"
-                class="header__locale-button{% if language.iso_code == current_language_iso %} is-active{% endif %}"
-                aria-label="{{ language.endonym_name | default: language.name }}"
+                type="button"
+                data-locale-button
+                data-locale-code="{{ language.iso_code }}"
+                class="locale-switcher__button{% if language.iso_code == current_language_iso %} is-active{% endif %}"
+                lang="{{ language.iso_code }}"
               >
-                {{ language_label }}
+                {{ language.iso_code | upcase }}
               </button>
             {% endfor %}
           </div>
@@ -77,118 +53,87 @@
       {% endif %}
 
       {% if shop.customer_accounts_enabled %}
-        <a href="{{ settings.account_url }}" aria-label="{{ 'customers.login.title' | t }}">{% render 'icon-account' %}</a>
+        <a href="{{ routes.account_url }}" class="site-header__icon-btn desktop-only" aria-label="{{ 'theme.account' | t }}">
+          {% render 'icon-ui', icon: 'account' %}
+        </a>
       {% endif %}
 
-      <a
-        href="{{ routes.cart_url }}"
-        data-minicart-open
-        aria-label="{{ 'cart.title' | t }}"
-      >
-        {% if cart.item_count > 0 %}
-          <sup>{{ cart.item_count }}</sup>
-        {% endif %}
-
-        {% render 'icon-cart' %}
+      <a href="{{ routes.cart_url }}" class="site-header__icon-btn" aria-label="{{ 'cart.title' | t }}" data-cart-open>
+        {% render 'icon-ui', icon: 'cart' %}
+        {% render 'cart-count-bubble' %}
       </a>
     </div>
-    <dialog id="minicart-drawer" class="minicart-drawer">
-        <div class="minicart__header">
-          <h2 class="minicart__title">{{ 'cart.title' | t | default: 'Your Cart' }}</h2>
-          <button type="button" id="minicart-close" class="minicart__close-btn" aria-label="{{ 'cart.close' | t | default: 'Close' }}">
-            ✕
-          </button>
-        </div>
-
-        <div class="minicart__body">
-          {% if cart.item_count > 0 %}
-            <form action="{{ routes.cart_url }}" method="post" id="minicart-form" class="minicart__form">
-              <div class="minicart__items">
-                {% for item in cart.items %}
-                  <div class="minicart__item">
-                    <a href="{{ item.url }}" class="minicart__item-image">
-                      {% if item.image %}
-                        <img src="{{ item.image | image_url: width: 150 }}" alt="{{ item.title | escape }}" width="75" height="75" loading="lazy">
-                      {% endif %}
-                    </a>
-                    <div class="minicart__item-details">
-                      <a href="{{ item.url }}" class="minicart__item-title">{{ item.product.title }}</a>
-                      
-                      {% unless item.variant.title contains 'Default' %}
-                        <p class="minicart__item-variant">{{ item.variant.title }}</p>
-                      {% endunless %}
-                      
-                      <div class="minicart__item-price">{{ item.final_line_price | money }}</div>
-                      
-                      <div class="minicart__item-actions">
-                        <div class="minicart__quantity">
-                          <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="Quantity">
-                        </div>
-                        <a href="{{ item.url_to_remove }}" class="minicart__item-remove">Remove</a>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-            </form>
-          {% else %}
-            <div class="minicart__empty">
-              <p>Your cart is empty.</p>
-              <a href="{{ routes.all_products_collection_url }}" class="minicart__continue-btn">Continue shopping</a>
-            </div>
-          {% endif %}
-        </div>
-
-        {% if cart.item_count > 0 %}
-          <div class="minicart__footer">
-            <div class="minicart__subtotal">
-              <span>Subtotal</span>
-              <span>{{ cart.total_price | money }}</span>
-            </div>
-            <p class="minicart__taxes-note">Taxes and shipping calculated at checkout.</p>
-            <button type="submit" form="minicart-form" name="checkout" class="minicart__checkout-btn">
-              Checkout
-            </button>
-          </div>
-        {% endif %}
-    </dialog>
   </div>
 </header>
-<script src="{{ 'header.js' | asset_url }}" defer></script>
-<script src="{{ 'minicart.js' | asset_url }}" defer></script>
 
-<style>
-  {{ 'header-layout.css' | inline_asset_content }}
-  {{ 'burger-menu.css' | inline_asset_content }}
-  {{ 'minicart.css' | inline_asset_content }}
-</style>
+<div class="mobile-nav" data-mobile-nav hidden>
+  <button type="button" class="mobile-nav__overlay" aria-label="{{ 'header.close_menu' | t }}" data-mobile-nav-overlay></button>
+  <div class="mobile-nav__panel">
+    <div class="mobile-nav__header">
+      <strong>{{ shop.name }}</strong>
+      <button type="button" aria-label="{{ 'header.close_menu' | t }}" data-mobile-nav-close>
+        {% render 'icon-ui', icon: 'close' %}
+      </button>
+    </div>
+
+    <div class="mobile-nav__links">
+      {% for link in section.settings.menu.links %}
+        <a href="{{ link.url }}">
+          <span>{{ link.title }}</span>
+          {% render 'icon-ui', icon: 'arrow' %}
+        </a>
+      {% endfor %}
+
+      {% if shop.customer_accounts_enabled %}
+        <a href="{{ routes.account_url }}">
+          <span>{{ 'theme.account' | t }}</span>
+          {% render 'icon-ui', icon: 'arrow' %}
+        </a>
+      {% endif %}
+    </div>
+
+    {% if localization.available_languages.size > 1 %}
+      {% form 'localization', class: 'locale-switcher mobile-nav__locale', data-locale-form: '' %}
+        <input type="hidden" name="return_to" value="{{ request.path }}">
+        <p class="mobile-nav__locale-label">{{ 'header.language' | t }}</p>
+        <div class="locale-switcher__options" role="group" aria-label="{{ 'header.language' | t }}">
+          {% for language in localization.available_languages %}
+            <button
+              type="button"
+              data-locale-button
+              data-locale-code="{{ language.iso_code }}"
+              class="locale-switcher__button{% if language.iso_code == current_language_iso %} is-active{% endif %}"
+              lang="{{ language.iso_code }}"
+            >
+              {{ language.iso_code | upcase }}
+            </button>
+          {% endfor %}
+        </div>
+      {% endform %}
+    {% endif %}
+  </div>
+</div>
 
 {% schema %}
 {
-  "name": "t:general.header",
+  "name": "Header",
   "settings": [
     {
       "type": "link_list",
       "id": "menu",
-      "label": "t:labels.menu"
-    },
-    {
-      "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
+      "label": "Menu"
     },
     {
       "type": "checkbox",
       "id": "show_announcement",
-      "label": "t:labels.show_announcement",
+      "label": "Show announcement",
       "default": true
     },
     {
       "type": "text",
       "id": "announcement_text",
-      "label": "t:labels.announcement_text",
-      "default": "Welcome to the Vlasnoruch toy store!"
+      "label": "Announcement text",
+      "default": "Ручна робота, природні матеріали і подарункова подача, яку приємно вручати."
     }
   ]
 }
