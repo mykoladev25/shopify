@@ -1,73 +1,489 @@
+{% liquid
+  assign header_menu = section.settings.menu | default: 'main-menu'
+  assign brand_label = section.settings.brand_label | default: 'Vlasnoruch atelier'
+  assign current_language_iso = localization.language.iso_code | default: request.locale.iso_code
+  assign logo_image_width = section.settings.logo_width | times: 2
+  assign supported_language_codes = 'uk,en' | split: ','
+  assign current_language_root = localization.language.root_url | default: routes.root_url
+  assign current_path = request.path
+  assign path_suffix = current_path
+
+  if current_language_root != '/' and current_path contains current_language_root
+    assign path_suffix = current_path | remove_first: current_language_root
+  endif
+
+  if path_suffix == blank
+    assign path_suffix = '/'
+  endif
+
+  capture header_eyebrow
+    render 'localized-value', source: section.settings, key: 'eyebrow'
+  endcapture
+  capture header_secondary_label
+    render 'localized-value', source: section.settings, key: 'secondary_label'
+  endcapture
+  capture header_cart_label
+    render 'localized-value', source: section.settings, key: 'cart_label'
+  endcapture
+%}
+
 <header class="site-header">
-  <div class="site-header__inner">
-    <a href="{{ routes.root_url }}" class="site-header__logo">
-      {{ shop.name }}
-    </a>
-    <nav class="site-header__nav">
-      {%- for link in linklists.main-menu.links -%}
-        <a href="{{ link.url }}" class="site-header__link">{{ link.title }}</a>
-      {%- endfor -%}
-    </nav>
-    <div class="site-header__actions">
-      <button type="button" class="site-header__cart-btn" aria-label="Відкрити кошик" onclick="document.querySelector('cart-drawer').open()">
-        Кошик (<span class="cart-count">{{ cart.item_count }}</span>)
-      </button>
+  <div class="page-width">
+    <div class="site-header__bar">
+      <a href="{{ routes.root_url }}" class="site-header__brand">
+        <span class="site-header__brand-mark">
+          {% if section.settings.logo_image != blank %}
+            {{
+              section.settings.logo_image
+              | image_url: width: logo_image_width
+              | image_tag:
+                class: 'site-header__brand-image',
+                loading: 'eager',
+                widths: '80, 120, 160, 200, 240, 320',
+                sizes: '120px',
+                alt: brand_label
+            }}
+          {% else %}
+            <img
+              src="{{ 'vlasnoruch-atelier-mark.svg' | asset_url }}"
+              alt="{{ brand_label }}"
+              width="{{ section.settings.logo_width }}"
+              height="{{ section.settings.logo_width }}"
+              loading="eager"
+              class="site-header__brand-image"
+            >
+          {% endif %}
+        </span>
+
+        <span class="site-header__brand-copy">
+          {% if header_eyebrow != blank %}
+            <span class="site-header__eyebrow">{{ header_eyebrow | strip }}</span>
+          {% endif %}
+          <span class="site-header__logo">{{ brand_label }}</span>
+        </span>
+      </a>
+
+      <nav class="site-header__nav" aria-label="Primary navigation">
+        {%- for link in linklists[header_menu].links -%}
+          <a href="{{ link.url }}" class="site-header__link">{{ link.title }}</a>
+        {%- endfor -%}
+      </nav>
+
+      <div class="site-header__actions">
+        {% if localization.available_languages.size > 1 %}
+          <div class="site-header__locales" aria-label="{{ 'theme.language_selector' | t }}">
+            {% for target_code in supported_language_codes %}
+              {% for language in localization.available_languages %}
+                {% if language.iso_code == target_code %}
+                  {% liquid
+                    assign locale_url = path_suffix
+
+                    if language.root_url == '/'
+                      assign locale_url = path_suffix
+                    elsif path_suffix == '/'
+                      assign locale_url = language.root_url
+                    else
+                      assign locale_url = language.root_url | append: path_suffix
+                    endif
+                  %}
+                  <a
+                    href="{{ locale_url }}"
+                    class="site-header__locale-btn{% if current_language_iso == language.iso_code %} is-active{% endif %}"
+                    lang="{{ language.iso_code }}"
+                    hreflang="{{ language.iso_code }}"
+                  >
+                    {% if target_code == 'uk' %}UA{% else %}EN{% endif %}
+                  </a>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if header_secondary_label != blank and section.settings.secondary_link != blank %}
+          <a href="{{ section.settings.secondary_link }}" class="site-header__secondary-link text-link">
+            {{ header_secondary_label | strip }}
+          </a>
+        {% endif %}
+
+        <button
+          type="button"
+          class="site-header__cart-btn"
+          aria-label="{{ 'theme.open_cart' | t }}"
+          onclick="document.dispatchEvent(new CustomEvent('cart:open'))"
+        >
+          <span>{{ header_cart_label | strip | default: 'Cart' }}</span>
+          <span class="site-header__cart-count">{{ cart.item_count }}</span>
+        </button>
+
+        <details class="site-header__mobile-nav">
+          <summary class="site-header__menu-toggle" aria-label="{{ 'theme.open_menu' | t }}">
+            <span></span>
+            <span></span>
+            <span></span>
+          </summary>
+
+          <div class="site-header__mobile-panel">
+            <div class="site-header__mobile-links">
+              {%- for link in linklists[header_menu].links -%}
+                <a href="{{ link.url }}" class="site-header__mobile-link">{{ link.title }}</a>
+              {%- endfor -%}
+            </div>
+
+            {% if header_secondary_label != blank and section.settings.secondary_link != blank %}
+              <a href="{{ section.settings.secondary_link }}" class="text-link">
+                {{ header_secondary_label | strip }}
+              </a>
+            {% endif %}
+          </div>
+        </details>
+      </div>
     </div>
   </div>
 </header>
 
 <style>
   .site-header {
-    background-color: var(--color-surface);
-    border-bottom: 1px solid var(--color-border);
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 40;
+    padding-top: 0;
+    background: linear-gradient(180deg, rgba(245, 240, 232, 0.94) 0%, rgba(245, 240, 232, 0.78) 72%, rgba(245, 240, 232, 0) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
-  .site-header__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--space-4);
-    display: flex;
-    justify-content: space-between;
+
+  .site-header__bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
+    gap: 1rem;
+    min-height: 4.1rem;
+    padding: 0.8rem 0 0.75rem;
+    border-bottom: 1px solid rgba(71, 53, 36, 0.09);
   }
+
+  .site-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .site-header__brand-mark {
+    flex: 0 0 auto;
+    width: {{ section.settings.logo_width | at_most: 88 }}px;
+  }
+
+  .site-header__brand-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .site-header__brand-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .site-header__eyebrow {
+    color: var(--color-accent-deep);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.84;
+  }
+
   .site-header__logo {
-    font-size: 1.5rem;
-    font-weight: 500;
     color: var(--color-text-dark);
-    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
+
   .site-header__nav {
     display: none;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1rem, 1.8vw, 1.8rem);
   }
-  @media (min-width: 768px) {
-    .site-header__nav {
-      display: flex;
-      gap: var(--space-6);
-    }
-  }
+
   .site-header__link {
+    position: relative;
     color: var(--color-text-dark);
-    text-decoration: none;
-    font-weight: 500;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.8;
   }
+
+  .site-header__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.25rem;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 180ms ease;
+  }
+
+  .site-header__link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
+  }
+
+  .site-header__locales {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .site-header__locale-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0 0.2rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: rgba(32, 24, 18, 0.62);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    border-bottom: 1px solid transparent;
+  }
+
+  .site-header__locale-btn.is-active {
+    color: var(--color-text-dark);
+    border-color: rgba(32, 24, 18, 0.5);
+  }
+
+  .site-header__secondary-link {
+    display: none;
+  }
+
   .site-header__cart-btn {
-    background: none;
-    border: none;
-    font-size: 1rem;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-width: 2.2rem;
+    min-height: 2.2rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     color: var(--color-text-dark);
     cursor: pointer;
-    padding: var(--space-2) var(--space-4);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .site-header__cart-count {
+    min-width: 1.45rem;
+    height: 1.45rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 0.2rem;
+    border-radius: 999px;
+    background: var(--color-text-dark);
+    color: var(--color-contrast);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+
+  .site-header__mobile-nav {
+    position: relative;
+  }
+
+  .site-header__menu-toggle {
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.24rem;
+    padding: 0.35rem 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .site-header__menu-toggle span {
+    width: 1.4rem;
+    height: 1px;
+    background: var(--color-text-dark);
+  }
+
+  .site-header__mobile-panel {
+    position: absolute;
+    top: calc(100% + 0.65rem);
+    right: 0;
+    width: min(17rem, calc(100vw - 2rem));
+    padding: 0.95rem 1rem 1rem;
+    border-radius: 1rem;
+    background: rgba(247, 241, 233, 0.96);
+    border: 1px solid rgba(71, 53, 36, 0.1);
+    box-shadow: var(--shadow-md);
+  }
+
+  .site-header__mobile-links {
+    display: grid;
+    gap: 0.15rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .site-header__mobile-link {
+    display: block;
+    padding: 0.75rem 0;
+    color: var(--color-text-dark);
+    font-size: 0.92rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(71, 53, 36, 0.08);
+  }
+
+  @media (min-width: 990px) {
+    .site-header__bar {
+      min-height: 4.7rem;
+      padding-block: 1rem 0.95rem;
+    }
+
+    .site-header__nav {
+      display: flex;
+    }
+
+    .site-header__secondary-link {
+      display: inline-flex;
+    }
+
+    .site-header__mobile-nav {
+      display: none;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .site-header__bar {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.85rem;
+    }
+
+    .site-header__eyebrow {
+      display: none;
+    }
+
+    .site-header__brand-mark {
+      width: 38px;
+    }
+
+    .site-header__cart-btn {
+      width: auto;
+    }
+
+    .site-header__cart-btn span:first-child {
+      display: none;
+    }
+
+    .site-header__actions {
+      gap: 0.65rem;
+    }
   }
 </style>
 
 {% schema %}
 {
   "name": "Header",
-  "settings": []
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 52,
+      "max": 120,
+      "step": 4,
+      "default": 72
+    },
+    {
+      "type": "text",
+      "id": "brand_label",
+      "label": "Brand label",
+      "default": "Vlasnoruch atelier"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Vlasnoruch atelier"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_en",
+      "label": "Eyebrow EN",
+      "default": "Vlasnoruch atelier"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary link label",
+      "default": "Про майстерню"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label_en",
+      "label": "Secondary link label EN",
+      "default": "About the atelier"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary link"
+    },
+    {
+      "type": "text",
+      "id": "cart_label",
+      "label": "Cart label",
+      "default": "Кошик"
+    },
+    {
+      "type": "text",
+      "id": "cart_label_en",
+      "label": "Cart label EN",
+      "default": "Cart"
+    }
+  ]
 }
 {% endschema %}

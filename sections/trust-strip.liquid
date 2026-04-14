@@ -1,47 +1,143 @@
+{% liquid
+  capture trust_title
+    render 'localized-value', source: section.settings, key: 'title'
+  endcapture
+%}
+
 {%- style -%}
   .trust-strip {
-    background-color: var(--color-surface);
-    padding: var(--space-6) var(--space-4);
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
+    padding-block: clamp(3rem, 7vw, 5rem) clamp(4rem, 8vw, 6rem);
   }
-  .trust-strip__grid {
+
+  .trust-strip__panel {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-6);
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
+    gap: 1.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.12);
   }
-  .trust-item__title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-text-dark);
-    margin-bottom: var(--space-2);
+
+  .trust-strip__intro {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .trust-strip__title {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.02;
+    max-width: 12ch;
+  }
+
+  .trust-strip__list {
+    display: grid;
+    gap: 0;
+  }
+
+  .trust-strip__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    padding-block: 1rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.12);
+  }
+
+  .trust-strip__item:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .trust-strip__item-index {
+    color: var(--color-accent-deep);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
-  .trust-item__text {
-    font-size: 0.875rem;
-    color: var(--color-text);
-    margin: 0;
+
+  .trust-strip__item-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    margin-bottom: 0.2rem;
+    letter-spacing: -0.01em;
+  }
+
+  .trust-strip__item-text {
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+
+  @media (min-width: 990px) {
+    .trust-strip__panel {
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+      gap: clamp(1.5rem, 4vw, 3rem);
+      align-items: start;
+    }
+
+    .trust-strip__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.5rem;
+    }
+
+    .trust-strip__item {
+      min-height: 100%;
+      align-content: start;
+    }
+
+    .trust-strip__item:nth-child(2) {
+      border-top: 0;
+      padding-top: 0;
+    }
   }
 {%- endstyle -%}
 
 <section class="trust-strip">
-  <div class="trust-strip__grid">
-    {%- for block in section.blocks -%}
-      <div class="trust-item" {{ block.shopify_attributes }}>
-        <div class="trust-item__title">{{ block.settings.title | escape }}</div>
-        <p class="trust-item__text">{{ block.settings.text | escape }}</p>
+  <div class="page-width">
+    <div class="trust-strip__panel">
+      {% if trust_title != blank %}
+        <div class="trust-strip__intro animate-fade-up">
+          <span class="section-kicker">{{ 'theme.brand_promises' | t }}</span>
+          <h2 class="trust-strip__title">{{ trust_title | strip }}</h2>
+        </div>
+      {% endif %}
+
+      <div class="trust-strip__list">
+        {%- for block in section.blocks -%}
+          {% capture trust_block_title %}
+            {% render 'localized-value', source: block.settings, key: 'title' %}
+          {% endcapture %}
+          {% capture trust_block_text %}
+            {% render 'localized-value', source: block.settings, key: 'text' %}
+          {% endcapture %}
+          <article class="trust-strip__item" {{ block.shopify_attributes }}>
+            <span class="trust-strip__item-index">0{{ forloop.index }}</span>
+            <div>
+              <div class="trust-strip__item-title">{{ trust_block_title | strip | escape }}</div>
+              <p class="trust-strip__item-text">{{ trust_block_text | strip | escape }}</p>
+            </div>
+          </article>
+        {%- endfor -%}
       </div>
-    {%- endfor -%}
+    </div>
   </div>
 </section>
 
 {% schema %}
 {
   "name": "Trust Strip",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Чому цей магазин відчувається надійно"
+    },
+    {
+      "type": "text",
+      "id": "title_en",
+      "label": "Title EN",
+      "default": "Why this shop feels considered and reliable"
+    }
+  ],
   "max_blocks": 5,
   "blocks": [
     {
@@ -56,9 +152,21 @@
         },
         {
           "type": "text",
+          "id": "title_en",
+          "label": "Heading EN",
+          "default": "Shipping"
+        },
+        {
+          "type": "text",
           "id": "text",
           "label": "Text",
           "default": "Дбайлива доставка у ваш дім."
+        },
+        {
+          "type": "text",
+          "id": "text_en",
+          "label": "Text EN",
+          "default": "Careful delivery to your door."
         }
       ]
     }

@@ -1,0 +1,237 @@
+{% liquid
+  capture section_eyebrow
+    render 'localized-value', source: section.settings, key: 'eyebrow'
+  endcapture
+  capture section_title
+    render 'localized-value', source: section.settings, key: 'title'
+  endcapture
+  capture section_text
+    render 'localized-value', source: section.settings, key: 'text'
+  endcapture
+  capture section_button_label
+    render 'localized-value', source: section.settings, key: 'button_label'
+  endcapture
+%}
+
+{%- style -%}
+  .about-process {
+    padding-block: clamp(4rem, 8vw, 6.5rem);
+  }
+
+  .about-process__layout {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .about-process__intro {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .about-process__title {
+    font-size: clamp(2.3rem, 5.2vw, 4.15rem);
+    max-width: 11ch;
+  }
+
+  .about-process__text {
+    max-width: 36rem;
+    line-height: 1.85;
+    font-size: clamp(1rem, 1.8vw, 1.12rem);
+  }
+
+  .about-process__steps {
+    display: grid;
+    gap: 0;
+  }
+
+  .about-process__step {
+    display: grid;
+    gap: 0.8rem;
+    padding-block: 1rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.12);
+  }
+
+  .about-process__index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    height: auto;
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-accent-deep);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+
+  .about-process__step-title {
+    color: var(--color-text-dark);
+    font-size: 1rem;
+    font-family: var(--font-body);
+    letter-spacing: -0.02em;
+  }
+
+  .about-process__step-text {
+    line-height: 1.75;
+  }
+
+  @media (min-width: 990px) {
+    .about-process__layout {
+      grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    }
+
+    .about-process__steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.6rem;
+    }
+
+    .about-process__step:first-child {
+      grid-column: span 2;
+    }
+  }
+{%- endstyle -%}
+
+<section class="about-process">
+  <div class="page-width">
+    <div class="about-process__layout">
+      <div class="about-process__intro">
+        {% if section_eyebrow != blank %}
+          <span class="section-kicker">{{ section_eyebrow | strip }}</span>
+        {% endif %}
+
+        <h2 class="about-process__title">{{ section_title | strip }}</h2>
+
+        {% if section_text != blank %}
+          <div class="about-process__text rte">{{ section_text | strip }}</div>
+        {% endif %}
+
+        {% if section_button_label != blank and section.settings.button_link != blank %}
+          <div>
+            <a href="{{ section.settings.button_link }}" class="text-link">{{ section_button_label | strip }}</a>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="about-process__steps">
+        {%- for block in section.blocks -%}
+          {% capture step_title %}
+            {% render 'localized-value', source: block.settings, key: 'title' %}
+          {% endcapture %}
+          {% capture step_text %}
+            {% render 'localized-value', source: block.settings, key: 'text' %}
+          {% endcapture %}
+          <div class="about-process__step" {{ block.shopify_attributes }}>
+            <span class="about-process__index">0{{ forloop.index }}</span>
+            <div class="about-process__step-title">{{ step_title | strip }}</div>
+            <p class="about-process__step-text">{{ step_text | strip }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Process",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Як ми працюємо"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_en",
+      "label": "Eyebrow EN",
+      "default": "How we work"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Три речі, які ми не віддаємо на компроміс."
+    },
+    {
+      "type": "text",
+      "id": "title_en",
+      "label": "Title EN",
+      "default": "Three things we do not compromise on."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Кожна іграшка проходить через матеріал, руку майстра й фінальну перевірку на дотик. Ми не робимо речі поспіхом, бо саме в деталях відчувається спокій готового виробу.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text_en",
+      "label": "Text EN",
+      "default": "<p>Each toy moves through material selection, the maker's hand, and a final touch check. We do not rush the process because calmness is felt in the details of the finished piece.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Написати нам"
+    },
+    {
+      "type": "text",
+      "id": "button_label_en",
+      "label": "Button label EN",
+      "default": "Contact us"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Відбір дерева"
+        },
+        {
+          "type": "text",
+          "id": "title_en",
+          "label": "Title EN",
+          "default": "Wood selection"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Беремо ясень і дуб з красивою текстурою, стійкою вагою та відчуттям живого матеріалу."
+        },
+        {
+          "type": "textarea",
+          "id": "text_en",
+          "label": "Text EN",
+          "default": "We choose ash and oak with beautiful grain, stable weight, and the feel of a living material."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Process",
+      "blocks": [
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" }
+      ]
+    }
+  ]
+}
+{% endschema %}

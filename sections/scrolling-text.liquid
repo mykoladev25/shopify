@@ -1,37 +1,58 @@
+{% liquid
+  assign repeat_count = section.settings.repeat_count | default: 6
+  capture scrolling_text_copy
+    render 'localized-value', source: section.settings, key: 'text'
+  endcapture
+%}
+
 {%- style -%}
   .scrolling-text {
-    background-color: var(--color-text-dark);
-    color: var(--color-bg);
     overflow: hidden;
-    padding: var(--space-4) 0;
-    white-space: nowrap;
-    position: relative;
-    transform: rotate(-1deg) scale(1.05);
-    z-index: 10;
-    box-shadow: var(--shadow-float);
+    padding-block: 0.95rem;
+    background: var(--color-text-dark);
+    color: var(--color-contrast);
+    box-shadow: 0 22px 50px rgba(32, 24, 18, 0.18);
   }
+
   .scrolling-text__inner {
-    display: inline-block;
-    animation: marquee 20s linear infinite;
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    animation: marquee 26s linear infinite;
   }
+
   .scrolling-text__content {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding-right: 2rem;
     font-family: var(--font-heading);
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
     font-style: italic;
-    padding-right: var(--space-8);
+    letter-spacing: 0.01em;
   }
+
+  .scrolling-text__content::after {
+    content: '•';
+    font-style: normal;
+    opacity: 0.55;
+  }
+
   @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
   }
 {%- endstyle -%}
 
-<section class="scrolling-text">
+<section class="scrolling-text" aria-label="Brand values">
   <div class="scrolling-text__inner">
-    {%- for i in (1..6) -%}
-      <span class="scrolling-text__content">
-        Дбайлива доставка у ваш дім ✦ Чисте дерево. Природні барвники ✦ Виготовлено вручну. Передається у спадок ✦
-      </span>
+    {%- for i in (1..repeat_count) -%}
+      <span class="scrolling-text__content">{{ scrolling_text_copy | strip }}</span>
     {%- endfor -%}
   </div>
 </section>
@@ -39,7 +60,29 @@
 {% schema %}
 {
   "name": "Scrolling Text",
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Дбайлива доставка • Натуральне дерево • Безпечні олії та барвники • Виготовлено вручну"
+    },
+    {
+      "type": "text",
+      "id": "text_en",
+      "label": "Text EN",
+      "default": "Hand-finished • Ash and oak • Natural oils • Gift-ready presentation"
+    },
+    {
+      "type": "range",
+      "id": "repeat_count",
+      "label": "Repetitions",
+      "min": 4,
+      "max": 10,
+      "step": 1,
+      "default": 6
+    }
+  ],
   "presets": [{"name": "Scrolling Text"}]
 }
 {% endschema %}

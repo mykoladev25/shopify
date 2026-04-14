@@ -22,6 +22,51 @@
       "quantity": "Кількість"
     }
   },
+  "404": {
+    "title": "Сторінку не знайдено",
+    "not_found": "Схоже, цієї сторінки вже немає або посилання змінилося.",
+    "back_to_shopping": "Повернутися до каталогу"
+  },
+  "blog": {
+    "article_metadata_html": "{{ author }}, {{ date }}",
+    "article_comments": "Коментарі",
+    "comment_form_title": "Залишити коментар",
+    "comment_form_name": "Ім'я",
+    "comment_form_email": "Email",
+    "comment_form_body": "Коментар",
+    "comment_form_submit": "Надіслати"
+  },
+  "cart": {
+    "title": "Кошик",
+    "remove": "Видалити",
+    "update": "Оновити кошик",
+    "summary_title": "Підсумок замовлення",
+    "subtotal": "Проміжний підсумок",
+    "taxes_note": "Вартість доставки та податки розраховуються під час оформлення.",
+    "checkout": "Оформити замовлення"
+  },
+  "collections": {
+    "title": "Колекції"
+  },
+  "featured_collection": {
+    "title": "Вибране",
+    "placeholder_title": "Нова іграшка незабаром"
+  },
+  "hero_banner": {
+    "subtitle": "Дерев'яні іграшки ручної роботи",
+    "title": "Теплі речі для тихої гри",
+    "cta": "Переглянути каталог"
+  },
+  "product": {
+    "add_to_cart": "Додати в кошик"
+  },
+  "search": {
+    "title": "Пошук",
+    "placeholder": "Пошук іграшок, колекцій або сторінок",
+    "submit": "Знайти",
+    "no_results_html": "За запитом \"{{ terms }}\" нічого не знайдено.",
+    "results_for_html": "За запитом \"{{ terms }}\" знайдено {{ count }}."
+  },
   "theme": {
     "filters": "Фільтри",
     "sort": "Сортування",
@@ -30,8 +75,12 @@
     "min": "Від",
     "max": "До",
     "sort_by": "Сортувати за",
+    "items_label": "товарів",
+    "filters_active_label": "активних фільтрів",
     "from": "Звідки",
     "to": "Куди",
+    "special_price": "Особлива ціна",
+    "coming_soon": "Незабаром",
     "contact_intro": "Напишіть нам, якщо важливі строки, подарунок або доставка.",
     "contact_name": "Ім'я",
     "contact_email": "Email",
@@ -39,9 +88,34 @@
     "contact_subject": "Тема",
     "contact_message": "Повідомлення",
     "contact_submit": "Відправити",
+    "contact_success": "Дякуємо. Ваше повідомлення вже в майстерні, відповімо найближчим часом.",
     "contact_details": "Деталі контакту",
     "contact_hours": "Години роботи",
-    "contact_shipping": "Доставка та оплата"
+    "contact_shipping": "Доставка та оплата",
+    "language_selector": "Вибір мови",
+    "open_cart": "Відкрити кошик",
+    "open_menu": "Відкрити меню",
+    "brand_promises": "Переваги бренду",
+    "footer_navigation": "Навігація",
+    "footer_contact": "Контакт",
+    "footer_rights": "© {{ year }} {{ shop }}. Усі права захищено.",
+    "footer_tagline": "Створено для спокійного, тактильного вибору без зайвого шуму.",
+    "close_label": "Закрити",
+    "decrease_quantity": "Зменшити кількість",
+    "quantity_for": "Кількість для товару {{ product }}",
+    "increase_quantity": "Збільшити кількість",
+    "price_note": "Ціна може відрізнятися залежно від вибраного варіанту.",
+    "product_fallback_title": "Дерев'яна іграшка Vlasnoruch atelier",
+    "product_fallback_description": "<p>Річ із ясена або дуба, продумана для малого дотику, щоденної гри й тихого подарунка.</p>",
+    "product_trust_materials": "Ясен і дуб, ручне шліфування, натуральні олії та безпечний фініш.",
+    "product_trust_service": "Пишіть нам, якщо потрібні строки, подарункова подача або уточнення щодо доставки."
+  },
+  "gift_card": {
+    "expired": "Термін дії цього сертифіката завершився.",
+    "expires_on": "Дійсний до {{ expires_on }}",
+    "card": "Подарунковий сертифікат",
+    "use_at_checkout": "Використайте код під час оформлення замовлення.",
+    "add_to_apple_wallet": "Додати до Apple Wallet"
   },
   "password": {
     "title": "Незабаром відкриття",

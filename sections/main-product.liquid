@@ -1,118 +1,223 @@
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+%}
+
 {%- style -%}
   .product-main {
-    padding: var(--space-8) var(--space-4);
-    background: var(--color-bg);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(4.5rem, 8vw, 6.5rem);
   }
+
   .product-main__wrapper {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: clamp(1.5rem, 5vw, 4rem);
   }
-  @media (min-width: 768px) {
-    .product-main__wrapper {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-12);
-    }
-  }
+
   .product-gallery {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+    display: grid;
+    gap: 0.9rem;
   }
+
   .product-gallery__main {
-    aspect-ratio: 1 / 1;
-    border-radius: var(--radius-lg);
+    aspect-ratio: 1 / 1.08;
+    border-radius: 1.1rem;
     overflow: hidden;
-    background: var(--color-contrast);
-    border: 1px solid var(--color-border);
+    background: rgba(242, 233, 221, 0.86);
   }
-  .product-gallery__main img {
+
+  .product-gallery__main img,
+  .product-gallery__placeholder {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
+
+  .product-gallery__thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .product-gallery__thumb {
+    aspect-ratio: 1 / 1;
+    border-radius: 0.9rem;
+    overflow: hidden;
+    background: rgba(242, 233, 221, 0.72);
+  }
+
+  .product-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .product-info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+    display: grid;
+    gap: 1.3rem;
+    align-content: start;
   }
+
+  .product-info__meta {
+    color: var(--color-accent-deep);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
   .product-info__title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    margin: 0;
-    line-height: 1.1;
+    font-size: clamp(2.3rem, 5.2vw, 4.2rem);
+    max-width: 10ch;
+    line-height: 0.96;
   }
-  .product-info__price {
-    font-size: 1.5rem;
-    font-weight: 500;
+
+  .product-info__price .price__current {
+    font-size: 1.22rem;
   }
-  .product-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    margin-top: var(--space-4);
-  }
-  .product-form__quantity {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-  }
-  .product-form__quantity input {
-    width: 60px;
-    padding: var(--space-2);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    text-align: center;
-    background: var(--color-surface);
-    color: var(--color-text-dark);
-  }
+
   .product-info__description {
-    color: var(--color-text);
-    line-height: 1.6;
+    max-width: 38rem;
+    line-height: 1.85;
+  }
+
+  .product-form {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1.15rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.1);
+  }
+
+  .product-form__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: end;
+  }
+
+  .product-form__label {
+    color: var(--color-text-dark);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .product-form__quantity input {
+    width: 5rem;
+    text-align: center;
+  }
+
+  .product-info__promises {
+    display: grid;
+    gap: 0;
+    padding-top: 0.4rem;
+  }
+
+  .product-info__promise {
+    padding-block: 0.9rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.1);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  @media (min-width: 990px) {
+    .product-main__wrapper {
+      grid-template-columns: minmax(0, 1.03fr) minmax(0, 0.97fr);
+      align-items: start;
+    }
+
+    .product-form__row {
+      grid-template-columns: auto auto minmax(0, 1fr);
+    }
+
+    .product-form__submit {
+      width: 100%;
+    }
   }
 {%- endstyle -%}
 
 <section class="product-main">
-  <div class="product-main__wrapper">
-    <div class="product-gallery">
-      <div class="product-gallery__main">
-        {%- if product.featured_image -%}
-          <img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title | escape }}" loading="eager">
-        {%- else -%}
-          {{ 'product-1' | placeholder_svg_tag }}
-        {%- endif -%}
-      </div>
-    </div>
-    
-    <div class="product-info">
-      <h1 class="product-info__title">{{ product.title | default: 'Еко-іграшка з дерева' }}</h1>
-      <div class="product-info__price">{{ product.price | default: 250000 | money }}</div>
-      
-      <div class="product-info__description">
-        {{ product.description | default: '<p>Чудова дерев’яна іграшка, створена з любов’ю та турботою про вашу дитину. Екологічні матеріали, безпечні фарби.</p>' }}
-      </div>
-      
-      <form action="/cart/add" method="post" class="product-form" id="product-form-{{ section.id }}">
-        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-        
-        <div class="product-form__quantity">
-          <label for="Quantity-{{ section.id }}">Кількість</label>
-          <input type="number" id="Quantity-{{ section.id }}" name="quantity" value="1" min="1" form="product-form-{{ section.id }}">
-        </div>
-        
-        <button type="submit" class="btn btn--full" {% unless product.available or product == blank %}disabled{% endunless %}>
-          {%- if product.available or product == blank -%}
-            Додати в кошик
+  <div class="page-width">
+    <div class="product-main__wrapper">
+      <div class="product-gallery">
+        <div class="product-gallery__main">
+          {%- if product.featured_image -%}
+            {{
+              product.featured_image
+              | image_url: width: 1400
+              | image_tag:
+                loading: 'eager',
+                widths: '700, 900, 1100, 1400',
+                sizes: '(min-width: 990px) 52vw, 100vw',
+                alt: product.title
+            }}
           {%- else -%}
-            Немає в наявності
+            {{ 'product-1' | placeholder_svg_tag: 'product-gallery__placeholder' }}
           {%- endif -%}
-        </button>
-      </form>
-      
-      <div class="trust-mini" style="margin-top: var(--space-4); font-size: 0.875rem; color: var(--color-text);">
-        <p>✓ Екологічні матеріали, сертифіковані для найменших.</p>
-        <p>✓ Працюємо офіційно. Безпечна покупка.</p>
+        </div>
+
+        {% if product.images.size > 1 %}
+          <div class="product-gallery__thumbs">
+            {%- for image in product.images offset: 1 limit: 3 -%}
+              <div class="product-gallery__thumb">
+                {{
+                  image
+                  | image_url: width: 540
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '240, 360, 540',
+                    sizes: '(min-width: 990px) 16vw, 30vw',
+                    alt: image.alt | default: product.title
+                }}
+              </div>
+            {%- endfor -%}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="product-info">
+        {% if product.type != blank or product.vendor != blank %}
+          <div class="product-info__meta">{{ product.type | default: product.vendor }}</div>
+        {% endif %}
+
+        <h1 class="product-info__title">{{ product.title | default: 'theme.product_fallback_title' | t }}</h1>
+
+        <div class="product-info__price">
+          {% if product != blank %}
+            {% render 'price', product: product %}
+          {% else %}
+            <div class="price">
+              <span class="price__current">{{ 250000 | money }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="product-info__description rte">
+          {{ product.description | default: 'theme.product_fallback_description' }}
+        </div>
+
+        <form action="{{ routes.cart_add_url }}" method="post" class="product-form" id="product-form-{{ section.id }}">
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+          <div class="product-form__row">
+            <label class="product-form__label" for="Quantity-{{ section.id }}">{{ 'general.product.quantity' | t }}</label>
+            <div class="product-form__quantity">
+              <input type="number" id="Quantity-{{ section.id }}" name="quantity" value="1" min="1" form="product-form-{{ section.id }}">
+            </div>
+
+            <button type="submit" class="btn product-form__submit" {% unless product.available or product == blank %}disabled{% endunless %}>
+              {%- if product.available or product == blank -%}
+                {{ 'general.product.add_to_cart' | t }}
+              {%- else -%}
+                {{ 'general.product.sold_out' | t }}
+              {%- endif -%}
+            </button>
+          </div>
+        </form>
+
+        <div class="product-info__promises">
+          <p class="product-info__promise">{{ 'theme.product_trust_materials' | t }}</p>
+          <p class="product-info__promise">{{ 'theme.product_trust_service' | t }}</p>
+        </div>
       </div>
     </div>
   </div>

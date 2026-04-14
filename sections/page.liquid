@@ -3,134 +3,318 @@
   if page.handle == 'contact'
     assign is_contact_page = true
   endif
+
+  capture contact_heading
+    render 'localized-value', source: section.settings, key: 'contact_heading'
+  endcapture
+  capture contact_hours
+    render 'localized-value', source: section.settings, key: 'contact_hours'
+  endcapture
+  capture contact_shipping_note
+    render 'localized-value', source: section.settings, key: 'contact_shipping_note'
+  endcapture
 %}
 
-<section class="section-shell page-template" style="--section-top: 24px; --section-bottom: 88px;">
-  <div class="section-shell__inner">
-    <div class="section-heading">
-      {% if page.metafields.custom.eyebrow.value != blank %}
-        <p class="section-heading__eyebrow">{{ page.metafields.custom.eyebrow.value }}</p>
-      {% endif %}
-      <h1>{{ page.title }}</h1>
-      {% if page.content != blank and is_contact_page == false %}
-        <div class="rte section-heading__text">{{ page.content }}</div>
+<style>
+  .page-template {
+    padding-block: clamp(4rem, 7vw, 6rem) clamp(5rem, 8vw, 7rem);
+  }
+
+  .page-template__shell {
+    width: min(100%, 980px);
+    margin: 0 auto;
+  }
+
+  .page-template__shell--contact {
+    width: min(100%, 1320px);
+  }
+
+  .page-template__hero {
+    display: grid;
+    gap: 0.85rem;
+    margin-bottom: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  .page-template__eyebrow {
+    color: var(--color-accent-deep);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .page-template__title {
+    font-size: clamp(3rem, 6vw, 5rem);
+  }
+
+  .page-template__lead {
+    max-width: 42rem;
+    font-size: clamp(1rem, 1.7vw, 1.12rem);
+    line-height: 1.8;
+  }
+
+  .page-template__content {
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .page-template__content.rte,
+  .contact-layout__intro .rte,
+  .contact-layout__shipping .rte {
+    line-height: 1.85;
+  }
+
+  .page-template__content.rte > * + *,
+  .contact-layout__intro .rte > * + * {
+    margin-top: 1rem;
+  }
+
+  .contact-layout {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .contact-layout__main,
+  .contact-card {
+    padding: clamp(1.35rem, 3vw, 2.25rem);
+  }
+
+  .contact-card {
+    box-shadow: none;
+  }
+
+  .contact-layout__main {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .contact-layout__intro {
+    display: grid;
+    gap: 0.8rem;
+    max-width: 42rem;
+  }
+
+  .contact-layout__intro h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  .contact-layout__aside {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .contact-form__grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .contact-form__field {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .contact-form__field span {
+    color: var(--color-text-dark);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .field--textarea {
+    min-height: 11rem;
+    resize: vertical;
+  }
+
+  .form-status {
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .form-status--success {
+    background: rgba(85, 131, 94, 0.12);
+    color: #2f5d37;
+  }
+
+  .form-status--error {
+    background: rgba(153, 55, 55, 0.1);
+    color: #7e2d2d;
+  }
+
+  .contact-card h3 {
+    margin-bottom: 0.8rem;
+    font-size: 1.25rem;
+  }
+
+  .contact-card__list {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .contact-card__list a,
+  .contact-card__list p {
+    color: var(--color-text-dark);
+    font-weight: 600;
+  }
+
+  .contact-card__meta {
+    margin-top: 0.25rem;
+    color: var(--color-text);
+    line-height: 1.7;
+  }
+
+  @media (min-width: 990px) {
+    .contact-layout {
+      grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.6fr);
+      align-items: start;
+    }
+  }
+
+  @media (min-width: 750px) {
+    .contact-form__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
+
+<section class="page-template">
+  <div class="page-width">
+    <div class="page-template__shell{% if is_contact_page %} page-template__shell--contact{% endif %}">
+      <div class="page-template__hero">
+        {% if page.metafields.custom.eyebrow.value != blank %}
+          <p class="page-template__eyebrow">{{ page.metafields.custom.eyebrow.value }}</p>
+        {% endif %}
+
+        <h1 class="page-template__title">{{ page.title }}</h1>
+
+        {% if is_contact_page %}
+          <p class="page-template__lead">{{ 'theme.contact_intro' | t }}</p>
+        {% elsif page.metafields.custom.intro.value != blank %}
+          <div class="page-template__lead rte">{{ page.metafields.custom.intro.value }}</div>
+        {% endif %}
+      </div>
+
+      {% if is_contact_page %}
+        <div class="contact-layout">
+          <div class="contact-layout__main surface-card">
+            <div class="contact-layout__intro">
+              <h2>{{ contact_heading | strip }}</h2>
+              {% if page.content != blank %}
+                <div class="rte">{{ page.content }}</div>
+              {% else %}
+                <p>{{ 'theme.contact_intro' | t }}</p>
+              {% endif %}
+            </div>
+
+            {% form 'contact', class: 'contact-form' %}
+              {% if form.posted_successfully? %}
+                <div class="form-status form-status--success" tabindex="-1">
+                  {{ 'theme.contact_success' | t }}
+                </div>
+              {% elsif form.errors %}
+                <div class="form-status form-status--error" tabindex="-1">
+                  {{ form.errors | default_errors }}
+                </div>
+              {% endif %}
+
+              <div class="contact-form__grid">
+                <label class="contact-form__field">
+                  <span>{{ 'theme.contact_name' | t }}</span>
+                  <input
+                    class="field"
+                    type="text"
+                    name="contact[name]"
+                    value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                    autocomplete="name"
+                  >
+                </label>
+
+                <label class="contact-form__field">
+                  <span>{{ 'theme.contact_email' | t }}</span>
+                  <input
+                    class="field"
+                    type="email"
+                    name="contact[email]"
+                    value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                    autocomplete="email"
+                    required
+                  >
+                </label>
+              </div>
+
+              <div class="contact-form__grid">
+                <label class="contact-form__field">
+                  <span>{{ 'theme.contact_phone' | t }}</span>
+                  <input
+                    class="field"
+                    type="tel"
+                    name="contact[phone]"
+                    value="{{ form.phone }}"
+                    autocomplete="tel"
+                  >
+                </label>
+
+                <label class="contact-form__field">
+                  <span>{{ 'theme.contact_subject' | t }}</span>
+                  <input
+                    class="field"
+                    type="text"
+                    name="contact[subject]"
+                    value="{{ form.subject }}"
+                  >
+                </label>
+              </div>
+
+              <label class="contact-form__field">
+                <span>{{ 'theme.contact_message' | t }}</span>
+                <textarea class="field field--textarea" name="contact[body]" rows="7" required>{{ form.body }}</textarea>
+              </label>
+
+              <button type="submit" class="button">
+                {{ 'theme.contact_submit' | t }}
+              </button>
+            {% endform %}
+          </div>
+
+          <aside class="contact-layout__aside">
+            <div class="contact-card surface-card">
+              <h3>{{ 'theme.contact_details' | t }}</h3>
+              <div class="contact-card__list">
+                {% if section.settings.contact_email != blank %}
+                  <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
+                {% endif %}
+                {% if section.settings.contact_phone != blank %}
+                  <a href="tel:{{ section.settings.contact_phone | replace: ' ', '' }}">{{ section.settings.contact_phone }}</a>
+                {% endif %}
+                {% if section.settings.contact_instagram != blank %}
+                  <a href="{{ section.settings.contact_instagram }}" target="_blank" rel="noopener">Instagram</a>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="contact-card surface-card">
+              <h3>{{ 'theme.contact_hours' | t }}</h3>
+              <p class="contact-card__meta">{{ contact_hours | strip }}</p>
+            </div>
+
+            <div class="contact-card surface-card">
+              <h3>{{ 'theme.contact_shipping' | t }}</h3>
+              <p class="contact-card__meta">{{ contact_shipping_note | strip }}</p>
+            </div>
+          </aside>
+        </div>
+      {% else %}
+        <div class="page-template__content surface-card rte">
+          {{ page.content }}
+        </div>
       {% endif %}
     </div>
-
-    {% if is_contact_page %}
-      <div class="contact-layout">
-        <div class="contact-layout__main surface-card">
-          <div class="contact-layout__intro">
-            <h2>{{ section.settings.contact_heading }}</h2>
-            {% if page.content != blank %}
-              <div class="rte">{{ page.content }}</div>
-            {% else %}
-              <p>{{ 'theme.contact_intro' | t }}</p>
-            {% endif %}
-          </div>
-
-          {% form 'contact', class: 'contact-form' %}
-            {% if form.posted_successfully? %}
-              <div class="form-status form-status--success" tabindex="-1">
-                {{ 'theme.contact_success' | t }}
-              </div>
-            {% elsif form.errors %}
-              <div class="form-status form-status--error" tabindex="-1">
-                {{ form.errors | default_errors }}
-              </div>
-            {% endif %}
-
-            <div class="contact-form__grid">
-              <label class="contact-form__field">
-                <span>{{ 'theme.contact_name' | t }}</span>
-                <input
-                  class="field"
-                  type="text"
-                  name="contact[name]"
-                  value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-                  autocomplete="name"
-                >
-              </label>
-
-              <label class="contact-form__field">
-                <span>{{ 'theme.contact_email' | t }}</span>
-                <input
-                  class="field"
-                  type="email"
-                  name="contact[email]"
-                  value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
-                  autocomplete="email"
-                  required
-                >
-              </label>
-            </div>
-
-            <div class="contact-form__grid">
-              <label class="contact-form__field">
-                <span>{{ 'theme.contact_phone' | t }}</span>
-                <input
-                  class="field"
-                  type="tel"
-                  name="contact[phone]"
-                  value="{{ form.phone }}"
-                  autocomplete="tel"
-                >
-              </label>
-
-              <label class="contact-form__field">
-                <span>{{ 'theme.contact_subject' | t }}</span>
-                <input
-                  class="field"
-                  type="text"
-                  name="contact[subject]"
-                  value="{{ form.subject }}"
-                >
-              </label>
-            </div>
-
-            <label class="contact-form__field">
-              <span>{{ 'theme.contact_message' | t }}</span>
-              <textarea class="field field--textarea" name="contact[body]" rows="7" required>{{ form.body }}</textarea>
-            </label>
-
-            <button type="submit" class="button">
-              {{ 'theme.contact_submit' | t }}
-            </button>
-          {% endform %}
-        </div>
-
-        <aside class="contact-layout__aside">
-          <div class="contact-card surface-card">
-            <h3>{{ 'theme.contact_details' | t }}</h3>
-            <div class="contact-card__list">
-              {% if section.settings.contact_email != blank %}
-                <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
-              {% endif %}
-              {% if section.settings.contact_phone != blank %}
-                <a href="tel:{{ section.settings.contact_phone | replace: ' ', '' }}">{{ section.settings.contact_phone }}</a>
-              {% endif %}
-              {% if section.settings.contact_instagram != blank %}
-                <a href="{{ section.settings.contact_instagram }}" target="_blank" rel="noopener">Instagram</a>
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="contact-card surface-card">
-            <h3>{{ 'theme.contact_hours' | t }}</h3>
-            <p>{{ section.settings.contact_hours }}</p>
-          </div>
-
-          <div class="contact-card surface-card">
-            <h3>{{ 'theme.contact_shipping' | t }}</h3>
-            <p>{{ section.settings.contact_shipping_note }}</p>
-          </div>
-        </aside>
-      </div>
-    {% else %}
-      <div class="page-template__content surface-card rte">
-        {{ page.content }}
-      </div>
-    {% endif %}
   </div>
 </section>
 
@@ -143,6 +327,12 @@
       "id": "contact_heading",
       "label": "Contact heading",
       "default": "Напишіть нам, якщо важливі строки, подарунок або доставка."
+    },
+    {
+      "type": "text",
+      "id": "contact_heading_en",
+      "label": "Contact heading EN",
+      "default": "Write to us if timing, gifting, or shipping matters."
     },
     {
       "type": "text",
@@ -166,10 +356,22 @@
       "default": "Пн-Пт, 10:00-18:00"
     },
     {
+      "type": "text",
+      "id": "contact_hours_en",
+      "label": "Business hours EN",
+      "default": "Mon-Fri, 10:00-18:00"
+    },
+    {
       "type": "textarea",
       "id": "contact_shipping_note",
       "label": "Shipping note",
       "default": "Пишіть, якщо хочете уточнити строки відправки, подарункову подачу або доставку за межі України."
+    },
+    {
+      "type": "textarea",
+      "id": "contact_shipping_note_en",
+      "label": "Shipping note EN",
+      "default": "Write to us if you want to confirm dispatch timing, gift presentation, or shipping outside Ukraine."
     }
   ]
 }

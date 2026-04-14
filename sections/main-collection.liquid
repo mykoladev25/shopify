@@ -4,6 +4,34 @@
   assign active_filter_count = 0
   assign current_sort = collection.sort_by | default: collection.default_sort_by
 
+  capture collection_eyebrow
+    render 'localized-value', source: section.settings, key: 'eyebrow'
+  endcapture
+  capture collection_intro_text
+    render 'localized-value', source: section.settings, key: 'intro_text'
+  endcapture
+  capture promo_badge
+    render 'localized-value', source: section.settings, key: 'promo_badge'
+  endcapture
+  capture promo_heading
+    render 'localized-value', source: section.settings, key: 'promo_heading'
+  endcapture
+  capture promo_text
+    render 'localized-value', source: section.settings, key: 'promo_text'
+  endcapture
+  capture promo_link_label
+    render 'localized-value', source: section.settings, key: 'promo_link_label'
+  endcapture
+  capture empty_heading
+    render 'localized-value', source: section.settings, key: 'empty_heading'
+  endcapture
+  capture empty_text
+    render 'localized-value', source: section.settings, key: 'empty_text'
+  endcapture
+  capture empty_button_label
+    render 'localized-value', source: section.settings, key: 'empty_button_label'
+  endcapture
+
   for filter in collection.filters
     case filter.type
       when 'list', 'boolean'
@@ -20,82 +48,312 @@
 %}
 
 <style>
+  .collection-page {
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(5rem, 8vw, 7rem);
+  }
+
+  .collection-page__hero {
+    display: grid;
+    gap: 0.85rem;
+    margin-bottom: clamp(1.2rem, 4vw, 2.2rem);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(71, 53, 36, 0.1);
+  }
+
+  .collection-page__eyebrow {
+    color: var(--color-accent-deep);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .collection-page__title {
+    font-size: clamp(2.6rem, 5.5vw, 4.9rem);
+  }
+
+  .collection-page__intro {
+    max-width: 40rem;
+    font-size: clamp(1rem, 1.7vw, 1.12rem);
+    line-height: 1.8;
+  }
+
+  .collection-page__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .collection-page__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-text);
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .collection-page__meta-item:not(:last-child)::after {
+    content: '';
+    width: 0.2rem;
+    height: 0.2rem;
+    margin-left: 0.65rem;
+    border-radius: 999px;
+    background: rgba(71, 53, 36, 0.32);
+  }
+
+  .collection-toolbar {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(71, 53, 36, 0.1);
+  }
+
+  .collection-toolbar__summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .collection-toolbar__summary-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-text-dark);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .icon-chevron {
+    max-width: 24px;
+  }
+
+  .collection-toolbar__summary-count {
+    min-width: 1.7rem;
+    height: 1.7rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 0.3rem;
+    border-radius: 999px;
+    background: var(--color-text-dark);
+    color: var(--color-contrast);
+    font-size: 0.72rem;
+    letter-spacing: 0;
+  }
+
+  .collection-toolbar__sort {
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+  }
+
+  .collection-toolbar__sort label {
+    color: var(--color-text-dark);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .collection-filters {
+    display: grid;
+    gap: 1.1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.1);
+  }
+
+  .collection-filters__group {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .collection-filters__legend {
+    margin-bottom: 0.85rem;
+    color: var(--color-text-dark);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .collection-filters__list {
+    display: grid;
+    gap: 0;
+  }
+
+  .collection-filters__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(71, 53, 36, 0.08);
+  }
+
+  .collection-filters__option-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .collection-filters__option-count {
+    color: var(--color-text);
+    font-size: 0.84rem;
+  }
+
+  .collection-filters__price {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .collection-filters__price-field {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .collection-filters__price-label {
+    color: var(--color-text-dark);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .collection-filters__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.3rem 0.9rem;
+  }
+
+  .collection-promo-card {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    min-height: 100%;
+    padding: 1.15rem 0 0;
+    border-top: 1px solid var(--color-text-dark);
+    grid-column: span 2;
+  }
+
+  .collection-promo-card__badge {
+    color: var(--color-accent-deep);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .collection-promo-card h3 {
+    font-size: clamp(1.65rem, 3vw, 2.15rem);
+    line-height: 1.08;
+    max-width: 14ch;
+  }
+
+  .collection-promo-card p {
+    max-width: 34rem;
+    line-height: 1.75;
+  }
+
+  .pagination {
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+    display: flex;
+    justify-content: center;
+  }
+
+  .collection-empty {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.1);
+    text-align: left;
+  }
+
+  @media (min-width: 990px) {
+    .collection-page__hero {
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 0.72fr);
+      column-gap: clamp(2rem, 5vw, 5rem);
+      align-items: end;
+    }
 
     .collection-toolbar {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-      margin-bottom: var(--space-8);
-      padding: var(--space-4);
-      background: var(--color-surface);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--color-border);
-    }
-    
-    @media (min-width: 768px) {
-      .collection-toolbar {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-    }
-    
-    .collection-filters__group {
-      border: none;
-      padding: 0;
-      margin: 0 0 var(--space-4) 0;
-    }
-    
-    .collection-toolbar__summary-label {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-weight: 500;
-      cursor: pointer;
-    }
-    
-    .collection-toolbar__sort {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-    }
-    
-    .collection-toolbar__sort select {
-      padding: var(--space-2);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      background: var(--color-bg);
-      color: var(--color-text-dark);
-      font-family: inherit;
-      font-size: 1rem;
+      grid-template-columns: minmax(0, 1fr) minmax(15rem, 17rem);
+      align-items: start;
     }
 
     .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: clamp(var(--space-6), 4vw, var(--space-12));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem 1.15rem;
     }
-  </style>
 
-  <section class="section-shell collection-page page-width" style="padding-top: var(--space-16); padding-bottom: var(--space-24);">
-    <div class="section-shell__inner">
-      {% paginate collection.products by products_per_page %}
-      <div class="section-heading" style="margin-bottom: var(--space-12); max-width: 800px;">
-        {% if section.settings.eyebrow != blank %}
-          <p class="section-heading__eyebrow" style="color: var(--color-accent); font-family: var(--font-body); font-style: italic; font-size: 1.125rem; margin-bottom: var(--space-4);">{{ section.settings.eyebrow }}</p>
-        {% endif %}
-        <h1 style="font-size: clamp(3rem, 6vw, 5rem); margin-bottom: var(--space-6); line-height: 1;">{{ collection.title }}</h1>
+    .collection-promo-card {
+      grid-column: span 2;
+      padding-right: clamp(1rem, 2vw, 2rem);
+    }
+  }
+
+  @media (min-width: 750px) {
+    .collection-filters__price {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .product-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.7rem 1.3rem;
+    }
+  }
+</style>
+
+<section class="collection-page">
+  <div class="page-width">
+    {% paginate collection.products by products_per_page %}
+      <div class="collection-page__hero">
+        <div>
+          {% if collection_eyebrow != blank %}
+            <p class="collection-page__eyebrow">{{ collection_eyebrow | strip }}</p>
+          {% endif %}
+          <h1 class="collection-page__title">{{ collection.title }}</h1>
+        </div>
+
         {% if collection.description != blank and section.settings.show_description %}
-          <div class="rte section-heading__text" style="color: var(--color-text); font-size: 1.25rem; font-family: var(--font-body); line-height: 1.6; border-left: 2px solid var(--color-border); padding-left: var(--space-6);">{{ collection.description }}</div>
-        {% elsif section.settings.intro_text != blank %}
-          <p class="section-heading__text" style="color: var(--color-text); font-size: 1.25rem; font-family: var(--font-body); line-height: 1.6; border-left: 2px solid var(--color-border); padding-left: var(--space-6);">{{ section.settings.intro_text }}</p>
+          <div class="collection-page__intro rte">{{ collection.description }}</div>
+        {% elsif collection_intro_text != blank %}
+          <p class="collection-page__intro">{{ collection_intro_text | strip }}</p>
         {% endif %}
       </div>
 
-      <div class="collection-toolbar surface-card">
+      <div class="collection-page__meta">
+        <span class="collection-page__meta-item">{{ collection.products_count }} {{ 'theme.items_label' | t }}</span>
+        {% if active_filter_count > 0 %}
+          <span class="collection-page__meta-item">{{ active_filter_count }} {{ 'theme.filters_active_label' | t }}</span>
+        {% endif %}
+      </div>
+
+      <div class="collection-toolbar">
         {% if collection.filters.size > 0 %}
           <details class="collection-toolbar__filters" {% if active_filter_count > 0 %}open{% endif %}>
-            <summary>
+            <summary class="collection-toolbar__summary">
               <span class="collection-toolbar__summary-label">
                 <span>{{ 'theme.filters' | t }}</span>
                 {% if active_filter_count > 0 %}
@@ -202,7 +460,7 @@
             {% endfor %}
           </select>
           <noscript>
-            <button type="submit" class="button button--secondary">{{ 'cart.update' | t }}</button>
+            <button type="submit" class="button button--secondary">{{ 'theme.apply_filters' | t }}</button>
           </noscript>
         </form>
       </div>
@@ -211,15 +469,13 @@
         <div class="product-grid product-grid--collection">
           {% for product in collection.products %}
             {% if section.settings.show_promo_card and promo_insert_index == forloop.index %}
-              <article class="collection-promo-card surface-card">
-                <div class="badge-list">
-                  {% render 'badge', label: section.settings.promo_badge %}
-                </div>
-                <h3>{{ section.settings.promo_heading }}</h3>
-                <p>{{ section.settings.promo_text }}</p>
-                {% if section.settings.promo_link_label != blank and section.settings.promo_link != blank %}
-                  <a href="{{ section.settings.promo_link }}" class="button button--secondary">
-                    {{ section.settings.promo_link_label }}
+              <article class="collection-promo-card">
+                <span class="collection-promo-card__badge">{{ promo_badge | strip }}</span>
+                <h3>{{ promo_heading | strip }}</h3>
+                <p>{{ promo_text | strip }}</p>
+                {% if promo_link_label != blank and section.settings.promo_link != blank %}
+                  <a href="{{ section.settings.promo_link }}" class="text-link">
+                    {{ promo_link_label | strip }}
                   </a>
                 {% endif %}
               </article>
@@ -235,17 +491,17 @@
           </nav>
         {% endif %}
       {% else %}
-        <div class="collection-empty surface-card">
-          <h2>{{ section.settings.empty_heading }}</h2>
-          <p>{{ section.settings.empty_text }}</p>
-          <a href="{{ routes.all_products_collection_url }}" class="button button--secondary">
-            {{ section.settings.empty_button_label }}
+        <div class="collection-empty">
+          <h2>{{ empty_heading | strip }}</h2>
+          <p>{{ empty_text | strip }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="text-link">
+            {{ empty_button_label | strip }}
           </a>
         </div>
       {% endif %}
-    </div>
-  </section>
-{% endpaginate %}
+    {% endpaginate %}
+  </div>
+</section>
 
 {% schema %}
 {
@@ -258,6 +514,12 @@
       "default": "Каталог іграшок"
     },
     {
+      "type": "text",
+      "id": "eyebrow_en",
+      "label": "Eyebrow EN",
+      "default": "The Vlasnoruch atelier collection"
+    },
+    {
       "type": "checkbox",
       "id": "show_description",
       "label": "Show collection description",
@@ -268,6 +530,12 @@
       "id": "intro_text",
       "label": "Fallback intro text",
       "default": "Дерев'яні машинки, трактори та спецтехніка для малюків. Ручна робота, створена з душею."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_text_en",
+      "label": "Fallback intro text EN",
+      "default": "A considered collection of handmade wooden toys for calm everyday play, gifts, and first meaningful purchases for a child."
     },
     {
       "type": "range",
@@ -301,9 +569,21 @@
     },
     {
       "type": "text",
+      "id": "promo_badge_en",
+      "label": "Promo badge EN",
+      "default": "Why people choose us"
+    },
+    {
+      "type": "text",
       "id": "promo_heading",
       "label": "Promo heading",
       "default": "Речі, які приємно дарувати і спокійно замовляти."
+    },
+    {
+      "type": "text",
+      "id": "promo_heading_en",
+      "label": "Promo heading EN",
+      "default": "Pieces that feel easy to order now and worth keeping for years."
     },
     {
       "type": "textarea",
@@ -312,10 +592,22 @@
       "default": "Природні матеріали, уважна ручна робота і сервіс, де все зрозуміло від початку."
     },
     {
+      "type": "textarea",
+      "id": "promo_text_en",
+      "label": "Promo text EN",
+      "default": "Natural materials, careful hand-finishing, and service that stays clear from the first question to delivery."
+    },
+    {
       "type": "text",
       "id": "promo_link_label",
       "label": "Promo link label",
       "default": "Наша історія"
+    },
+    {
+      "type": "text",
+      "id": "promo_link_label_en",
+      "label": "Promo link label EN",
+      "default": "About the atelier"
     },
     {
       "type": "url",
@@ -329,16 +621,34 @@
       "default": "Поки що нічого не знайдено за цими фільтрами"
     },
     {
+      "type": "text",
+      "id": "empty_heading_en",
+      "label": "Empty state heading EN",
+      "default": "Nothing matches these filters yet"
+    },
+    {
       "type": "textarea",
       "id": "empty_text",
       "label": "Empty state text",
       "default": "Спробуйте скинути частину фільтрів або перейти до всього каталогу."
     },
     {
+      "type": "textarea",
+      "id": "empty_text_en",
+      "label": "Empty state text EN",
+      "default": "Try clearing a few filters or return to the full collection."
+    },
+    {
       "type": "text",
       "id": "empty_button_label",
       "label": "Empty state button label",
       "default": "Усі іграшки"
+    },
+    {
+      "type": "text",
+      "id": "empty_button_label_en",
+      "label": "Empty state button label EN",
+      "default": "All toys"
     }
   ]
 }

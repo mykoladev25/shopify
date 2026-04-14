@@ -1,87 +1,173 @@
 {%- style -%}
   .product-card {
-    display: flex;
-    flex-direction: column;
-    background: transparent;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: grid;
+    gap: 1rem;
     position: relative;
-    border: none;
-    box-shadow: none;
+    align-content: start;
+    transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
   }
+
   .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: none;
+    transform: translateY(-2px);
   }
-  .product-card:hover .product-card__image-wrapper {
-    box-shadow: var(--shadow-float);
-  }
+
   .product-card:hover .product-card__image {
-    transform: scale(1.02);
+    transform: scale(1.015);
   }
+
   .product-card__image-wrapper {
     position: relative;
     aspect-ratio: 4 / 5;
-    background: var(--color-surface);
-    border-radius: var(--radius-md);
+    background: rgba(242, 233, 221, 0.78);
+    border-radius: 1rem;
     overflow: hidden;
-    transition: box-shadow 0.3s ease;
-    border: 1px solid var(--color-border);
-    margin-bottom: var(--space-4);
+    transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
   }
+
   .product-card__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
   }
+
+  .product-card__image--placeholder {
+    background: linear-gradient(135deg, rgba(220, 192, 161, 0.28), rgba(156, 103, 64, 0.08));
+    color: rgba(32, 24, 18, 0.28);
+  }
+
+  .product-card__badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+    padding: 0.38rem 0.5rem;
+    border-radius: 0.65rem;
+    background: rgba(31, 23, 17, 0.72);
+    color: var(--color-contrast);
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .product-card__link {
+    display: grid;
+    gap: 0.9rem;
+  }
+
   .product-card__info {
-    display: flex;
-    flex-direction: column;
-    padding: 0 var(--space-2) var(--space-4) var(--space-2);
-    flex-grow: 1;
+    display: grid;
+    gap: 0.38rem;
   }
+
+  .product-card__meta {
+    color: var(--color-accent-deep);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
   .product-card__title {
-    font-size: 1.125rem;
-    font-weight: 500;
-    margin: 0 0 var(--space-2) 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.28;
+    font-family: var(--font-body);
+    margin: 0;
     color: var(--color-text-dark);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
+
   .product-card__price {
-    font-size: 1.125rem;
-    color: var(--color-text);
-    font-weight: 400;
-    margin-bottom: var(--space-4);
+    margin-top: 0.12rem;
   }
+
   .product-card__form {
-    margin-top: auto;
-    padding: 0 var(--space-2);
+    margin-top: 0;
   }
-  .btn--full { width: 100%; }
+
+  .product-card__placeholder-action {
+    pointer-events: none;
+  }
+
+  .product-card__form .btn,
+  .product-card__form .button {
+    min-height: 2.9rem;
+    font-size: 0.7rem;
+  }
 {%- endstyle -%}
 
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+%}
+
 <div class="product-card">
-  <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title | escape }}">
+  <a
+    href="{% if product != blank %}{{ product.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}"
+    class="product-card__link"
+    aria-label="{{ product.title | default: 'Товар' | escape }}"
+  >
     <div class="product-card__image-wrapper">
-      {%- if product.featured_image -%}
-        <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy" class="product-card__image">
+      {% if product != blank %}
+        {% if current_variant != blank and current_variant.compare_at_price > current_variant.price %}
+          <span class="product-card__badge">{{ 'theme.special_price' | t }}</span>
+        {% elsif product.available == false %}
+          <span class="product-card__badge">{{ 'general.product.sold_out' | t }}</span>
+        {% endif %}
+      {% endif %}
+
+      {%- if product != blank and product.featured_image -%}
+        {{
+          product.featured_image
+          | image_url: width: 900
+          | image_tag:
+            class: 'product-card__image',
+            loading: 'lazy',
+            widths: '320, 480, 640, 900',
+            sizes: '(min-width: 990px) 24vw, (min-width: 768px) 33vw, 100vw',
+            alt: product.title
+        }}
       {%- else -%}
-        <img src="https://picsum.photos/seed/{{ product.id | default: 'wood' }}/600/800" alt="Placeholder" loading="lazy" class="product-card__image">
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__image product-card__image--placeholder' }}
       {%- endif -%}
     </div>
+
     <div class="product-card__info">
-      <h3 class="product-card__title">{{ product.title | default: 'Тестова іграшка' }}</h3>
-      <div class="product-card__price">{{ product.price | default: 150000 | money }}</div>
+      {% if product != blank and product.type != blank %}
+        <p class="product-card__meta">{{ product.type }}</p>
+      {% elsif product != blank and product.vendor != blank %}
+        <p class="product-card__meta">{{ product.vendor }}</p>
+      {% endif %}
+
+      <h3 class="product-card__title">{{ product.title | default: 'Нова іграшка з майстерні' }}</h3>
+
+      <div class="product-card__price">
+        {% if product != blank %}
+          {% render 'price', product: product %}
+        {% else %}
+          <div class="price">
+            <span class="price__current">{{ 150000 | money }}</span>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </a>
-  <div class="product-card__form" style="padding: 0 var(--space-4) var(--space-4);">
-    <form action="/cart/add" method="post">
-      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-      <button type="submit" class="btn btn--full" {% unless product.available or product == blank %}disabled{% endunless %}>
-        {%- if product.available or product == blank -%}У кошик{%- else -%}Немає в наявності{%- endif -%}
-      </button>
-    </form>
+
+  <div class="product-card__form">
+    {% if product != blank and current_variant != blank %}
+      <form action="{{ routes.cart_add_url }}" method="post">
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+        <button type="submit" class="btn btn--full" {% unless product.available %}disabled{% endunless %}>
+          {% if product.available %}
+            {{ 'general.product.add_to_cart' | t }}
+          {% else %}
+            {{ 'general.product.sold_out' | t }}
+          {% endif %}
+        </button>
+      </form>
+    {% else %}
+      <span class="btn btn--secondary btn--full product-card__placeholder-action" aria-disabled="true">{{ 'theme.coming_soon' | t }}</span>
+    {% endif %}
   </div>
 </div>

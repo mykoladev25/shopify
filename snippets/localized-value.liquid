@@ -1,0 +1,19 @@
+{% liquid
+  assign current_locale = localization.language.iso_code | default: request.locale.iso_code | default: 'uk'
+  assign resolved_key = key
+
+  if current_locale == 'en'
+    assign english_key = key | append: '_en'
+    if source[english_key] != blank
+      assign resolved_key = english_key
+    endif
+  endif
+
+  assign resolved_value = source[resolved_key]
+
+  if resolved_value == blank and fallback != blank
+    assign resolved_value = fallback
+  endif
+
+  echo resolved_value
+%}

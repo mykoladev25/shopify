@@ -22,14 +22,65 @@
       "quantity": "Quantity"
     }
   },
+  "404": {
+    "title": "Page not found",
+    "not_found": "This page may have moved or no longer exists.",
+    "back_to_shopping": "Back to the collection"
+  },
+  "blog": {
+    "article_metadata_html": "{{ author }}, {{ date }}",
+    "article_comments": "Comments",
+    "comment_form_title": "Leave a comment",
+    "comment_form_name": "Name",
+    "comment_form_email": "Email",
+    "comment_form_body": "Comment",
+    "comment_form_submit": "Submit"
+  },
+  "cart": {
+    "title": "Cart",
+    "remove": "Remove",
+    "update": "Update cart",
+    "summary_title": "Order summary",
+    "subtotal": "Subtotal",
+    "taxes_note": "Shipping and taxes are calculated at checkout.",
+    "checkout": "Checkout"
+  },
+  "collections": {
+    "title": "Collections"
+  },
+  "featured_collection": {
+    "title": "Featured",
+    "placeholder_title": "A new toy is coming soon"
+  },
+  "hero_banner": {
+    "subtitle": "Handmade wooden toys",
+    "title": "Warm pieces for calm play",
+    "cta": "Browse the collection"
+  },
+  "product": {
+    "add_to_cart": "Add to cart"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search toys, collections, or pages",
+    "submit": "Search",
+    "no_results_html": "No results found for \"{{ terms }}\".",
+    "results_for_html": "{{ count }} results found for \"{{ terms }}\"."
+  },
   "theme": {
     "filters": "Filters",
     "sort": "Sort",
     "apply_filters": "Apply",
     "clear": "Clear",
+    "from": "From",
+    "to": "To",
     "min": "Min",
     "max": "Max",
     "sort_by": "Sort by",
+    "items_label": "items",
+    "filters_active_label": "active filters",
+    "special_price": "Special price",
+    "coming_soon": "Coming soon",
     "contact_intro": "Message us about deadlines, gifts or shipping.",
     "contact_name": "Name",
     "contact_email": "Email",
@@ -37,9 +88,34 @@
     "contact_subject": "Subject",
     "contact_message": "Message",
     "contact_submit": "Send",
+    "contact_success": "Thank you. Your message is on its way and we will reply soon.",
     "contact_details": "Contact Details",
     "contact_hours": "Business Hours",
-    "contact_shipping": "Shipping & Returns"
+    "contact_shipping": "Shipping & Returns",
+    "language_selector": "Language selector",
+    "open_cart": "Open cart",
+    "open_menu": "Open menu",
+    "brand_promises": "Brand promises",
+    "footer_navigation": "Navigation",
+    "footer_contact": "Contact",
+    "footer_rights": "© {{ year }} {{ shop }}. All rights reserved.",
+    "footer_tagline": "Built for calm, tactile shopping without visual noise.",
+    "close_label": "Close",
+    "decrease_quantity": "Decrease quantity",
+    "quantity_for": "Quantity for {{ product }}",
+    "increase_quantity": "Increase quantity",
+    "price_note": "Price may vary depending on the selected variant.",
+    "product_fallback_title": "A wooden toy from Vlasnoruch atelier",
+    "product_fallback_description": "<p>A piece in ash or oak, shaped for small hands, everyday play, and thoughtful gifting.</p>",
+    "product_trust_materials": "Ash and oak, hand-sanded surfaces, natural oils, and a safe finish.",
+    "product_trust_service": "Write to us if timing, gift presentation, or shipping details matter for your order."
+  },
+  "gift_card": {
+    "expired": "This gift card has expired.",
+    "expires_on": "Expires on {{ expires_on }}",
+    "card": "Gift card",
+    "use_at_checkout": "Use this code at checkout.",
+    "add_to_apple_wallet": "Add to Apple Wallet"
   },
   "password": {
     "title": "Opening soon",

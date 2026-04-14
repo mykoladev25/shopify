@@ -1,50 +1,196 @@
+{% liquid
+  assign footer_menu = section.settings.menu | default: 'main-menu'
+  assign footer_year = 'now' | date: '%Y'
+  capture footer_brand_label
+    render 'localized-value', source: section.settings, key: 'brand_label', fallback: 'Vlasnoruch atelier'
+  endcapture
+  capture footer_eyebrow
+    render 'localized-value', source: section.settings, key: 'eyebrow'
+  endcapture
+  capture footer_text
+    render 'localized-value', source: section.settings, key: 'text'
+  endcapture
+  capture footer_note
+    render 'localized-value', source: section.settings, key: 'note'
+  endcapture
+%}
+
 <footer class="site-footer">
-  <div class="site-footer__inner">
-    <div class="site-footer__brand">
-      <h3>{{ shop.name }}</h3>
-      <p>Створено руками. Передається у спадок.</p>
+  <div class="page-width">
+    <div class="site-footer__panel surface-card">
+      <div class="site-footer__brand">
+        {% if footer_eyebrow != blank %}
+          <p class="site-footer__eyebrow">{{ footer_eyebrow | strip }}</p>
+        {% endif %}
+        <h2 class="site-footer__title">{{ footer_brand_label | strip }}</h2>
+        {% if footer_text != blank %}
+          <div class="site-footer__text">{{ footer_text | strip }}</div>
+        {% endif %}
+      </div>
+
+      {% if linklists[footer_menu].links != blank %}
+        <nav class="site-footer__nav" aria-label="Footer navigation">
+          <p class="site-footer__heading">{{ 'theme.footer_navigation' | t }}</p>
+          <div class="site-footer__nav-links">
+            {%- for link in linklists[footer_menu].links -%}
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            {%- endfor -%}
+          </div>
+        </nav>
+      {% endif %}
+
+      <div class="site-footer__meta">
+        <p class="site-footer__heading">{{ 'theme.footer_contact' | t }}</p>
+        {% if section.settings.support_email != blank %}
+          <a href="mailto:{{ section.settings.support_email }}" class="site-footer__contact">
+            {{ section.settings.support_email }}
+          </a>
+        {% endif %}
+        {% if footer_note != blank %}
+          <p class="site-footer__note">{{ footer_note | strip }}</p>
+        {% endif %}
+      </div>
     </div>
-    <div class="site-footer__links">
-      <p>&copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. Усі права захищено.</p>
+
+    <div class="site-footer__bottom">
+      <p>{{ 'theme.footer_rights' | t: year: footer_year, shop: shop.name }}</p>
+      <p>{{ 'theme.footer_tagline' | t }}</p>
     </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    background-color: var(--color-surface);
-    border-top: 1px solid var(--color-border);
-    padding: var(--space-8) var(--space-4);
-    margin-top: var(--space-12);
+    padding-block: var(--space-16) var(--space-8);
     color: var(--color-text-dark);
   }
-  .site-footer__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-    text-align: center;
+
+  .site-footer__panel {
+    display: grid;
+    gap: var(--space-8);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
   }
-  @media (min-width: 768px) {
-    .site-footer__inner {
-      flex-direction: row;
-      justify-content: space-between;
-      text-align: left;
+
+  @media (min-width: 990px) {
+    .site-footer__panel {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr) minmax(0, 0.8fr);
+      align-items: start;
     }
   }
-  .site-footer__brand h3 {
-    margin: 0 0 var(--space-2) 0;
+
+  .site-footer__eyebrow,
+  .site-footer__heading {
+    margin-bottom: 0.8rem;
+    color: var(--color-accent-deep);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
-  .site-footer__brand p {
-    margin: 0;
-    color: var(--color-text);
+
+  .site-footer__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 1rem;
+  }
+
+  .site-footer__text,
+  .site-footer__note {
+    max-width: 32rem;
+    line-height: 1.8;
+  }
+
+  .site-footer__nav-links {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .site-footer__nav a,
+  .site-footer__contact {
+    color: var(--color-text-dark);
+    font-weight: 600;
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.1rem 0 0;
+    color: rgba(32, 24, 18, 0.78);
+    font-size: 0.88rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 </style>
 
 {% schema %}
 {
   "name": "Footer",
-  "settings": []
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_label",
+      "label": "Brand label",
+      "default": "Vlasnoruch atelier"
+    },
+    {
+      "type": "text",
+      "id": "brand_label_en",
+      "label": "Brand label EN",
+      "default": "Vlasnoruch atelier"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Створено вручну"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_en",
+      "label": "Eyebrow EN",
+      "default": "Handmade in small batches"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Дерев'яні іграшки, які приємно дарувати, зберігати і передавати далі.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text_en",
+      "label": "Text EN",
+      "default": "<p>Wooden toys that feel good to gift, keep close, and pass on over time.</p>"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
+    },
+    {
+      "type": "text",
+      "id": "support_email",
+      "label": "Support email",
+      "default": "hello@example.com"
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Note",
+      "default": "Пишіть нам для індивідуальних замовлень, подарункових наборів і запитів від магазинів."
+    },
+    {
+      "type": "textarea",
+      "id": "note_en",
+      "label": "Note EN",
+      "default": "Write to us about gifting, thoughtful custom requests, or wholesale enquiries."
+    }
+  ]
 }
 {% endschema %}

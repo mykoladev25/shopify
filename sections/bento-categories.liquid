@@ -1,113 +1,328 @@
+{% liquid
+  capture section_eyebrow
+    render 'localized-value', source: section.settings, key: 'eyebrow'
+  endcapture
+  capture section_title
+    render 'localized-value', source: section.settings, key: 'title'
+  endcapture
+  capture section_text
+    render 'localized-value', source: section.settings, key: 'text'
+  endcapture
+  capture section_link_label
+    render 'localized-value', source: section.settings, key: 'link_label'
+  endcapture
+%}
+
 {%- style -%}
   .bento-categories {
-    padding: clamp(var(--space-12), 10vw, var(--space-24)) var(--space-4);
-    background: var(--color-bg);
+    padding-block: clamp(3.5rem, 8vw, 6rem);
   }
-  .bento-header {
-    text-align: center;
-    margin-bottom: clamp(var(--space-8), 6vw, var(--space-12));
-  }
-  .bento-header h2 {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    letter-spacing: -0.02em;
-  }
+
   .bento-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-    max-width: 1400px;
-    margin: 0 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
   }
-  @media (min-width: 768px) {
-    .bento-grid {
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, 300px);
-    }
-  }
+
   .bento-card {
     position: relative;
-    border-radius: var(--radius-lg);
+    min-height: 14.5rem;
+    display: grid;
+    align-content: end;
+    gap: 0.55rem;
+    padding: clamp(1rem, 3vw, 1.4rem);
+    border-radius: clamp(1rem, 2.4vw, 1.35rem);
     overflow: hidden;
-    background: var(--color-surface);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: var(--space-6);
-    color: var(--color-text-dark);
-    text-decoration: none;
+    color: var(--color-contrast);
     isolation: isolate;
   }
-  .bento-card--large {
-    grid-column: span 1;
-    grid-row: span 1;
+
+  .bento-card--featured {
+    min-height: 18rem;
+    grid-column: span 2;
   }
-  @media (min-width: 768px) {
-    .bento-card--large {
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-  }
-  .bento-card__bg {
+
+  .bento-card__image,
+  .bento-card__placeholder {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: -2;
+    transition: transform 300ms ease;
   }
-  .bento-card:hover .bento-card__bg {
-    transform: scale(1.05);
+
+  .bento-card__placeholder {
+    background: linear-gradient(135deg, rgba(156, 103, 64, 0.42), rgba(32, 24, 18, 0.2));
   }
+
   .bento-card::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(234, 227, 218, 0.9) 0%, rgba(234, 227, 218, 0.1) 60%, transparent 100%);
     z-index: -1;
+    background: linear-gradient(180deg, rgba(32, 24, 18, 0.06) 12%, rgba(32, 24, 18, 0.68) 100%);
   }
+
+  .bento-card:hover .bento-card__image {
+    transform: scale(1.04);
+  }
+
+  .bento-card__kicker {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.78;
+  }
+
   .bento-card__title {
-    font-family: var(--font-heading);
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
-    margin: 0 0 var(--space-2) 0;
-    font-weight: 500;
+    font-size: clamp(1.45rem, 4vw, 2.45rem);
+    color: inherit;
+    line-height: 0.98;
   }
-  .bento-card__desc {
-    font-family: var(--font-body);
-    font-size: 1.125rem;
-    margin: 0;
-    opacity: 0.8;
+
+  .bento-card__text {
+    max-width: 20rem;
+    color: rgba(255, 250, 243, 0.8);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .bento-card__link {
+    margin-top: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 990px) {
+    .bento-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-auto-rows: 16.5rem;
+      gap: 1rem;
+    }
+
+    .bento-card--featured {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
   }
 {%- endstyle -%}
 
 <section class="bento-categories">
-  <div class="bento-header animate-fade-up">
-    <h2>Для кожного віку</h2>
-  </div>
-  
-  <div class="bento-grid">
-    <a href="#" class="bento-card bento-card--large animate-fade-up delay-1">
-      <img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Toys" class="bento-card__bg">
-      <h3 class="bento-card__title">Для найменших</h3>
-      <p class="bento-card__desc">0–1 рік. Безпечні гризунці та перші брязкальця.</p>
-    </a>
-    <a href="#" class="bento-card animate-fade-up delay-2">
-      <img src="https://images.unsplash.com/photo-1601628828688-632f38a5a7d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Toys" class="bento-card__bg">
-      <h3 class="bento-card__title">Розвиток</h3>
-      <p class="bento-card__desc">1–3 роки. Пірамідки та сортери.</p>
-    </a>
-    <a href="#" class="bento-card animate-fade-up delay-3">
-      <img src="https://images.unsplash.com/photo-1558066532-a5e2f7556a31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Toys" class="bento-card__bg">
-      <h3 class="bento-card__title">Сюжетні ігри</h3>
-      <p class="bento-card__desc">3+ роки. Машинки та спецтехніка.</p>
-    </a>
+  <div class="page-width">
+    <div class="section-intro section-intro--split">
+      <div class="animate-fade-up">
+        {% if section_eyebrow != blank %}
+          <span class="section-kicker">{{ section_eyebrow | strip }}</span>
+        {% endif %}
+        <h2 class="section-title" style="margin-top: 0.45rem;">{{ section_title | strip }}</h2>
+      </div>
+
+      {% if section_text != blank %}
+        <p class="section-copy animate-fade-up delay-1">{{ section_text | strip }}</p>
+      {% endif %}
+    </div>
+
+    <div class="bento-grid">
+      {%- for block in section.blocks -%}
+        {% liquid
+          assign card_collection = collections[block.settings.collection]
+          capture localized_kicker
+            render 'localized-value', source: block.settings, key: 'kicker'
+          endcapture
+          capture localized_title
+            render 'localized-value', source: block.settings, key: 'title'
+          endcapture
+          capture localized_text
+            render 'localized-value', source: block.settings, key: 'text'
+          endcapture
+
+          assign card_title = localized_title | strip
+          assign card_text = localized_text | strip
+          assign card_url = block.settings.link
+          assign card_image = block.settings.image
+
+          if card_title == blank and card_collection != blank
+            assign card_title = card_collection.title
+          endif
+
+          if card_text == blank and card_collection != blank and card_collection.description != blank
+            assign card_text = card_collection.description | strip_html | truncatewords: 18
+          endif
+
+          if card_url == blank and card_collection != blank
+            assign card_url = card_collection.url
+          endif
+
+          if card_image == blank and card_collection != blank
+            assign card_image = card_collection.featured_image | default: card_collection.image | default: card_collection.products.first.featured_image
+          endif
+        %}
+
+        <a
+          href="{{ card_url | default: routes.all_products_collection_url }}"
+          class="bento-card{% if block.settings.featured %} bento-card--featured{% endif %} animate-fade-up delay-{{ forloop.index }}"
+          {{ block.shopify_attributes }}
+        >
+          {% if card_image != blank %}
+            {{
+              card_image
+              | image_url: width: 1600
+              | image_tag:
+                class: 'bento-card__image',
+                loading: 'lazy',
+                widths: '480, 720, 960, 1280, 1600',
+                sizes: '(min-width: 990px) 33vw, 100vw',
+                alt: card_title
+            }}
+          {% else %}
+            {{ 'collection-2' | placeholder_svg_tag: 'bento-card__placeholder' }}
+          {% endif %}
+
+          {% if localized_kicker != blank %}
+            <span class="bento-card__kicker">{{ localized_kicker | strip }}</span>
+          {% endif %}
+
+          <h3 class="bento-card__title">{{ card_title }}</h3>
+
+          {% if card_text != blank %}
+            <p class="bento-card__text">{{ card_text }}</p>
+          {% endif %}
+
+          <span class="bento-card__link">{{ section_link_label | strip }}</span>
+        </a>
+      {%- endfor -%}
+    </div>
   </div>
 </section>
 
 {% schema %}
 {
   "name": "Bento Categories",
-  "settings": [],
-  "presets": [{"name": "Bento Categories"}]
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Продумані колекції"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_en",
+      "label": "Eyebrow EN",
+      "default": "For different moments of childhood"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Колекції для різних сценаріїв дитинства"
+    },
+    {
+      "type": "text",
+      "id": "title_en",
+      "label": "Title EN",
+      "default": "Collections chosen for everyday play and thoughtful gifts"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Побудуйте домашню колекцію навколо віку, типу гри або особливого моменту. Кожна добірка має свій настрій, але одну якість: відчуття спокою й матеріалу."
+    },
+    {
+      "type": "textarea",
+      "id": "text_en",
+      "label": "Text EN",
+      "default": "From a very first wooden toy to story-led sets for longer play, each collection is arranged to make choosing feel calm and clear."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Переглянути колекцію"
+    },
+    {
+      "type": "text",
+      "id": "link_label_en",
+      "label": "Link label EN",
+      "default": "View collection"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Kicker",
+          "default": "Колекція"
+        },
+        {
+          "type": "text",
+          "id": "kicker_en",
+          "label": "Kicker EN",
+          "default": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "title_en",
+          "label": "Title EN"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "textarea",
+          "id": "text_en",
+          "label": "Text EN"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured card",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bento Categories",
+      "blocks": [
+        { "type": "category" },
+        { "type": "category" },
+        { "type": "category" }
+      ]
+    }
+  ]
 }
 {% endschema %}

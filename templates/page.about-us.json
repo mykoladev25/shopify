@@ -1,0 +1,183 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "about-story",
+      "blocks": {
+        "material": {
+          "type": "fact",
+          "settings": {
+            "title": "Матеріал",
+            "title_en": "Material",
+            "text": "Працюємо з ясеном і дубом, які добре старіють, красиво тримають текстуру й залишаються приємними в руці.",
+            "text_en": "We work with ash and oak that age well, hold their grain beautifully, and feel good in the hand."
+          }
+        },
+        "finish": {
+          "type": "fact",
+          "settings": {
+            "title": "Фініш",
+            "title_en": "Finish",
+            "text": "Натуральні олії підкреслюють дерево, а не ховають його під важким, штучним шаром.",
+            "text_en": "Natural oils bring out the wood instead of hiding it under a heavy artificial layer."
+          }
+        },
+        "craft": {
+          "type": "fact",
+          "settings": {
+            "title": "Ручна робота",
+            "title_en": "Hand craft",
+            "text": "Кожну деталь шліфуємо і збираємо вручну, щоб форма відчувалась спокійною та завершеною.",
+            "text_en": "Each piece is sanded and assembled by hand so the form feels calm and complete."
+          }
+        }
+      },
+      "block_order": [
+        "material",
+        "finish",
+        "craft"
+      ],
+      "settings": {
+        "eyebrow": "Vlasnoruch atelier",
+        "eyebrow_en": "Vlasnoruch atelier",
+        "title": "Майстерня, де дерево відчувається теплим з першого дотику.",
+        "title_en": "An atelier where wood feels warm from the first touch.",
+        "text": "<p>Ми робимо іграшки, які хочеться не лише купити, а й залишити поруч надовго. Для нас важливі пропорція, фактура, тиша форми і чесність матеріалу без зайвого декору.</p>",
+        "text_en": "<p>We make toys people want not only to buy, but to keep close for years. Proportion, texture, quiet form, and material honesty matter more to us than decorative excess.</p>",
+        "note": "Це речі для щоденної гри, подарунків і пам'яті, яка лишається в родині далі.",
+        "note_en": "These are pieces for everyday play, gifting, and memory that stays in the family over time.",
+        "button_label": "Переглянути колекцію",
+        "button_label_en": "Shop the collection",
+        "button_link": "/collections/all"
+      }
+    },
+    "process": {
+      "type": "about-process",
+      "blocks": {
+        "step1": {
+          "type": "step",
+          "settings": {
+            "title": "Відбір дерева",
+            "title_en": "Wood selection",
+            "text": "Беремо ясень і дуб з красивою текстурою, спокійним тоном і відчутною вагою. Основа має бути чесною ще до форми.",
+            "text_en": "We choose ash and oak with beautiful grain, calm tone, and satisfying weight. The material must feel honest before it becomes a shape."
+          }
+        },
+        "step2": {
+          "type": "step",
+          "settings": {
+            "title": "Ручне доведення",
+            "title_en": "Hand finishing",
+            "text": "Кромки, грані й колеса доводимо вручну, щоб дотик був гладким, а річ не відчувалась випадково зробленою.",
+            "text_en": "Edges, curves, and wheels are finished by hand so the touch feels smooth and the object never feels accidental."
+          }
+        },
+        "step3": {
+          "type": "step",
+          "settings": {
+            "title": "Тиха подача",
+            "title_en": "Quiet presentation",
+            "text": "Пакуємо охайно й без візуального шуму, щоб річ було приємно дарувати одразу, без додаткових кроків.",
+            "text_en": "We package each piece neatly and without visual noise so it is ready to gift the moment it arrives."
+          }
+        }
+      },
+      "block_order": [
+        "step1",
+        "step2",
+        "step3"
+      ],
+      "settings": {
+        "eyebrow": "Як ми працюємо",
+        "eyebrow_en": "How we work",
+        "title": "Три речі, які ми не віддаємо на компроміс.",
+        "title_en": "Three things we do not compromise on.",
+        "text": "<p>Кожна іграшка проходить шлях від добору дерева до фінальної перевірки на дотик. Ми не женемося за кількістю, бо саме в деталях відчувається спокій готової речі.</p>",
+        "text_en": "<p>Each toy moves from wood selection to a final touch check. We do not chase volume because calmness is felt in the details of a finished piece.</p>",
+        "button_label": "Написати нам",
+        "button_label_en": "Contact us",
+        "button_link": "/pages/contact"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "materials": {
+          "type": "trust_point",
+          "settings": {
+            "title": "Матеріали",
+            "title_en": "Materials",
+            "text": "Ясен і дуб з природною текстурою, яку хочеться бачити, а не закривати декором.",
+            "text_en": "Ash and oak with natural grain you want to see rather than hide behind decoration."
+          }
+        },
+        "safe": {
+          "type": "trust_point",
+          "settings": {
+            "title": "Безпечний фініш",
+            "title_en": "Safe finish",
+            "text": "Натуральні олії залишають поверхню живою, матовою і приємною на дотик.",
+            "text_en": "Natural oils keep the surface alive, matte, and pleasant to the touch."
+          }
+        },
+        "gifting": {
+          "type": "trust_point",
+          "settings": {
+            "title": "На подарунок",
+            "title_en": "Gift-ready",
+            "text": "Подача продумана так, щоб річ одразу виглядала як готовий, уважний подарунок.",
+            "text_en": "The presentation is considered so each piece already feels like a complete, thoughtful gift."
+          }
+        },
+        "service": {
+          "type": "trust_point",
+          "settings": {
+            "title": "Сервіс",
+            "title_en": "Service",
+            "text": "Можна написати нам про строки, доставку чи особливий запит і отримати чесну відповідь без формальностей.",
+            "text_en": "You can write to us about timing, delivery, or a specific request and get a clear answer without formality."
+          }
+        }
+      },
+      "block_order": [
+        "materials",
+        "safe",
+        "gifting",
+        "service"
+      ],
+      "settings": {
+        "title": "Чим Vlasnoruch atelier відрізняється від просто красивої іграшки",
+        "title_en": "What makes Vlasnoruch atelier more than just a nice-looking toy"
+      }
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "eyebrow": "З чого почати",
+        "eyebrow_en": "Where to start",
+        "title": "Іграшки, з яких легко почати знайомство з брендом",
+        "title_en": "Toys that make a thoughtful first introduction to the brand",
+        "text": "Якщо ви тут уперше, почніть з моделей, де найкраще відчуваються вага дерева, продумана форма і тиха подача.",
+        "text_en": "If you are here for the first time, begin with the pieces that best show the weight of the wood, the considered form, and the quiet presentation.",
+        "products_to_show": 4,
+        "button_label": "Перейти до каталогу",
+        "button_label_en": "Browse the collection",
+        "button_link": "/collections/all"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "process",
+    "trust",
+    "featured"
+  ]
+}

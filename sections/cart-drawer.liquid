@@ -5,92 +5,137 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 100;
+    background: rgba(20, 16, 12, 0.36);
+    z-index: 1200;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
   }
+
   .cart-drawer {
     position: fixed;
     top: 0;
     right: 0;
     width: 100%;
-    max-width: 400px;
+    max-width: 430px;
     height: 100vh;
-    background: var(--color-surface);
-    z-index: 101;
+    background: rgba(247, 241, 233, 0.98);
+    z-index: 1201;
     transform: translateX(100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
     display: flex;
     flex-direction: column;
-    border-left: 1px solid var(--color-border);
+    border-left: 1px solid rgba(71, 53, 36, 0.12);
+    box-shadow: -24px 0 64px rgba(20, 16, 12, 0.12);
   }
+
   cart-drawer[open] .cart-drawer-overlay {
     opacity: 1;
     visibility: visible;
   }
+
   cart-drawer[open] .cart-drawer {
     transform: translateX(0);
   }
+
   .cart-drawer__header {
-    padding: var(--space-4);
+    padding: 1.2rem 1.2rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid rgba(71, 53, 36, 0.08);
   }
+
   .cart-drawer__title {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
   }
+
   .cart-drawer-close {
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
     background: none;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--color-text-dark);
   }
+
   .cart-drawer__body {
     flex-grow: 1;
     overflow-y: auto;
-    padding: var(--space-4);
+    padding: 1rem 1.2rem 1.2rem;
   }
-  .cart-drawer__footer {
-    padding: var(--space-4);
-    border-top: 1px solid var(--color-border);
-    background: var(--color-bg);
-  }
-  .cart-item {
+
+  .cart-drawer-content {
     display: flex;
-    gap: var(--space-4);
-    margin-bottom: var(--space-4);
-    padding-bottom: var(--space-4);
-    border-bottom: 1px solid var(--color-border);
-  }
-  .cart-item__image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border);
-  }
-  .cart-item__info {
+    flex-direction: column;
     flex-grow: 1;
   }
+
+  .cart-drawer__footer {
+    padding: 1rem 1.2rem 1.2rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.08);
+    background: rgba(242, 234, 224, 0.9);
+  }
+
+  .cart-item {
+    display: flex;
+    gap: 0.95rem;
+    margin-bottom: 0.95rem;
+    padding-bottom: 0.95rem;
+    border-bottom: 1px solid rgba(71, 53, 36, 0.08);
+  }
+
+  .cart-item__image {
+    width: 86px;
+    height: 86px;
+    object-fit: cover;
+    border-radius: 0.85rem;
+    background: rgba(242, 233, 221, 0.72);
+  }
+
+  .cart-item__info {
+    flex-grow: 1;
+    display: grid;
+    gap: 0.3rem;
+    align-content: start;
+  }
+
   .cart-item__title {
-    margin: 0 0 var(--space-2) 0;
+    margin: 0;
     font-size: 1rem;
+    line-height: 1.3;
   }
+
   .cart-item__price {
-    font-weight: 500;
+    font-weight: 700;
+    color: var(--color-text-dark);
   }
+
+  .cart-item__quantity {
+    margin-top: 0.15rem;
+    font-size: 0.86rem;
+    color: var(--color-text);
+  }
+
   .cart-drawer__subtotal {
     display: flex;
     justify-content: space-between;
-    font-size: 1.25rem;
-    font-weight: 500;
-    margin-bottom: var(--space-4);
+    font-size: 1.12rem;
+    font-weight: 700;
+    margin-bottom: 0.95rem;
+  }
+
+  .cart-drawer__empty {
+    max-width: 18rem;
+    margin-top: 2rem;
+    color: var(--color-text);
+    line-height: 1.75;
   }
 {%- endstyle -%}
 
@@ -98,36 +143,45 @@
   <div class="cart-drawer-overlay"></div>
   <div class="cart-drawer">
     <div class="cart-drawer__header">
-      <h2 class="cart-drawer__title">Ваш кошик</h2>
-      <button class="cart-drawer-close" aria-label="Закрити">&times;</button>
+      <h2 class="cart-drawer__title">{{ 'general.cart.title' | t }}</h2>
+      <button class="cart-drawer-close" aria-label="{{ 'theme.close_label' | t }}">&times;</button>
     </div>
     
-    <div class="cart-drawer-content" style="display: flex; flex-direction: column; flex-grow: 1;">
+    <div class="cart-drawer-content">
       <div class="cart-drawer__body">
         {%- if cart.item_count > 0 -%}
           {%- for item in cart.items -%}
             <div class="cart-item">
               {%- if item.image -%}
-                <img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title | escape }}" class="cart-item__image">
+                {{
+                  item.image
+                  | image_url: width: 160
+                  | image_tag:
+                    class: 'cart-item__image',
+                    loading: 'lazy',
+                    widths: '120, 160, 240',
+                    sizes: '80px',
+                    alt: item.title
+                }}
               {%- endif -%}
               <div class="cart-item__info">
                 <h3 class="cart-item__title">{{ item.product.title }}</h3>
                 <div class="cart-item__price">{{ item.final_line_price | money }}</div>
-                <div style="margin-top: 8px; font-size: 0.875rem;">Кількість: {{ item.quantity }}</div>
+                <div class="cart-item__quantity">{{ 'general.product.quantity' | t }}: {{ item.quantity }}</div>
               </div>
             </div>
           {%- endfor -%}
         {%- else -%}
-          <p style="text-align: center; color: var(--color-text); margin-top: 2rem;">Ваш кошик порожній</p>
+          <p class="cart-drawer__empty">{{ 'general.cart.empty' | t }}</p>
         {%- endif -%}
       </div>
       
       <div class="cart-drawer__footer">
         <div class="cart-drawer__subtotal">
-          <span>Разом:</span>
+          <span>{{ 'general.cart.subtotal' | t }}</span>
           <span>{{ cart.total_price | money }}</span>
         </div>
-        <a href="/checkout" class="btn btn--full" style="width: 100%; box-sizing: border-box;">Оформити замовлення</a>
+        <a href="/checkout" class="btn btn--full">{{ 'general.cart.checkout' | t }}</a>
       </div>
     </div>
   </div>

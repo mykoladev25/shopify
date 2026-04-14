@@ -1,73 +1,155 @@
+{% liquid
+  capture editorial_eyebrow
+    render 'localized-value', source: section.settings, key: 'eyebrow'
+  endcapture
+  capture editorial_title
+    render 'localized-value', source: section.settings, key: 'title'
+  endcapture
+  capture editorial_text
+    render 'localized-value', source: section.settings, key: 'text'
+  endcapture
+  capture editorial_button_label
+    render 'localized-value', source: section.settings, key: 'button_label'
+  endcapture
+
+  assign editorial_alt = editorial_title | strip
+  if section.settings.image != blank and section.settings.image.alt != blank
+    assign editorial_alt = section.settings.image.alt
+  endif
+%}
+
 {%- style -%}
-  .editorial-story {
-    padding: clamp(var(--space-12), 10vw, var(--space-24)) var(--space-4);
-    background-color: var(--color-surface);
-  }
-  .editorial-wrapper {
-    max-width: 1400px;
-    margin: 0 auto;
+  .editorial-story__panel {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-12);
+    gap: clamp(1.5rem, 4vw, 3rem);
     align-items: center;
   }
-  @media (min-width: 1024px) {
-    .editorial-wrapper {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-16);
-    }
-  }
-  .editorial-image-col {
+
+  .editorial-story__media {
     position: relative;
-    border-radius: var(--radius-xl);
+    min-height: 25rem;
+    border-radius: clamp(1rem, 2.6vw, 1.5rem);
     overflow: hidden;
-    aspect-ratio: 4/5;
-    box-shadow: var(--shadow-float);
+    background: linear-gradient(135deg, rgba(220, 192, 161, 0.36), rgba(156, 103, 64, 0.08));
   }
-  .editorial-image {
+
+  .editorial-story__image,
+  .editorial-story__placeholder {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .editorial-text-col {
-    padding: var(--space-8) 0;
+
+  .editorial-story__placeholder {
+    color: rgba(32, 24, 18, 0.28);
   }
-  .editorial-eyebrow {
-    font-family: var(--font-body);
-    font-style: italic;
-    color: var(--color-accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    font-size: 0.875rem;
-    margin-bottom: var(--space-4);
+
+  .editorial-story__content {
+    display: grid;
+    gap: 1.1rem;
+    align-content: center;
   }
-  .editorial-title {
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    line-height: 1.1;
-    margin-bottom: var(--space-6);
-    letter-spacing: -0.02em;
-    color: var(--color-text-dark);
+
+  .editorial-story__title {
+    font-size: clamp(2.35rem, 5.2vw, 4.45rem);
+    max-width: 10ch;
   }
-  .editorial-desc {
-    font-size: 1.25rem;
+
+  .editorial-story__text {
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
     line-height: 1.8;
-    color: var(--color-text);
-    margin-bottom: var(--space-8);
+  }
+
+  .editorial-story__details {
+    display: grid;
+    gap: 0;
+  }
+
+  .editorial-story__detail {
+    padding-block: 0.95rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.12);
+  }
+
+  .editorial-story__detail-title {
+    margin-bottom: 0.25rem;
+    color: var(--color-text-dark);
+    font-size: 0.96rem;
     font-family: var(--font-body);
+    font-weight: 700;
+  }
+
+  .editorial-story__detail-text {
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  @media (min-width: 990px) {
+    .editorial-story__panel {
+      grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+      column-gap: clamp(2rem, 5vw, 4rem);
+    }
+
+    .editorial-story__media {
+      min-height: 38rem;
+    }
   }
 {%- endstyle -%}
 
-<section class="editorial-story">
-  <div class="editorial-wrapper">
-    <div class="editorial-image-col animate-scale">
-      <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Workshop" class="editorial-image">
-    </div>
-    <div class="editorial-text-col">
-      <div class="editorial-eyebrow animate-fade-up">Наша майстерня</div>
-      <h2 class="editorial-title animate-fade-up delay-1">Тільки живе дерево. Без компромісів.</h2>
-      <p class="editorial-desc animate-fade-up delay-2">Кожна деталь відшліфовується вручну до ідеально гладкої поверхні. Ми використовуємо лише натуральні олії та барвники, щоб кожна іграшка була не тільки красивою, але й абсолютно безпечною для вашого малюка з перших днів життя.</p>
-      <div class="animate-fade-up delay-3">
-        <a href="/collections/all" class="btn btn--secondary">Дізнатися більше</a>
+<section class="editorial-story section-shell">
+  <div class="page-width">
+    <div class="editorial-story__panel">
+      <div class="editorial-story__media animate-scale">
+        {% if section.settings.image != blank %}
+          {{
+            section.settings.image
+            | image_url: width: 1400
+            | image_tag:
+              class: 'editorial-story__image',
+              loading: 'lazy',
+              widths: '640, 900, 1200, 1400',
+              sizes: '(min-width: 990px) 44vw, 100vw',
+              alt: editorial_alt
+          }}
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'editorial-story__placeholder' }}
+        {% endif %}
+      </div>
+
+      <div class="editorial-story__content">
+        {% if editorial_eyebrow != blank %}
+          <span class="section-kicker animate-fade-up">{{ editorial_eyebrow | strip }}</span>
+        {% endif %}
+
+        <h2 class="editorial-story__title animate-fade-up delay-1">{{ editorial_title | strip }}</h2>
+
+        {% if editorial_text != blank %}
+          <div class="editorial-story__text animate-fade-up delay-2 rte">{{ editorial_text | strip }}</div>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <div class="editorial-story__details animate-fade-up delay-3">
+            {%- for block in section.blocks -%}
+              {% capture detail_title %}
+                {% render 'localized-value', source: block.settings, key: 'title' %}
+              {% endcapture %}
+              {% capture detail_text %}
+                {% render 'localized-value', source: block.settings, key: 'text' %}
+              {% endcapture %}
+              <div class="editorial-story__detail" {{ block.shopify_attributes }}>
+                <div class="editorial-story__detail-title">{{ detail_title | strip }}</div>
+                <p class="editorial-story__detail-text">{{ detail_text | strip }}</p>
+              </div>
+            {%- endfor -%}
+          </div>
+        {% endif %}
+
+        {% if editorial_button_label != blank %}
+          <div class="animate-fade-up delay-4">
+            <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="text-link">
+              {{ editorial_button_label | strip }}
+            </a>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -76,7 +158,107 @@
 {% schema %}
 {
   "name": "Editorial Story",
-  "settings": [],
-  "presets": [{"name": "Editorial Story"}]
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Наша майстерня"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_en",
+      "label": "Eyebrow EN",
+      "default": "Inside the atelier"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Тільки живе дерево. Жодної візуальної метушні."
+    },
+    {
+      "type": "text",
+      "id": "title_en",
+      "label": "Title EN",
+      "default": "We make objects that feel quiet and last well."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Ми працюємо так, щоб продукт відчувався спокійним і чесним: ручна шліфовка, натуральні олії, продумані пропорції та упаковка, яку не хочеться одразу викидати.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text_en",
+      "label": "Text EN",
+      "default": "<p>We do not chase visual noise. We work with wood so each toy holds material honesty, proportion, and care in the smallest details.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Познайомитися ближче"
+    },
+    {
+      "type": "text",
+      "id": "button_label_en",
+      "label": "Button label EN",
+      "default": "More about the atelier"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "detail",
+      "name": "Detail",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Фініш"
+        },
+        {
+          "type": "text",
+          "id": "title_en",
+          "label": "Title EN",
+          "default": "Finish"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Лляна олія та бджолиний віск замість агресивних покриттів."
+        },
+        {
+          "type": "textarea",
+          "id": "text_en",
+          "label": "Text EN",
+          "default": "Natural oils and wax instead of heavy, glossy coatings."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Story",
+      "blocks": [
+        { "type": "detail" },
+        { "type": "detail" },
+        { "type": "detail" }
+      ]
+    }
+  ]
 }
 {% endschema %}

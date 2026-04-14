@@ -1,151 +1,441 @@
+{% liquid
+  assign hero_collection = collections[section.settings.collection]
+  if hero_collection == blank
+    assign hero_collection = collections['all']
+  endif
+
+  capture hero_eyebrow
+    render 'localized-value', source: section.settings, key: 'eyebrow'
+  endcapture
+  capture hero_title
+    render 'localized-value', source: section.settings, key: 'title'
+  endcapture
+  capture hero_emphasis
+    render 'localized-value', source: section.settings, key: 'emphasis'
+  endcapture
+  capture hero_text
+    render 'localized-value', source: section.settings, key: 'text'
+  endcapture
+  capture hero_button_label
+    render 'localized-value', source: section.settings, key: 'button_label'
+  endcapture
+  capture hero_secondary_button_label
+    render 'localized-value', source: section.settings, key: 'secondary_button_label'
+  endcapture
+  capture hero_material_note
+    render 'localized-value', source: section.settings, key: 'badge'
+  endcapture
+  capture hero_craft_note_title
+    render 'localized-value', source: section.settings, key: 'highlight_title'
+  endcapture
+  capture hero_craft_note_text
+    render 'localized-value', source: section.settings, key: 'highlight_text'
+  endcapture
+
+  assign hero_alt = hero_title | strip
+  if section.settings.image != blank and section.settings.image.alt != blank
+    assign hero_alt = section.settings.image.alt
+  elsif hero_collection != blank and hero_collection.products.first.featured_image != blank
+    assign hero_alt = hero_collection.products.first.title
+  endif
+%}
+
 {%- style -%}
-  .hero-{{ section.id }} {
-    padding: clamp(var(--space-12), 15vw, var(--space-24)) var(--space-4);
-    background-color: var(--color-bg);
-    min-height: 90vh;
+  .home-hero {
+    padding-block: 0.8rem clamp(4rem, 8vw, 6rem);
+  }
+
+  .home-hero__layout {
     display: grid;
-    grid-template-columns: 1fr;
-    align-items: center;
+    gap: 1.4rem;
+  }
+
+  .home-hero__media-shell,
+  .home-hero__content {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .home-hero__media-shell {
+    gap: 0.9rem;
+  }
+
+  .home-hero__stage {
     position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: clamp(1rem, 2.6vw, 1.6rem);
     overflow: hidden;
+    background: rgba(238, 228, 214, 0.92);
   }
-  @media (min-width: 1024px) {
-    .hero-{{ section.id }} {
-      grid-template-columns: 50% 50%;
-      padding: 0 var(--space-16);
-    }
+
+  .home-hero__stage::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 48%;
+    background: linear-gradient(180deg, rgba(32, 24, 18, 0) 0%, rgba(32, 24, 18, 0.14) 38%, rgba(32, 24, 18, 0.76) 100%);
+    pointer-events: none;
   }
-  .hero-{{ section.id }}__content {
-    position: relative;
+
+  .home-hero__stage-caption {
+    position: absolute;
+    inset: auto 0 0;
     z-index: 2;
-    padding-right: var(--space-8);
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    color: var(--color-contrast);
   }
-  .hero-{{ section.id }}__eyebrow {
-    font-family: var(--font-body);
-    font-size: 1rem;
+
+  .home-hero__stage-label {
+    display: inline-flex;
+    width: fit-content;
+    color: rgba(255, 248, 240, 0.82);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--color-accent);
-    margin-bottom: var(--space-4);
   }
-  .hero-{{ section.id }}__title {
-    font-size: clamp(3.5rem, 8vw, 7rem);
-    color: var(--color-text-dark);
-    margin-bottom: var(--space-6);
-    letter-spacing: -0.02em;
-    line-height: 0.95;
+
+  .home-hero__title {
+    max-width: 8ch;
+    color: var(--color-contrast);
+    font-size: clamp(2.25rem, 7.8vw, 4.85rem);
+    line-height: 0.92;
+    letter-spacing: -0.048em;
   }
-  .hero-{{ section.id }}__title span {
-    font-style: italic;
-    color: var(--color-accent);
+
+  .home-hero__title-emphasis {
+    display: block;
+    color: rgba(255, 245, 236, 0.84);
+    font-style: normal;
   }
-  .hero-{{ section.id }}__text {
-    font-size: clamp(1.125rem, 2vw, 1.375rem);
-    color: var(--color-text);
-    margin-bottom: var(--space-8);
-    max-width: 480px;
-    line-height: 1.6;
-    border-left: 1px solid var(--color-border);
-    padding-left: var(--space-6);
+
+  .home-hero__text {
+    max-width: 28rem;
+    color: rgba(255, 248, 240, 0.82);
+    font-size: 0.98rem;
+    line-height: 1.65;
   }
-  .hero-{{ section.id }}__cta {
+
+  .home-hero__actions {
     display: flex;
-    gap: var(--space-4);
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
   }
-  .hero-{{ section.id }}__image-wrapper {
-    height: 50vh;
-    width: 100%;
-    margin-top: var(--space-8);
-    position: relative;
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    box-shadow: var(--shadow-float);
-    order: -1; /* Move image above text on mobile */
-    margin-bottom: var(--space-6);
+
+  .home-hero__actions .btn {
+    background: rgba(252, 248, 242, 0.92);
+    color: var(--color-text-dark);
   }
-  .hero-{{ section.id }}__content {
-    position: relative;
-    z-index: 2;
-    padding-right: 0;
+
+  .home-hero__actions .btn:hover {
+    background: rgba(252, 248, 242, 1);
   }
-  @media (min-width: 1024px) {
-    .hero-{{ section.id }} {
-      grid-template-columns: 50% 50%;
-      padding: 0 var(--space-16);
-    }
-    .hero-{{ section.id }}__image-wrapper {
-      order: 0;
-      margin-top: 0;
-      margin-bottom: 0;
-      height: 110%;
-      width: 120%;
-      position: absolute;
-      right: -10%;
-      top: -5%;
-      border-radius: var(--radius-xl) 0 0 var(--radius-xl);
-      transform: rotate(-2deg);
-      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .hero-{{ section.id }}__content {
-      padding-right: var(--space-8);
-    }
-    .hero-{{ section.id }}:hover .hero-{{ section.id }}__image-wrapper {
-      transform: rotate(0deg) scale(1.02);
-    }
+
+  .home-hero__secondary-action {
+    width: fit-content;
+    padding: 0.25rem 0;
+    color: rgba(255, 248, 240, 0.9);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
-  .hero-{{ section.id }}__image {
+
+  .home-hero__secondary-action::after {
+    color: rgba(255, 248, 240, 0.9);
+  }
+
+  .home-hero__image,
+  .home-hero__image--placeholder {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .hero-{{ section.id }}__badge {
-    position: absolute;
-    bottom: var(--space-4);
-    left: var(--space-4);
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    padding: var(--space-2) var(--space-4);
-    border-radius: 100px;
-    font-family: var(--font-heading);
-    font-style: italic;
-    font-size: 1rem;
-    color: var(--color-text-dark);
-    box-shadow: var(--shadow-md);
-    z-index: 3;
+
+  .home-hero__image--placeholder {
+    background: linear-gradient(135deg, rgba(220, 192, 161, 0.42), rgba(156, 103, 64, 0.12));
+    color: rgba(32, 24, 18, 0.3);
   }
-  @media (min-width: 1024px) {
-    .hero-{{ section.id }}__badge { 
-      bottom: var(--space-8);
-      left: -20px;
-      padding: var(--space-4) var(--space-6);
-      font-size: 1.25rem;
+
+  .home-hero__material-note {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+    max-width: calc(100% - 2rem);
+    color: rgba(255, 248, 240, 0.78);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .home-hero__product-rail {
+    display: grid;
+    gap: 0;
+  }
+
+  .home-hero__product {
+    display: grid;
+    grid-template-columns: 5.1rem minmax(0, 1fr);
+    gap: 0.8rem;
+    align-items: center;
+    padding-block: 0.85rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.1);
+    color: var(--color-text-dark);
+  }
+
+  .home-hero__product:first-child {
+    border-top: 0;
+    padding-top: 0.1rem;
+  }
+
+  .home-hero__product-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 0.9rem;
+    object-fit: cover;
+    background: rgba(247, 239, 228, 0.92);
+  }
+
+  .home-hero__product-body {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .home-hero__product-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.28;
+  }
+
+  .home-hero__product-price {
+    color: var(--color-text);
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .home-hero__content {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .home-hero__craft-note {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.12);
+  }
+
+  .home-hero__craft-title {
+    color: var(--color-accent-deep);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .home-hero__craft-text {
+    max-width: 38rem;
+    font-size: 0.98rem;
+    line-height: 1.75;
+  }
+
+  .home-hero__values {
+    display: grid;
+    gap: 0;
+  }
+
+  .home-hero__value-item {
+    display: grid;
+    gap: 0.3rem;
+    padding-block: 0.95rem;
+    border-top: 1px solid rgba(71, 53, 36, 0.12);
+  }
+
+  .home-hero__value-item:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .home-hero__value-kicker {
+    color: var(--color-accent-deep);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .home-hero__value-label {
+    display: block;
+    color: var(--color-text-dark);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.65;
+  }
+
+  @media (min-width: 990px) {
+    .home-hero__layout {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+
+    .home-hero__content {
+      gap: 1.5rem;
+      padding-top: clamp(1rem, 6vw, 4rem);
+    }
+
+    .home-hero__stage {
+      min-height: 42rem;
+      aspect-ratio: auto;
+    }
+
+    .home-hero__stage-caption {
+      padding: 1.45rem;
+      gap: 0.95rem;
+    }
+
+    .home-hero__product-rail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+
+    .home-hero__product {
+      padding-top: 1rem;
     }
   }
 {%- endstyle -%}
 
-<section class="hero-{{ section.id }}">
-  <div class="hero-{{ section.id }}__image-wrapper animate-scale delay-2">
-    <div class="hero-{{ section.id }}__badge animate-fade-up delay-4">Ручна робота. Ясен та дуб.</div>
-    {%- if section.settings.image != blank -%}
-      <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="Hero Image" class="hero-{{ section.id }}__image" loading="eager">
-    {%- else -%}
-      <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Wooden toy" class="hero-{{ section.id }}__image" loading="eager">
-    {%- endif -%}
-  </div>
-  
-  <div class="hero-{{ section.id }}__content">
-    <div class="hero-{{ section.id }}__eyebrow animate-fade-up">Екологічні іграшки</div>
-    <h1 class="hero-{{ section.id }}__title animate-fade-up delay-1">
-      Тепло,<br>яке можна <span>відчути.</span>
-    </h1>
-    <div class="hero-{{ section.id }}__text animate-fade-up delay-2">{{ section.settings.text }}</div>
-    <div class="hero-{{ section.id }}__cta animate-fade-up delay-3">
-      {%- if section.settings.button_label != blank -%}
-        <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn">
-          {{ section.settings.button_label | escape }}
-        </a>
-      {%- endif -%}
+<section class="home-hero">
+  <div class="page-width">
+    <div class="home-hero__layout">
+      <div class="home-hero__media-shell animate-scale delay-1">
+        <div class="home-hero__stage">
+          {% if section.settings.image != blank %}
+            {{
+              section.settings.image
+              | image_url: width: 1800
+              | image_tag:
+                class: 'home-hero__image',
+                loading: 'eager',
+                widths: '640, 900, 1200, 1500, 1800',
+                sizes: '(min-width: 990px) 52vw, 100vw',
+                alt: hero_alt
+            }}
+          {% elsif hero_collection != blank and hero_collection.products.first.featured_image != blank %}
+            {{
+              hero_collection.products.first.featured_image
+              | image_url: width: 1800
+              | image_tag:
+                class: 'home-hero__image',
+                loading: 'eager',
+                widths: '640, 900, 1200, 1500, 1800',
+                sizes: '(min-width: 990px) 52vw, 100vw',
+                alt: hero_alt
+            }}
+          {% else %}
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'home-hero__image home-hero__image--placeholder' }}
+          {% endif %}
+
+          {% if hero_material_note != blank %}
+            <div class="home-hero__material-note">{{ hero_material_note | strip }}</div>
+          {% endif %}
+
+          <div class="home-hero__stage-caption">
+            {% if hero_eyebrow != blank %}
+              <span class="home-hero__stage-label">{{ hero_eyebrow | strip }}</span>
+            {% endif %}
+
+            <h1 class="home-hero__title animate-fade-up delay-2">
+              {{ hero_title | strip | escape }}
+              {% if hero_emphasis != blank %}
+                <span class="home-hero__title-emphasis">{{ hero_emphasis | strip | escape }}</span>
+              {% endif %}
+            </h1>
+
+            {% if hero_text != blank %}
+              <div class="home-hero__text animate-fade-up delay-3 rte">{{ hero_text | strip }}</div>
+            {% endif %}
+
+            <div class="home-hero__actions animate-fade-up delay-4">
+              {% if hero_button_label != blank %}
+                <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn">
+                  {{ hero_button_label | strip | escape }}
+                </a>
+              {% endif %}
+
+              {% if hero_secondary_button_label != blank %}
+                <a href="{{ section.settings.secondary_button_link | default: routes.all_products_collection_url }}" class="home-hero__secondary-action text-link">
+                  {{ hero_secondary_button_label | strip | escape }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        {% if hero_collection != blank and hero_collection.products_count > 0 %}
+          <div class="home-hero__product-rail">
+            {%- for product in hero_collection.products limit: 2 -%}
+              <a href="{{ product.url }}" class="home-hero__product">
+                {% if product.featured_image != blank %}
+                  {{
+                    product.featured_image
+                    | image_url: width: 480
+                    | image_tag:
+                      class: 'home-hero__product-image',
+                      loading: 'lazy',
+                      widths: '240, 320, 480',
+                      sizes: '(min-width: 990px) 18vw, 44vw',
+                      alt: product.title
+                  }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'home-hero__product-image' }}
+                {% endif %}
+                <span class="home-hero__product-body">
+                  <span class="home-hero__product-title">{{ product.title }}</span>
+                  <span class="home-hero__product-price">{{ product.price | money }}</span>
+                </span>
+              </a>
+            {%- endfor -%}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="home-hero__content">
+        {% if hero_craft_note_title != blank or hero_craft_note_text != blank %}
+          <div class="home-hero__craft-note animate-fade-up delay-4">
+            {% if hero_craft_note_title != blank %}
+              <span class="home-hero__craft-title">{{ hero_craft_note_title | strip }}</span>
+            {% endif %}
+            {% if hero_craft_note_text != blank %}
+              <p class="home-hero__craft-text">{{ hero_craft_note_text | strip }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <div class="home-hero__values animate-fade-up delay-5">
+            {%- for block in section.blocks -%}
+              {% capture hero_fact_value %}
+                {% render 'localized-value', source: block.settings, key: 'value' %}
+              {% endcapture %}
+              {% capture hero_fact_label %}
+                {% render 'localized-value', source: block.settings, key: 'label' %}
+              {% endcapture %}
+              <div class="home-hero__value-item" {{ block.shopify_attributes }}>
+                {% if hero_fact_value != blank %}
+                  <span class="home-hero__value-kicker">{{ hero_fact_value | strip }}</span>
+                {% endif %}
+                <span class="home-hero__value-label">{{ hero_fact_label | strip }}</span>
+              </div>
+            {%- endfor -%}
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </section>
@@ -156,20 +446,97 @@
   "settings": [
     {
       "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Екологічні іграшки з дерева"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_en",
+      "label": "Eyebrow EN",
+      "default": "Handmade wooden toys"
+    },
+    {
+      "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "Створено руками. Передається у спадок."
+      "default": "Тепло, яке залишається поруч"
+    },
+    {
+      "type": "text",
+      "id": "title_en",
+      "label": "Heading EN",
+      "default": "The warmth of wood,"
+    },
+    {
+      "type": "text",
+      "id": "emphasis",
+      "label": "Emphasis",
+      "default": "на роки."
+    },
+    {
+      "type": "text",
+      "id": "emphasis_en",
+      "label": "Emphasis EN",
+      "default": "made to be passed on."
     },
     {
       "type": "richtext",
       "id": "text",
       "label": "Description",
-      "default": "<p>Ми віримо, що іграшка має залишати слід у пам'яті, а не на планеті. Кожна деталь виточується вручну з масиву ясена та дуба, покривається лляною олією та бджолиним воском.</p>"
+      "default": "<p>Ми створюємо дерев'яні іграшки, які приємно торкатися, дарувати й передавати далі. Чистий ясен і дуб, ручна обробка, натуральні олії та спокійна естетика без зайвого шуму.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text_en",
+      "label": "Description EN",
+      "default": "<p>We create toys in ash and oak that feel beautiful in the hand, generous to give, and worthy of keeping in the family for years.</p>"
     },
     {
       "type": "image_picker",
       "id": "image",
       "label": "Hero Image"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Hero collection"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Image badge",
+      "default": "Ручна робота. Ясен та дуб."
+    },
+    {
+      "type": "text",
+      "id": "badge_en",
+      "label": "Image badge EN",
+      "default": "Ash and oak. Natural oils. Hand-finished."
+    },
+    {
+      "type": "text",
+      "id": "highlight_title",
+      "label": "Highlight title",
+      "default": "Продумано до дотику"
+    },
+    {
+      "type": "text",
+      "id": "highlight_title_en",
+      "label": "Highlight title EN",
+      "default": "Made for the hand"
+    },
+    {
+      "type": "textarea",
+      "id": "highlight_text",
+      "label": "Highlight text",
+      "default": "Шліфуємо кожну грань вручну, щоб іграшка відчувалася теплою та безпечною з першого дотику."
+    },
+    {
+      "type": "textarea",
+      "id": "highlight_text_en",
+      "label": "Highlight text EN",
+      "default": "Each edge is finished by hand so the toy feels smooth, calm, and safe from the very first touch."
     },
     {
       "type": "text",
@@ -178,14 +545,72 @@
       "default": "Переглянути колекцію"
     },
     {
+      "type": "text",
+      "id": "button_label_en",
+      "label": "Button label EN",
+      "default": "Shop the collection"
+    },
+    {
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary button label",
+      "default": "Про майстерню"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label_en",
+      "label": "Secondary button label EN",
+      "default": "About the atelier"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "fact",
+      "name": "Fact",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "100%"
+        },
+        {
+          "type": "text",
+          "id": "value_en",
+          "label": "Value EN"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "натуральне дерево"
+        },
+        {
+          "type": "text",
+          "id": "label_en",
+          "label": "Label EN"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Home Hero"
+      "name": "Home Hero",
+      "blocks": [
+        { "type": "fact" },
+        { "type": "fact" },
+        { "type": "fact" }
+      ]
     }
   ]
 }

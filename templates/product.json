@@ -16,7 +16,12 @@
     "recommendations": {
       "type": "featured-products",
       "settings": {
-        "title": "З цим часто купують",
+        "eyebrow": "Радимо додати",
+        "eyebrow_en": "Pairs well with",
+        "title": "Те, що добре поєднується з цією іграшкою",
+        "title_en": "Pieces that sit well alongside this toy",
+        "text": "Ще кілька речей із такою ж спокійною подачею, живою текстурою дерева і готовністю до подарунка.",
+        "text_en": "A few more pieces with the same quiet presentation, tactile wood grain, and giftable feel.",
         "products_to_show": 4
       }
     }

@@ -13,8 +13,11 @@
       "type": "page",
       "settings": {
         "contact_heading": "Напишіть нам, якщо важливі строки, подарунок або доставка.",
+        "contact_heading_en": "Write to us if timing, gifting, or shipping matters.",
         "contact_hours": "Пн-Пт, 10:00-18:00",
-        "contact_shipping_note": "Пишіть, якщо хочете уточнити строки відправки, подарункову подачу або доставку за межі України."
+        "contact_hours_en": "Mon-Fri, 10:00-18:00",
+        "contact_shipping_note": "Пишіть, якщо хочете уточнити строки відправки, подарункову подачу або доставку за межі України.",
+        "contact_shipping_note_en": "Write to us if you want to confirm dispatch timing, gift presentation, or shipping outside Ukraine."
       }
     }
   },
