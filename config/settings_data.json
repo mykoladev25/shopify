@@ -31,13 +31,13 @@
         "type": "header",
         "settings": {
           "logo_image": "shopify://shop_images/482267747_1296315014926274_1806318694979643643_n.svg",
-          "logo_width": 72,
+          "logo_width": 120,
           "brand_label": "",
           "eyebrow": "Власноруч",
           "eyebrow_en": "Vlasnoruch",
           "menu": "",
-          "secondary_label": "Про майстерню",
-          "secondary_label_en": "About the atelier",
+          "secondary_label": "Про нас",
+          "secondary_label_en": "About us",
           "secondary_link": "",
           "cart_label": "Кошик",
           "cart_label_en": "Cart"
